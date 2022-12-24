@@ -26,6 +26,7 @@ void parse(app::Game game)
 			while (getline(str, word, ','))
 				row.push_back(word);
 				game.update_content(row);
+
 		}
 	}
 	else
