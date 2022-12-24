@@ -1,6 +1,3 @@
-﻿  GameLoop.cpp
-  main.cpp
-  ParsingFunction.cpp
-  ZeldaApp.cpp
-  Generating Code...
+﻿  Editor.cpp
+C:\Users\30694\source\repos\Zelda_II\hy454\CS454\CS454\Editor.cpp(15,21): warning C4018: '<': signed/unsigned mismatch
   CS454.vcxproj -> C:\Users\30694\source\repos\Zelda_II\hy454\CS454\Debug\CS454.exe

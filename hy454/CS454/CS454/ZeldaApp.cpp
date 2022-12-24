@@ -2,7 +2,7 @@
 #include "SDL.h"
 
 void ZeldaApp::Initialise() {
-	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
+	/*if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
 		std::cout << "Subsystems Initialised!..." << std::endl;
 
@@ -15,7 +15,15 @@ void ZeldaApp::Initialise() {
 			SDL_SetRenderDrawColor(myrenderer, 255, 255, 255, 255);
 			std::cout << "Renderer created!" << std::endl;
 		}
-	}
+	}*/
+
+
+	
+	editor = MapEditor::Editor();
+	//std::string path = ;
+	editor.parse("map.csv");
+	editor.print();
+
 	//std::cout << "hello world" << std::endl;
 	//game.SetRender(myRender);
 }

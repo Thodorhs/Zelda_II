@@ -20,12 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="ZeldaApp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ParsingFunction.cpp" />
     <ClCompile Include="ZeldaApp.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

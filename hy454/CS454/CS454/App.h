@@ -10,8 +10,7 @@ namespace app {
 			Action render, anim, input, ai, physics, destruct, collisions, user;
 			Pred done;
 			void Invoke(const Action& f) { if (f) f(); }
-			std::vector<std::vector<std::string>> content;
-	        std::vector<std::string> row;
+			
 		public:
 			void SetRender(const Action& f) { render = f; }
 			// rest of setters are similary defined
@@ -27,9 +26,7 @@ namespace app {
 			void MainLoop(void);
 			void MainLoopIteration(void);
 			
-			void update_content(std::vector<std::string> v){
-				content.push_back(v);
-			}
+		
 	};
 
 
