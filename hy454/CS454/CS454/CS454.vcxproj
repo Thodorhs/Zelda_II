@@ -18,17 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="App.h" />
-    <ClInclude Include="Editor.h" />
-    <ClInclude Include="ZeldaApp.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Editor.cpp" />
-    <ClCompile Include="GameLoop.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="ZeldaApp.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
