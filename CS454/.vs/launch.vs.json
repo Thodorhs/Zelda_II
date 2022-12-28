@@ -1,0 +1,12 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "default",
+      "project": "CS454\\CMakeLists.txt",
+      "projectTarget": "Zelda_II.exe",
+      "name": "Zelda_II.exe"
+    }
+  ]
+}

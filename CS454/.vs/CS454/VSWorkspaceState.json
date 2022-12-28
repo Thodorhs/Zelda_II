@@ -1,0 +1,14 @@
+{
+  "OutputFoldersPerTargetSystem": {
+    "Local Machine": [
+      "CS454\\out\\build\\x64-debug",
+      "CS454\\out\\install\\x64-debug",
+      "CS454\\out\\build\\x64-release",
+      "CS454\\out\\install\\x64-release",
+      "CS454\\out\\build\\x86-debug",
+      "CS454\\out\\install\\x86-debug",
+      "CS454\\out\\build\\x86-release",
+      "CS454\\out\\install\\x86-release"
+    ]
+  }
+}
