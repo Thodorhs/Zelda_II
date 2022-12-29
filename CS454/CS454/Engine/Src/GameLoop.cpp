@@ -5,7 +5,7 @@ void app::Game::MainLoop(void) {
 }
 
 void app::Game::MainLoopIteration(void) {
-	//Render();
+	Render();
 	//Input();
 	//ProgressAnimations();
 	//AI();

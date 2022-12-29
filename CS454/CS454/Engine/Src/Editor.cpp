@@ -3,7 +3,7 @@
 #include <sstream>
 #include <fstream>
 #include <iostream>
-#include "../include/Editor.h"
+#include "../Include/Editor.h"
 using namespace MapEditor;
 
 void Editor::update_content(std::vector<std::string> v) {
@@ -20,7 +20,7 @@ void Editor::print() {
 }
 
 
-void Editor::parse(const std::string path) {
+void Editor::parse(const std::string path){
 	std::vector<std::string> row;
 	std::string line, word;
 	std::fstream file(path, std::ios::in);
@@ -35,7 +35,7 @@ void Editor::parse(const std::string path) {
 
 			while (getline(str, word, ','))
 				row.push_back(word);
-			update_content(row);
+			   update_content(row);
 		}
 	}
 	else
