@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/proteo/Desktop/Zelda_II/CS454/CS454
+# Install script for directory: C:/Users/30694/source/repos/Zelda_II/CS454/CS454
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/proteo/Desktop/Zelda_II/CS454/CS454/out/install/x64-debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/30694/source/repos/Zelda_II/CS454/CS454/out/install/x64-debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/proteo/Desktop/Zelda_II/CS454/CS454/out/build/x64-debug/Engine/cmake_install.cmake")
+  include("C:/Users/30694/source/repos/Zelda_II/CS454/CS454/out/build/x64-debug/Engine/cmake_install.cmake")
 
 endif()
 
@@ -46,5 +46,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/proteo/Desktop/Zelda_II/CS454/CS454/out/build/x64-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/30694/source/repos/Zelda_II/CS454/CS454/out/build/x64-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

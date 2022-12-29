@@ -1,5 +1,6 @@
 #include "../Include/ZeldaApp.h"
 #include "SDL.h"
+#include "SDL_image.h"
 
 void ZeldaApp::Initialise() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
@@ -16,8 +17,11 @@ void ZeldaApp::Initialise() {
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
+	SDL_Surface* tempSurface;
+	tempSurface = IMG_Load("overworld_tileset_grass.png");
 	//std::cout << "hello world" << std::endl;
 	//game.SetRender(myRender);
+
 }
 
 void ZeldaApp::Load() {

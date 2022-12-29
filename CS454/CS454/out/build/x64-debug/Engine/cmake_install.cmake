@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/proteo/Desktop/Zelda_II/CS454/CS454/Engine
+# Install script for directory: C:/Users/30694/source/repos/Zelda_II/CS454/CS454/Engine
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Users/proteo/Desktop/Zelda_II/CS454/CS454/out/install/x64-debug")
+  set(CMAKE_INSTALL_PREFIX "C:/Users/30694/source/repos/Zelda_II/CS454/CS454/out/install/x64-debug")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
