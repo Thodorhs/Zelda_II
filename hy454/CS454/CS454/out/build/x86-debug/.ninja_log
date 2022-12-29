@@ -1,5 +1,0 @@
-# ninja log v5
-5	568	6938726014636677	Engine/CMakeFiles/peos.dir/src/GameLoop.cpp.obj	e92c1e3c01d782b2
-3	573	6938726014686467	Engine/CMakeFiles/peos.dir/src/main.cpp.obj	7c1dab2ec9910c41
-1	640	6938726015362347	Engine/CMakeFiles/peos.dir/src/ZeldaApp.cpp.obj	b7a329452037b2e1
-641	826	6938726017156354	Engine/peos.exe	67c5ca7276fa1fc1
