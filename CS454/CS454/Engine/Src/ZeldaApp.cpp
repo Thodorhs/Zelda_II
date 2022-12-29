@@ -1,5 +1,6 @@
 #include "../Include/ZeldaApp.h"
 #include "SDL.h"
+#include "SDL_image.h"
 
 void ZeldaApp::Initialise() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
