@@ -1,9 +1,0 @@
-# ninja log v5
-10	2212	6940333070247146	Engine/CMakeFiles/Zelda_II.dir/Src/GameLoop.cpp.obj	29cf82220453d8d8
-18	2249	6940333070615921	Engine/CMakeFiles/Zelda_II.dir/Src/main.cpp.obj	16e9ed17ce0e1e2d
-1	2572	6940333073848414	Engine/CMakeFiles/Zelda_II.dir/Src/ZeldaApp.cpp.obj	9e828894cd514855
-2574	3119	6940333079141922	Zelda_II.exe	72a7e406dad57dbe
-2	2878	6940333493176410	Engine/CMakeFiles/Zelda_II.dir/Src/ZeldaApp.cpp.obj	9e828894cd514855
-2880	3158	6940333495499341	Zelda_II.exe	72a7e406dad57dbe
-2	2903	6940333694665835	Engine/CMakeFiles/Zelda_II.dir/Src/ZeldaApp.cpp.obj	9e828894cd514855
-2905	3187	6940333697027942	Zelda_II.exe	72a7e406dad57dbe
