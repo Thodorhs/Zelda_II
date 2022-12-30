@@ -1,6 +1,7 @@
 #pragma once
 #include "App.h"
 #include "Editor.h"
+
 class ZeldaApp :app::App {
 	private:
 		 MapEditor::Editor editor;

@@ -1,6 +1,7 @@
 #include "../Include/ZeldaApp.h"
 #include "SDL.h"
 #include "SDL_Image.h"
+#include <filesystem>
 
 SDL_Renderer* myrenderer;
 
@@ -94,8 +95,18 @@ void ZeldaApp::Initialise() {
 		{
 			SDL_SetRenderDrawColor(myrenderer, 255, 255, 255, 255);
 
-			editor.parse("map.csv");
-			tempSurface = IMG_Load("overworld_tileset_grass.png");
+			std::filesystem::path cwd = std::filesystem::current_path();
+			std::string find_first_part_path = cwd.string();
+
+			size_t pos = find_first_part_path.find("out");
+			std::string half_path = find_first_part_path.substr(0, pos);
+
+			std::string full_asset_path = half_path + "Engine\\Assets";
+
+			editor = MapEditor::Editor();
+			editor.parse(full_asset_path + "\\map1_Kachelebene 1.csv");
+			editor.print();
+			tempSurface = IMG_Load((full_asset_path + "\\overworld_tileset_grass.png").c_str());
 			content = editor.content;
 
 			std::cout << "Renderer created!" << std::endl;
@@ -105,10 +116,10 @@ void ZeldaApp::Initialise() {
 	game.SetRender(myRender);
 
 	
-	editor = MapEditor::Editor();
+	
 	//std::string path = ;
-	editor.parse("map.csv");
-	editor.print();
+	//editor.parse("map.csv");
+	//editor.print();
 
 	//std::cout << "hello world" << std::endl;
 	//game.SetRender(myRender);
