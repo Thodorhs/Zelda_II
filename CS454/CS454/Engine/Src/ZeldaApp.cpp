@@ -1,50 +1,18 @@
 #include "../Include/ZeldaApp.h"
-#include "SDL.h"
-#include "SDL_Image.h"
+#include "../Include/ViewWindow.h"
 #include <filesystem>
 
+MapEditor Geditor;
+ViewWindow GgameWindow;
+SDL_Surface* ImgSurface;
 SDL_Renderer* myrenderer;
-
-std::vector<std::vector<std::string>> content;
-SDL_Surface* tempSurface;
-
-float CameraPosX = 0.0;
-float CameraPosY = 0.0;
-
-int MouseX;
-int MouseY;
-
-void MapLoader() {
-	SDL_Texture* tex;
-	SDL_Rect srcrect;
-	SDL_Rect dstrect;
-
-	tex = SDL_CreateTextureFromSurface(myrenderer, tempSurface);
-
-	for (int i = 0; i < content.size(); i++) {
-		for (int j = 0; j < content[i].size(); j++) {
-			int id = stoi(content[i][j]);
-
-			srcrect.x = (id % 12) * 16;
-			srcrect.y = (id / 12) * 16;
-			srcrect.h = srcrect.w = 16;
-
-			dstrect.x = (j + CameraPosX) * 48;
-			dstrect.y = (i + CameraPosY) * 48;
-			dstrect.h = dstrect.w = 48;
-
-			SDL_RenderCopy(myrenderer, tex, &srcrect, &dstrect);
-		}
-	}
-
-}
 
 void myRender() {
 	SDL_RenderClear(myrenderer);
 	SDL_Event event;
 
-	SDL_PollEvent(&event);
-	switch (event.type) {
+	//SDL_PollEvent(&event);
+	//switch (event.type) {
 
 	/*case SDL_MOUSEBUTTONDOWN:
 		case SDL_BUTTON_LEFT:
@@ -54,7 +22,7 @@ void myRender() {
 		SDL_GetMouseState(&MouseX, &MouseY);
 		std::cout << MouseX << ":" << MouseY << std::endl;
 		break;*/
-	case SDL_KEYDOWN:
+	/*case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
 			case SDLK_DOWN:
 				CameraPosY = CameraPosY - 0.1;
@@ -72,16 +40,15 @@ void myRender() {
 				break;
 		}
 		break;
-	}
+	}*/
 
-	MapLoader();
+	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { 0,0,16,16 }, { 0,0,-1,0 }, ImgSurface, myrenderer);
 
 	//your stuff to render would typically go here.
 	SDL_RenderPresent(myrenderer);
 }
 
-
-void ZeldaApp::Initialise() {
+void ZeldaApp::Initialise(void) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
 		std::cout << "Subsystems Initialised!..." << std::endl;
@@ -89,40 +56,27 @@ void ZeldaApp::Initialise() {
 		SDL_Window* window = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
 		if (window) std::cout << "Window created!" << std::endl;
 
-
-		myrenderer = SDL_CreateRenderer(window, -1, 0);
+		SDL_Renderer* myrenderer = SDL_CreateRenderer(window, -1, 0);
 		if (myrenderer)
 		{
 			SDL_SetRenderDrawColor(myrenderer, 255, 255, 255, 255);
-
-			std::filesystem::path cwd = std::filesystem::current_path();
-			std::string find_first_part_path = cwd.string();
-
-			size_t pos = find_first_part_path.find("out");
-			std::string half_path = find_first_part_path.substr(0, pos);
-
-			std::string full_asset_path = half_path + "Engine\\Assets";
-
-			editor = MapEditor::Editor();
-			editor.parse(full_asset_path + "\\map1_Kachelebene 1.csv");
-			editor.print();
-			tempSurface = IMG_Load((full_asset_path + "\\overworld_tileset_grass.png").c_str());
-			content = editor.content;
-
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
+	std::filesystem::path cwd = std::filesystem::current_path();
+	std::string find_first_part_path = cwd.string();
+	size_t pos = find_first_part_path.find("out");
+	std::string half_path = find_first_part_path.substr(0, pos);
+	std::string full_asset_path = half_path + "Engine\\Assets";
 
+	Geditor = MapEditor();
+	GgameWindow = ViewWindow();
+
+	Geditor.ReadTextMap(full_asset_path + "\\map1_Kachelebene 1.csv");
+	ImgSurface = IMG_Load((full_asset_path + "\\overworld_tileset_grass.png").c_str());
+	
+	Geditor.print();
 	game.SetRender(myRender);
-
-	
-	
-	//std::string path = ;
-	//editor.parse("map.csv");
-	//editor.print();
-
-	//std::cout << "hello world" << std::endl;
-	//game.SetRender(myRender);
 }
 
 void ZeldaApp::Load() {
