@@ -9,7 +9,7 @@ SDL_Renderer* myrenderer;
 
 void myRender() {
 	SDL_RenderClear(myrenderer);
-	SDL_Event event;
+	//SDL_Event event;
 
 	//SDL_PollEvent(&event);
 	//switch (event.type) {
@@ -42,7 +42,7 @@ void myRender() {
 		break;
 	}*/
 
-	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { 0,0,16,16 }, { 0,0,-1,0 }, ImgSurface, myrenderer);
+	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { 0,0,350,350 }, { 0,0,-1,0 }, ImgSurface, myrenderer);
 
 	//your stuff to render would typically go here.
 	SDL_RenderPresent(myrenderer);
@@ -56,13 +56,14 @@ void ZeldaApp::Initialise(void) {
 		SDL_Window* window = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
 		if (window) std::cout << "Window created!" << std::endl;
 
-		SDL_Renderer* myrenderer = SDL_CreateRenderer(window, -1, 0);
+		myrenderer = SDL_CreateRenderer(window, -1, 0);
 		if (myrenderer)
 		{
 			SDL_SetRenderDrawColor(myrenderer, 255, 255, 255, 255);
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
+
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::string find_first_part_path = cwd.string();
 	size_t pos = find_first_part_path.find("out");
