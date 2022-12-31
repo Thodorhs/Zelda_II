@@ -10,49 +10,55 @@ SDL_Window* Gwindow;
 
 int CameraPosX = 0, CameraPosY = 0;
 
-void myRender() {
-	SDL_RenderClear(myrenderer);
+void controls() {
 	SDL_Event event;
 
 	SDL_PollEvent(&event);
 	switch (event.type) {
 
-	/*case SDL_MOUSEBUTTONDOWN:
-		case SDL_BUTTON_LEFT:
-			std::cout << "PEOS";
-		break;
-	case SDL_MOUSEMOTION:
-		SDL_GetMouseState(&MouseX, &MouseY);
-		std::cout << MouseX << ":" << MouseY << std::endl;
-		break;*/
+		/*case SDL_MOUSEBUTTONDOWN:
+			case SDL_BUTTON_LEFT:
+				std::cout << "PEOS";
+			break;
+		case SDL_MOUSEMOTION:
+			SDL_GetMouseState(&MouseX, &MouseY);
+			std::cout << MouseX << ":" << MouseY << std::endl;
+			break;*/
 	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
-			case SDLK_DOWN:
-				CameraPosY = CameraPosY - 1;
-				std::cout << "HELLODOWN";
-				break;
-			case SDLK_UP:
-				CameraPosY = CameraPosY + 1;
-				std::cout << "HELLOUP";
-				break;
-			case SDLK_LEFT:
-				CameraPosX = CameraPosX + 1;
-				std::cout << "HELLOLEFT";
-				break;
-			case SDLK_RIGHT:
-				CameraPosX = CameraPosX - 1;
-				std::cout << "HELLORIGHT";
-				break;
-			default:
-				break;
+		case SDLK_DOWN:
+			CameraPosY = CameraPosY - 1;
+			std::cout << "HELLODOWN";
+			break;
+		case SDLK_UP:
+			CameraPosY = CameraPosY + 1;
+			std::cout << "HELLOUP";
+			break;
+		case SDLK_LEFT:
+			CameraPosX = CameraPosX + 1;
+			std::cout << "HELLOLEFT";
+			break;
+		case SDLK_RIGHT:
+			CameraPosX = CameraPosX - 1;
+			std::cout << "HELLORIGHT";
+			break;
+		default:
+			break;
 		}
 		break;
 	}
 
+}
+void myRender() {
+	controls();
+	SDL_RenderClear(myrenderer);
+
 	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { CameraPosX,CameraPosY,320,240 }, { 0, 0,-1,0 }, ImgSurface, myrenderer, Gwindow);
+	
 
 	//your stuff to render would typically go here.
-	SDL_RenderPresent(myrenderer);
+	//SDL_Delay(500);
+	//SDL_RenderPresent(myrenderer);
 }
 
 void ZeldaApp::Initialise(void) {
@@ -66,7 +72,7 @@ void ZeldaApp::Initialise(void) {
 		myrenderer = SDL_CreateRenderer(Gwindow, -1, 0);
 		if (myrenderer)
 		{
-			SDL_SetRenderDrawColor(myrenderer, 255, 255, 255, 255);
+			SDL_SetRenderDrawColor(myrenderer, 0, 0, 0, 0);
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}

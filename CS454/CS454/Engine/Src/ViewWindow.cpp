@@ -3,22 +3,20 @@
 SDL_Rect srcrect;
 SDL_Rect dstrect;
 
-void ViewWindow::PutTile(SDL_Rect dstrect, unsigned short x, unsigned short y, SDL_Rect srcrect, Index tile, SDL_Renderer* myrenderer, SDL_Texture* tileTexture) {
+void ViewWindow::PutTile(SDL_Surface* WindowSurface, unsigned short x, unsigned short y, Index tile, SDL_Renderer* myrenderer, SDL_Surface* ImgSurface) {
 	srcrect.x = (tile % 12) * 16;
 	srcrect.y = (tile / 12) * 16;
 	srcrect.h = srcrect.w = 16;
 
-	dstrect.x = (x) * 48;
-	dstrect.y = (y) * 48;
-	dstrect.h = dstrect.w = 48;
-	SDL_RenderCopy(myrenderer, tileTexture, &srcrect, &dstrect);
+	dstrect.x = (x) * 16;
+	dstrect.y = (y) * 16;
+	dstrect.h = dstrect.w = 16;
+	SDL_BlitSurface(ImgSurface, &srcrect, WindowSurface, &dstrect);
+	//SDL_BlitScaled(ImgSurface, &srcrect, WindowSurface, &dstrect);
 }
 
 Point viewPosCached { -1, -1 };
 void ViewWindow::TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer, SDL_Window* Gwindow) {
-	SDL_Texture* tileTexture;
-
-	tileTexture = SDL_CreateTextureFromSurface(myrenderer, ImgSurface);
 
 	//std::cout << viewWin
 	if (viewPosCached.x != viewWin.x || viewPosCached.y != viewWin.y) {
@@ -28,8 +26,8 @@ void ViewWindow::TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rec
 		auto endRow = (viewWin.y + viewWin.h - 1)/16;//DIV_TILE_HEIGHT(viewWin.y + viewWin.y - 1);
 		//dpyX = MOD_TILE_WIDTH(viewWin.x);
 		//dpyY = MOD_TILE_WIDTH(viewWin.y);
-		//viewPosCached.x = viewWin.x, viewPosCached.y = viewWin.y;
-		
+		viewPosCached.x = viewWin.x, viewPosCached.y = viewWin.y;
+		SDL_Surface* WindowSurface = SDL_GetWindowSurface(Gwindow);
 		/*
 		std::cout << viewWin.y << "|";
 		std::cout << viewWin.h;
@@ -41,27 +39,14 @@ void ViewWindow::TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rec
 		*/
 
 		for (unsigned short row = startRow; row <= endRow; ++row)
-			for (unsigned short col = startCol; col <= endCol; ++col) 
-				PutTile(dstrect, col - startCol, row - startRow, srcrect, (*map)[row][col], myrenderer, tileTexture);
-			
-				/*PutTile(
-					dpyBuffer,
-					MUL_TILE_WIDTH(col - startCol),
-					MUL_TILE_HEIGHT(row - startRow),
-					tiles,
-					GetTile(map, col, row)
-				);*/
+			for (unsigned short col = startCol; col <= endCol; ++col) {
+				PutTile(WindowSurface, col - startCol, row - startRow, (*map)[row][col], myrenderer, ImgSurface);
+			}
+		std::cout << "HELLO WORDL" << std::endl;
+		SDL_RenderPresent(myrenderer);
+		SDL_UpdateWindowSurface(Gwindow);
 	}
-	/*else {
-		tileTexture = SDL_CreateTextureFromSurface(myrenderer, SDL_GetWindowSurface(Gwindow));
-		SDL_RenderCopy(myrenderer, tileTexture, NULL, NULL);
-	}*/
 
-
-	/*BitmapBlit(
-		dpyBuffer,
-		{ dpyX, dpyY , viewWin.w, viewWin.h },
-		dest,
-		{ displayArea.x, displayArea.y }
-	);*/
+	SDL_BlitSurface(SDL_GetWindowSurface(Gwindow), NULL, SDL_GetWindowSurface(Gwindow), NULL);
+	SDL_UpdateWindowSurface(Gwindow);
 }
