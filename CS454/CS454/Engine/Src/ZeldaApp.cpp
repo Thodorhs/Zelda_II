@@ -6,13 +6,16 @@ MapEditor Geditor;
 ViewWindow GgameWindow;
 SDL_Surface* ImgSurface;
 SDL_Renderer* myrenderer;
+SDL_Window* Gwindow;
+
+int CameraPosX = 0, CameraPosY = 0;
 
 void myRender() {
 	SDL_RenderClear(myrenderer);
-	//SDL_Event event;
+	SDL_Event event;
 
-	//SDL_PollEvent(&event);
-	//switch (event.type) {
+	SDL_PollEvent(&event);
+	switch (event.type) {
 
 	/*case SDL_MOUSEBUTTONDOWN:
 		case SDL_BUTTON_LEFT:
@@ -22,27 +25,31 @@ void myRender() {
 		SDL_GetMouseState(&MouseX, &MouseY);
 		std::cout << MouseX << ":" << MouseY << std::endl;
 		break;*/
-	/*case SDL_KEYDOWN:
+	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
 			case SDLK_DOWN:
-				CameraPosY = CameraPosY - 0.1;
+				CameraPosY = CameraPosY - 1;
+				std::cout << "HELLODOWN";
 				break;
 			case SDLK_UP:
-				CameraPosY = CameraPosY + 0.1;
+				CameraPosY = CameraPosY + 1;
+				std::cout << "HELLOUP";
 				break;
 			case SDLK_LEFT:
-				CameraPosX = CameraPosX + 0.1;
+				CameraPosX = CameraPosX + 1;
+				std::cout << "HELLOLEFT";
 				break;
 			case SDLK_RIGHT:
-				CameraPosX = CameraPosX - 0.1;
+				CameraPosX = CameraPosX - 1;
+				std::cout << "HELLORIGHT";
 				break;
 			default:
 				break;
 		}
 		break;
-	}*/
+	}
 
-	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { 0,0,350,350 }, { 0,0,-1,0 }, ImgSurface, myrenderer);
+	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { CameraPosX,CameraPosY,320,240 }, { 0, 0,-1,0 }, ImgSurface, myrenderer, Gwindow);
 
 	//your stuff to render would typically go here.
 	SDL_RenderPresent(myrenderer);
@@ -53,10 +60,10 @@ void ZeldaApp::Initialise(void) {
 	{
 		std::cout << "Subsystems Initialised!..." << std::endl;
 
-		SDL_Window* window = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
-		if (window) std::cout << "Window created!" << std::endl;
+		Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+		if (Gwindow) std::cout << "Window created!" << std::endl;
 
-		myrenderer = SDL_CreateRenderer(window, -1, 0);
+		myrenderer = SDL_CreateRenderer(Gwindow, -1, 0);
 		if (myrenderer)
 		{
 			SDL_SetRenderDrawColor(myrenderer, 255, 255, 255, 255);
