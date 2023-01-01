@@ -40,3 +40,46 @@ void ViewWindow::TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rec
 
 	SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, NULL); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
 }
+
+
+int ViewWindow::GetMapPixelWidth() 
+{return MapPixelWidth;}
+
+int ViewWindow::GetMapPixelHeight() 
+{return MapPixelHeight;}
+
+void ViewWindow::Scroll(Rect* viewWin, int dx, int dy) 
+{viewWin->x += dx; viewWin->y += dy;}
+
+bool ViewWindow::CanScrollHoriz(const Rect& viewWin, int dx) 
+{return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth();}
+
+bool ViewWindow::CanScrollVert(const Rect& viewWin, int dy) 
+{ return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight();}
+
+void ViewWindow::FilterScrollDistance(
+	int viewStartCoord, // x or y
+	int viewSize, // w or h
+	int* d, // dx or dy
+	int maxMapSize // w or h 
+) {
+	auto val = *d + viewStartCoord;
+	if (val < 0)
+		*d = viewStartCoord; // cross low bound
+	else
+		if (viewSize >= maxMapSize)// fits entirely
+			*d = 0;
+		else
+			if ((val + viewSize) >= maxMapSize) // cross upper bound
+				*d = maxMapSize - (viewStartCoord + viewSize);
+}
+
+void ViewWindow::FilterScroll(const Rect& viewWin, int* dx, int* dy) {
+	FilterScrollDistance(viewWin.x, viewWin.w, dx, GetMapPixelWidth());
+	FilterScrollDistance(viewWin.y, viewWin.h, dy, GetMapPixelHeight());
+}
+
+void ViewWindow::ScrollWithBoundsCheck(Rect* viewWin, int dx, int dy) {
+	FilterScroll(*viewWin, &dx, &dy);
+	Scroll(viewWin, dx, dy);
+}

@@ -7,52 +7,46 @@ ViewWindow GgameWindow;
 SDL_Surface* ImgSurface;
 SDL_Renderer* myrenderer;
 SDL_Window* Gwindow;
-
-int CameraPosX = 0, CameraPosY = 0;
+Rect ViewWIndowR = { 0,0,320,240 };
+int CameraPosX, CameraPosY;
+int PrevCameraPosX = 0, PrevCameraPosY = 0;
 
 void controls() {
 	SDL_Event event;
-
 	SDL_PollEvent(&event);
 	switch (event.type) {
-
-		/*case SDL_MOUSEBUTTONDOWN:
-			case SDL_BUTTON_LEFT:
-				std::cout << "PEOS";
+	case SDL_MOUSEBUTTONDOWN:
+		case SDL_BUTTON_LEFT:
+			SDL_GetMouseState(&CameraPosX, &CameraPosY);
+			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, CameraPosX - PrevCameraPosX, CameraPosY - PrevCameraPosY);
+			PrevCameraPosX , PrevCameraPosY = CameraPosX, CameraPosY;
 			break;
-		case SDL_MOUSEMOTION:
-			SDL_GetMouseState(&MouseX, &MouseY);
-			std::cout << MouseX << ":" << MouseY << std::endl;
-			break;*/
+		break;
 	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
 		case SDLK_DOWN:
-			CameraPosY = CameraPosY + 1;
-			std::cout << "HELLODOWN";
+			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, 0, 1);
 			break;
 		case SDLK_UP:
-			CameraPosY = CameraPosY - 1;
-			std::cout << "HELLOUP";
+			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, 0, -1);
 			break;
 		case SDLK_LEFT:
-			CameraPosX = CameraPosX + 1;
-			std::cout << "HELLOLEFT";
+			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, -1, 0);
 			break;
 		case SDLK_RIGHT:
-			CameraPosX = CameraPosX - 1;
-			std::cout << "HELLORIGHT";
+			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, 1, 0);
 			break;
 		default:
 			break;
 		}
 		break;
 	}
-
 }
+
 void myRender() {
 	controls();
 	SDL_RenderClear(myrenderer);
-	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { CameraPosX,CameraPosY,320,240 }, { 0, 0,-1,0 }, ImgSurface, myrenderer);
+	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, ImgSurface, myrenderer);
 	SDL_RenderPresent(myrenderer);
 }
 

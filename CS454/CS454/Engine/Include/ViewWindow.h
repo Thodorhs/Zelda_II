@@ -17,6 +17,8 @@ struct Point { int x, y; };
 
 class ViewWindow {
 private:
+	int MapPixelWidth = 21 * 16;
+	int MapPixelHeight = 42 * 16;
 
 public:
 	float CameraPosX;
@@ -25,21 +27,23 @@ public:
 	int MouseX;
 	int MouseY;
 
-	void TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer	);
+	void TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer);
 	void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);
 
 	//Scrolling
-	/*
 	int GetMapPixelWidth(void);
 	int GetMapPixelHeight(void);
 	void Scroll(Rect* viewWin, int dx, int dy);
 	bool CanScrollHoriz(const Rect& viewWin, int dx);
 	bool CanScrollVert(const Rect& viewWin, int dy);
+
 	static void FilterScrollDistance(
 		int viewStartCoord, // x or y
 		int viewSize, // w or h
 		int* d, // dx or dy
 		int maxMapSize // w or h 
 	);
-	void FilterScroll(const Rect& viewWin, int* dx, int* dy);*/
+	void FilterScroll(const Rect& viewWin, int* dx, int* dy);
+	void ScrollWithBoundsCheck(Rect* viewWin, int dx, int dy);
+
 };
