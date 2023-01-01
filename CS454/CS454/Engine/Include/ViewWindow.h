@@ -17,8 +17,8 @@ struct Point { int x, y; };
 
 class ViewWindow {
 private:
-	int MapPixelWidth = 21 * 16;
-	int MapPixelHeight = 42 * 16;
+	int MapPixelWidth;
+	int MapPixelHeight;
 
 public:
 	float CameraPosX;
@@ -33,6 +33,8 @@ public:
 	//Scrolling
 	int GetMapPixelWidth(void);
 	int GetMapPixelHeight(void);
+	void SetMapPixelWidth(int);
+	void SetMapPixelHeight(int);
 	void Scroll(Rect* viewWin, int dx, int dy);
 	bool CanScrollHoriz(const Rect& viewWin, int dx);
 	bool CanScrollVert(const Rect& viewWin, int dy);

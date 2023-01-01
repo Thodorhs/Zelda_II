@@ -16,16 +16,18 @@ namespace app {
 			
 		public:
 			void SetRender(const Action& f) { render = f; }
+			void SetInput(const Action& f) { input = f; }
+			void SetDone(const Pred& f) { done = f; }
 			// rest of setters are similary defined
 			void Render(void){ Invoke(render); }
 			//void ProgressAnimations(void) { Invoke(anim); }
-			//void Input(void) { Invoke(input); }
+			void Input(void) { Invoke(input); }
 			//void AI(void) { Invoke(ai); }
 			//void Physics(void) { Invoke(physics); }
 			//void CollisionChecking(void) { Invoke(collisions); }
 			//void CommitDestructions(void) { Invoke(destruct); }
 			//void UserCode(void) { Invoke(user); }
-			bool IsFinished(void) const { return false; }
+			bool IsFinished(void) const { return !done(); }
 			void MainLoop(void);
 			void MainLoopIteration(void);
 			//SDL_Renderer* myrenderer;

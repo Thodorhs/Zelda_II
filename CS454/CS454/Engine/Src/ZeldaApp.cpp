@@ -10,17 +10,29 @@ SDL_Window* Gwindow;
 Rect ViewWIndowR = { 0,0,320,240 };
 int CameraPosX, CameraPosY;
 int PrevCameraPosX = 0, PrevCameraPosY = 0;
+bool is_running; //used by done()
+bool mouse_down=false; //bool to check if i hold down the the left click
 
-void controls() {
+void myInput() {
 	SDL_Event event;
 	SDL_PollEvent(&event);
 	switch (event.type) {
-	case SDL_MOUSEBUTTONDOWN:
-		case SDL_BUTTON_LEFT:
+	case SDL_MOUSEMOTION:
+		if (mouse_down) { // if i am holding down the left click button and i am moving it then scroll..
 			SDL_GetMouseState(&CameraPosX, &CameraPosY);
 			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, CameraPosX - PrevCameraPosX, CameraPosY - PrevCameraPosY);
-			PrevCameraPosX , PrevCameraPosY = CameraPosX, CameraPosY;
-			break;
+			PrevCameraPosX, PrevCameraPosY = CameraPosX, CameraPosY;
+		}
+		break;
+	case SDL_MOUSEBUTTONDOWN:
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			mouse_down = true; // i'am holding it down so set it true
+		}
+		break;
+	case SDL_MOUSEBUTTONUP:
+		if (event.button.button == SDL_BUTTON_LEFT){
+			mouse_down = false; // i realesed it
+		}
 		break;
 	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
@@ -40,14 +52,22 @@ void controls() {
 			break;
 		}
 		break;
+	case SDL_QUIT:
+		is_running = false;
+		break;
+	default:
+		break;
 	}
 }
 
 void myRender() {
-	controls();
 	SDL_RenderClear(myrenderer);
 	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, ImgSurface, myrenderer);
 	SDL_RenderPresent(myrenderer);
+}
+
+bool myDone() {
+	return is_running;
 }
 
 void ZeldaApp::Initialise(void) {
@@ -74,12 +94,17 @@ void ZeldaApp::Initialise(void) {
 
 	Geditor = MapEditor();
 	GgameWindow = ViewWindow();
+	GgameWindow.SetMapPixelWidth(336);
+	GgameWindow.SetMapPixelHeight(672);
 
 	Geditor.ReadTextMap(full_asset_path + "\\map1_Kachelebene 1.csv");
 	ImgSurface = IMG_Load((full_asset_path + "\\overworld_tileset_grass.png").c_str());
 	
 	Geditor.print();
+	game.SetInput(myInput);
 	game.SetRender(myRender);
+	game.SetDone(myDone);
+	is_running = true;
 }
 
 void ZeldaApp::Load() {
