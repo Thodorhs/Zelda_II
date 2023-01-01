@@ -27,11 +27,11 @@ void controls() {
 	case SDL_KEYDOWN:
 		switch (event.key.keysym.sym) {
 		case SDLK_DOWN:
-			CameraPosY = CameraPosY - 1;
+			CameraPosY = CameraPosY + 1;
 			std::cout << "HELLODOWN";
 			break;
 		case SDLK_UP:
-			CameraPosY = CameraPosY + 1;
+			CameraPosY = CameraPosY - 1;
 			std::cout << "HELLOUP";
 			break;
 		case SDLK_LEFT:
@@ -53,12 +53,9 @@ void myRender() {
 	controls();
 	SDL_RenderClear(myrenderer);
 
-	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { CameraPosX,CameraPosY,320,240 }, { 0, 0,-1,0 }, ImgSurface, myrenderer, Gwindow);
+	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { CameraPosX,CameraPosY,320,240 }, { 0, 0,-1,0 }, ImgSurface, myrenderer);
 	
-
-	//your stuff to render would typically go here.
-	//SDL_Delay(500);
-	//SDL_RenderPresent(myrenderer);
+	SDL_RenderPresent(myrenderer);
 }
 
 void ZeldaApp::Initialise(void) {

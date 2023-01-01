@@ -17,8 +17,8 @@ public:
 	int MouseX;
 	int MouseY;
 
-	void TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer, SDL_Window* Gwindow);
-	void PutTile(SDL_Surface* WindowSurface, unsigned short x, unsigned short y, unsigned short tile, SDL_Renderer* myrenderer, SDL_Surface* ImgSurface);
+	void TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer);
+	void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);
 
 	//Scrolling
 	/*
