@@ -4,6 +4,14 @@
 #include "SDL_Image.h"
 #include "MapEditor.h"
 
+#define MUL_TILE_WIDTH(i) ((i)<<4)
+#define MUL_TILE_HEIGHT(i)((i)<<4)
+#define DIV_TILE_WIDTH(i) ((i)>>4)
+#define DIV_TILE_HEIGHT(i)((i)>>4)
+#define MOD_TILE_WIDTH(i) ((i)&15)
+#define MOD_TILE_HEIGHT(i)((i)&15)
+
+
 struct Rect { int x, y, w, h; };
 struct Point { int x, y; };
 
@@ -17,7 +25,7 @@ public:
 	int MouseX;
 	int MouseY;
 
-	void TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer);
+	void TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer	);
 	void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);
 
 	//Scrolling

@@ -52,9 +52,7 @@ void controls() {
 void myRender() {
 	controls();
 	SDL_RenderClear(myrenderer);
-
 	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), { CameraPosX,CameraPosY,320,240 }, { 0, 0,-1,0 }, ImgSurface, myrenderer);
-	
 	SDL_RenderPresent(myrenderer);
 }
 
