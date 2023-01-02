@@ -8,7 +8,7 @@
 TileMap MapEditor::MapData;
 
 void MapEditor::SetTile(Dim col, Dim row, Index index)
-{MapData[row][col] = index; }
+{ MapData[row][col] = index; }
 
 Index MapEditor::GetTile(Dim col, Dim row)
 { return MapData[row][col]; }

@@ -15,48 +15,64 @@ bool mouse_down=false; //bool to check if i hold down the the left click
 
 void myInput() {
 	SDL_Event event;
-	SDL_PollEvent(&event);
-	switch (event.type) {
-	case SDL_MOUSEMOTION:
-		if (mouse_down) { // if i am holding down the left click button and i am moving it then scroll..
-			SDL_GetMouseState(&CameraPosX, &CameraPosY);
-			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, CameraPosX - PrevCameraPosX, CameraPosY - PrevCameraPosY);
-			PrevCameraPosX, PrevCameraPosY = CameraPosX, CameraPosY;
-		}
-		break;
-	case SDL_MOUSEBUTTONDOWN:
-		if (event.button.button == SDL_BUTTON_LEFT) {
-			mouse_down = true; // i'am holding it down so set it true
-		}
-		break;
-	case SDL_MOUSEBUTTONUP:
-		if (event.button.button == SDL_BUTTON_LEFT){
-			mouse_down = false; // i realesed it
-		}
-		break;
-	case SDL_KEYDOWN:
-		switch (event.key.keysym.sym) {
-		case SDLK_DOWN:
-			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, 0, 1);
+	while (SDL_PollEvent(&event)) {
+		switch (event.type) {
+		case SDL_MOUSEMOTION:
+			if (mouse_down) { // if i am holding down the left click button and i am moving it then scroll..
+				int offsetX = 0, offsetY = 0;
+				SDL_GetMouseState(&CameraPosX, &CameraPosY);
+				if (CameraPosX - PrevCameraPosX > 0) offsetX = 1;
+				else if (CameraPosX - PrevCameraPosX < 0) offsetX = -1;
+
+				if (CameraPosY - PrevCameraPosY > 0) offsetY = 1;
+				else if (CameraPosY - PrevCameraPosY < 0) offsetY = -1;
+
+				GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, offsetX, offsetY);
+				PrevCameraPosX, PrevCameraPosY = CameraPosX, CameraPosY;
+			}
 			break;
-		case SDLK_UP:
-			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, 0, -1);
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.button.button == SDL_BUTTON_LEFT) {
+				mouse_down = true; // i'am holding it down so set it true
+			}
 			break;
-		case SDLK_LEFT:
-			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, -1, 0);
+		case SDL_MOUSEBUTTONUP:
+			if (event.button.button == SDL_BUTTON_LEFT){
+				mouse_down = false; // i realesed it
+			}
 			break;
-		case SDLK_RIGHT:
-			GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, 1, 0);
+		case SDL_KEYDOWN:
+			switch (event.key.keysym.sym) {
+			case SDLK_DOWN:
+				GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, 0, 1);
+				break;
+			case SDLK_UP:
+				GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, 0, -1);
+				break;
+			case SDLK_LEFT:
+				GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, -1, 0);
+				break;
+			case SDLK_RIGHT:
+				GgameWindow.ScrollWithBoundsCheck(&ViewWIndowR, 1, 0);
+				break;
+			case SDLK_HOME:
+				ViewWIndowR.x = 0;
+				ViewWIndowR.y = 0;
+				break;
+			case SDLK_END:
+				ViewWIndowR.x = MUL_TILE_WIDTH(Geditor.GetMapData()->at(0).size()) - ViewWIndowR.w;
+				ViewWIndowR.y = MUL_TILE_HEIGHT(Geditor.GetMapData()->size()) - ViewWIndowR.h;
+				break;
+			default:
+				break;
+			}
+			break;
+		case SDL_QUIT:
+			is_running = false;
 			break;
 		default:
 			break;
 		}
-		break;
-	case SDL_QUIT:
-		is_running = false;
-		break;
-	default:
-		break;
 	}
 }
 
