@@ -114,7 +114,7 @@ void DisplayGrid(const Rect& viewWin, GridIndex* grid, Dim tileCols /*SDL_Render
 			for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
 				for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem)
 
-					if (*gridBlock++ && GRID_SOLID_TILE) {
+					if (*gridBlock++ & GRID_SOLID_TILE) {
 						auto x = sx + colElem * 4;//MUL_GRID_ELEMENT_WIDTH(colElem);
 						auto y = sy + rowElem * 4;//MUL_GRID_ELEMENT_HEIGHT(rowElem);
 						auto w = GRID_ELEMENT_WIDTH - 1;
