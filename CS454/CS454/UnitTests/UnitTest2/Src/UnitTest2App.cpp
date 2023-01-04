@@ -130,7 +130,7 @@ void DisplayGrid(const Rect& viewWin, GridIndex* grid, Dim tileCols /*SDL_Render
 		}
 }
 
-GridIndex mygrid[21*42*100];
+GridIndex mygrid[21*42];
 
 void myRender() {
 	SDL_RenderClear(myrenderer);
