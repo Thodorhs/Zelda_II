@@ -1,7 +1,7 @@
-#include "../Bin/UnitTest1App.h"
+#include "../../../Engine/Include/ZeldaApp.h"
 
 int main() {
-	UnitTest1App App;
+	ZeldaApp App;
 	App.Initialise();
 	App.Run();
 

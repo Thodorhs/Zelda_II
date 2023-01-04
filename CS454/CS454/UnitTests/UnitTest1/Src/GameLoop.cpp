@@ -1,4 +1,4 @@
-#include "../Bin/App.h"
+#include "../../../Engine/Include/App.h"
 
 void app::Game::MainLoop(void) {
 	while (!IsFinished()) MainLoopIteration();

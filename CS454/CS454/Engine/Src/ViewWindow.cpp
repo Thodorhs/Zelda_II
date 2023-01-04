@@ -17,7 +17,7 @@ void ViewWindow::PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL
 }
 
 
-void ViewWindow::TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer) {
+void ViewWindow::TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer) {	
 	if (viewPosCached.x != viewWin.x || viewPosCached.y != viewWin.y) {
 		auto startCol = DIV_TILE_WIDTH(viewWin.x);
 		auto startRow = DIV_TILE_HEIGHT(viewWin.y);
@@ -31,51 +31,42 @@ void ViewWindow::TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rec
 		SDL_SetRenderTarget(myrenderer, RenderTextureTarget); //Setting the target of SDL_RenderCopy to be the texture
 
 		for (unsigned short row = startRow; row <= endRow; ++row)
-			for (unsigned short col = startCol; col <= endCol; ++col)
+			for (unsigned short col = startCol; col <= endCol; ++col) 
 				PutTile(MUL_TILE_WIDTH(col - startCol), MUL_TILE_HEIGHT(row - startRow), (*map)[row][col], myrenderer, Tileset);
-
+		
 		SDL_SetRenderTarget(myrenderer, NULL); //Unsetting the target of SDL_RenderCopy (now the target is the screen render)
 	}
 
+	PTdstrect.x = 0;
+	PTdstrect.y = 0;
+	PTdstrect.h = 240;
+	PTdstrect.w = 240;
+	SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, &PTdstrect); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
 
-	SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, NULL); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
+	//SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, NULL); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
 }
 
 
-int ViewWindow::GetMapPixelWidth()
-{
-	return MapPixelWidth;
-}
+int ViewWindow::GetMapPixelWidth() 
+{ return MapPixelWidth; }
 
-int ViewWindow::GetMapPixelHeight()
-{
-	return MapPixelHeight;
-}
+int ViewWindow::GetMapPixelHeight() 
+{ return MapPixelHeight; }
 
 void ViewWindow::SetMapPixelWidth(int y)
-{
-	MapPixelWidth = y;
-}
+{ MapPixelWidth = y; }
 
 void ViewWindow::SetMapPixelHeight(int x)
-{
-	MapPixelHeight = x;
-}
+{ MapPixelHeight = x; }
 
-void ViewWindow::Scroll(Rect* viewWin, int dx, int dy)
-{
-	viewWin->x += dx; viewWin->y += dy;
-}
+void ViewWindow::Scroll(Rect* viewWin, int dx, int dy) 
+{viewWin->x += dx; viewWin->y += dy;}
 
-bool ViewWindow::CanScrollHoriz(const Rect& viewWin, int dx)
-{
-	return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth();
-}
+bool ViewWindow::CanScrollHoriz(const Rect& viewWin, int dx) 
+{return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth();}
 
-bool ViewWindow::CanScrollVert(const Rect& viewWin, int dy)
-{
-	return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight();
-}
+bool ViewWindow::CanScrollVert(const Rect& viewWin, int dy) 
+{ return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight();}
 
 void ViewWindow::FilterScrollDistance(
 	int viewStartCoord, // x or y

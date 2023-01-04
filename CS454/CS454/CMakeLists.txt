@@ -9,3 +9,4 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 # Include sub-projects.
 add_subdirectory ("Engine")
 add_subdirectory ("UnitTests/UnitTest1")
+add_subdirectory ("UnitTests/UnitTest2")

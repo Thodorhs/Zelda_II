@@ -1,14 +1,7 @@
 #pragma once
-#include <string>
-#include <vector>
-#include <sstream>
-
 typedef unsigned short Index;
 typedef unsigned short Dim;
-typedef std::vector<std::vector<Index>> TileMap;
 
-
-/* START UNIT 2*/
 #define GRID_THIN_AIR_MASK 0x0000 // element is ignored
 #define GRID_LEFT_SOLID_MASK 0x0001 // bit 0
 #define GRID_RIGHT_SOLID_MASK 0x0002 // bit 1
@@ -47,24 +40,3 @@ void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index);
 #define DIV_GRID_ELEMENT_HEIGHT(i) ((i)>>2)
 #define MUL_GRID_ELEMENT_WIDTH(i) ((i)<<2)
 #define MUL_GRID_ELEMENT_HEIGHT(i) ((i)<<2)
-
-
-/* END UNIT 2*/
-
-class MapEditor {
-	private:
-		static TileMap MapData;
-
-	public:
-		void SetTile(Dim col, Dim row, Index index);
-		Index GetTile(Dim col, Dim row);
-
-		void WriteBinMap(const TileMap* m, FILE* fp);
-		bool ReadBinMap(TileMap* m, FILE* fp);
-
-		void WriteTextMap(const TileMap*, FILE* fp);
-		void ReadTextMap(const std::string path);
-
-		void print(void);
-		TileMap* GetMapData(void);
-};

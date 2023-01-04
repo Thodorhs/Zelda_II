@@ -1,4 +1,4 @@
-#include "../Bin/ViewWindow.h"
+#include "../../../Engine/Include/ViewWindow.h"
 
 SDL_Texture* RenderTextureTarget;
 Point viewPosCached{ -1, -1 };
