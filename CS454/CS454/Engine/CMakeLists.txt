@@ -8,7 +8,7 @@ find_package(SDL2_image REQUIRED)
 
 
 include_directories("Src/MapEditor.cpp" "Src/GameLoop.cpp" "Include/App.h" "Include/MapEditor.h" "Src/ZeldaApp.cpp" "Include/ZeldaApp.h" "Src/ViewWindow.cpp" "Include/ViewWindow.h")
-add_executable(Zelda_II "Src/MapEditor.cpp" "Src/main.cpp" "Src/GameLoop.cpp" "Include/App.h" "Include/MapEditor.h" "Src/ZeldaApp.cpp" "Include/ZeldaApp.h" "Src/ViewWindow.cpp" "Include/ViewWindow.h"  )
+add_executable(Zelda_II "Src/MapEditor.cpp" "Src/main.cpp" "Src/GameLoop.cpp" "Include/App.h" "Include/MapEditor.h" "Src/ZeldaApp.cpp" "Include/ZeldaApp.h" "Src/ViewWindow.cpp" "Include/ViewWindow.h")
 
 target_link_libraries(Zelda_II  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image)
 
