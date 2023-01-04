@@ -1,5 +1,5 @@
-#include "../Include/ZeldaApp.h"
-#include "../Include/ViewWindow.h"
+#include "../Bin/UnitTest1App.h"
+#include "../Bin/ViewWindow.h"
 #include <filesystem>
 
 MapEditor Geditor;
@@ -8,7 +8,6 @@ SDL_Surface* ImgSurface;
 SDL_Renderer* myrenderer;
 SDL_Window* Gwindow;
 Rect ViewWIndowR = { 0,0,320,240 };
-//GridIndex* mygrid;
 
 int CameraPosX, CameraPosY;
 int PrevCameraPosX = 0, PrevCameraPosY = 0;
@@ -78,11 +77,15 @@ void myInput() {
 	}
 }
 
-bool IsTileIndexAssumedEmpty(Index index) { return false; }
-/*
-void ComputeTileGridBlocks1(MapEditor Geditor, GridIndex* grid) {
-	for (auto row = 0; row < MAX_HEIGHT; ++row)
-		for (auto col = 0; col < MAX_WIDTH; ++col) {
+bool IsTileIndexAssumedEmpty(Index index) { 
+	if (index == 61) return false;
+	else return true;
+}
+
+
+void ComputeTileGridBlocks1(/*MapEditor Geditor, */ GridIndex * grid) {
+	for (auto row = 0; row < 42; ++row) //HEIGHT
+		for (auto col = 0; col < 21; ++col) { //WIDTH
 			memset(
 				grid,
 				IsTileIndexAssumedEmpty(Geditor.GetTile(col, row)) ? GRID_EMPTY_TILE : GRID_SOLID_TILE,
@@ -90,44 +93,57 @@ void ComputeTileGridBlocks1(MapEditor Geditor, GridIndex* grid) {
 			);
 			grid += GRID_ELEMENTS_PER_TILE;
 		}
-}*/
+}
 
-/*template <typename Tfunc>
-void DisplayGrid(Bitmap dest, const Rect& viewWin, GridIndex* grid, Dim tileCols, const Tfunc& display_f) {
+GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* grid) {
+	return grid + (rowTile * tileCols + colTile) * GRID_BLOCK_SIZEOF;
+}
+
+
+void DisplayGrid(const Rect& viewWin, GridIndex* grid, Dim tileCols /*SDL_Renderer myRenderer*/) {
 	auto startCol = DIV_TILE_WIDTH(viewWin.x);
 	auto startRow = DIV_TILE_HEIGHT(viewWin.y);
 	auto endCol = DIV_TILE_WIDTH(viewWin.x + viewWin.w - 1);
 	auto endRow = DIV_TILE_HEIGHT(viewWin.y + viewWin.h - 1);
 	for (Dim rowTile = startRow; rowTile <= endRow; ++rowTile)
 		for (Dim colTile = startCol; colTile <= endCol; ++colTile) {
+
 			auto sx = MUL_TILE_WIDTH(colTile - startCol);
 			auto sy = MUL_TILE_HEIGHT(rowTile - startRow);
 			auto* gridBlock = GetGridTileBlock(rowTile, colTile, tileCols, grid);
 			for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
 				for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem)
-					if (*gridBlock++ & GRID_SOLID_TILE) {
-						auto x = sx + MUL_GRID_ELEMENT_WIDTH(colElem);
-						auto y = sy + MUL_GRID_ELEMENT_HEIGHT(rowElem);
+
+					if (*gridBlock++ && GRID_SOLID_TILE) {
+						auto x = sx + colElem * 4;//MUL_GRID_ELEMENT_WIDTH(colElem);
+						auto y = sy + rowElem * 4;//MUL_GRID_ELEMENT_HEIGHT(rowElem);
 						auto w = GRID_ELEMENT_WIDTH - 1;
 						auto h = GRID_ELEMENT_HEIGHT - 1;
-						display_f(dest, x, y, w, h);
+						SDL_Rect gridRect;
+						gridRect.x = x;
+						gridRect.y = y;
+						gridRect.w = w;
+						gridRect.h = h;
+						SDL_RenderDrawRect(myrenderer, &gridRect);
 					}
 		}
-}*/
+}
+
+GridIndex mygrid[21*42];
 
 void myRender() {
 	SDL_RenderClear(myrenderer);
 	GgameWindow.TileTerrainDisplay(Geditor.GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, ImgSurface, myrenderer);
-	//ComputeTileGridBlocks1(Geditor, mygrid);
-
+	DisplayGrid(ViewWIndowR, mygrid, 21 /*SDL_Renderer myRenderer*/);
 	SDL_RenderPresent(myrenderer);
+	
 }
 
 bool myDone() {
 	return is_running;
 }
 
-void ZeldaApp::Initialise(void) {
+void UnitTest1App::Initialise(void) {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
 		std::cout << "Subsystems Initialised!..." << std::endl;
@@ -138,7 +154,7 @@ void ZeldaApp::Initialise(void) {
 		myrenderer = SDL_CreateRenderer(Gwindow, -1, 0);
 		if (myrenderer)
 		{
-			SDL_SetRenderDrawColor(myrenderer, 0, 0, 0, 0);
+			SDL_SetRenderDrawColor(myrenderer, 255, 0, 0, 0);
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
@@ -147,7 +163,7 @@ void ZeldaApp::Initialise(void) {
 	std::string find_first_part_path = cwd.string();
 	size_t pos = find_first_part_path.find("out");
 	std::string half_path = find_first_part_path.substr(0, pos);
-	std::string full_asset_path = half_path + "Engine\\Assets";
+	std::string full_asset_path = half_path + "UnitTests\\UnitTest1\\UnitTest1Media";
 
 	Geditor = MapEditor();
 	GgameWindow = ViewWindow();
@@ -162,20 +178,22 @@ void ZeldaApp::Initialise(void) {
 	game.SetRender(myRender);
 	game.SetDone(myDone);
 	is_running = true;
+
+	ComputeTileGridBlocks1(mygrid);
 }
 
-void ZeldaApp::Load() {
+void UnitTest1App::Load() {
 
 }
 
-void ZeldaApp::Run() {
+void UnitTest1App::Run() {
 	game.MainLoop();
 }
 
-void ZeldaApp::RunIteration() {
+void UnitTest1App::RunIteration() {
 	game.MainLoopIteration();
 }
 
-void ZeldaApp::Clear() {
+void UnitTest1App::Clear() {
 
 }
