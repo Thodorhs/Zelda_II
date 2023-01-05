@@ -181,6 +181,7 @@ void ZeldaApp::Initialise(void) {
 	is_running = true;
 
 	ComputeTileGridBlocks1(mygrid);
+	std::cout << "TEST";
 }
 
 void ZeldaApp::Load() {
