@@ -2,9 +2,17 @@
 #include "SDL.h"
 #include <iostream>
 #include <set>
+#include <cassert>
+#include <Functional>
+#include "../../../Engine/Include/MapEditor.h"
 
 typedef unsigned short Index;
 typedef unsigned short Dim;
+
+#define MAX_WIDTH 21
+#define MAX_HEIGHT 42
+#define TILE_WIDTH 16
+#define TILE_HEIGHT 16
 
 #define GRID_THIN_AIR_MASK 0x0000 // element is ignored
 #define GRID_LEFT_SOLID_MASK 0x0001 // bit 0
@@ -54,8 +62,63 @@ static GridMap grid; // example of a global static grid
 //GridCompute1
 void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index);
 bool IsTileIndexAssumedEmpty(Index index);
-void ComputeTileGridBlocks1(Index (&MapGetTile)(Dim, Dim), GridIndex* grid);
+void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid);
+
+////GridCompute2
+
+//VGeneral definitionsV
+typedef SDL_Surface Bitmap;
+typedef unsigned char* PixelMemory;
+
+using BitmapAccessFunctor = std::function<void(PixelMemory*)>;
+void BitmapAccessPixels(Bitmap bmp, const BitmapAccessFunctor& f);
+//end-General definitions-end
+
+class TileColorsHolder final {
+private:
+	std::set<Index> indices;
+	std::set<SDL_Color> colors;
+public:
+	void Insert(Bitmap bmp, Index index) {
+		if (indices.find(index) == indices.end()) {
+			indices.insert(index);
+			BitmapAccessPixels(bmp, [this](PixelMemory mem)
+				{ colors.insert(GetPixel32(mem)); });
+		}
+	}
+	bool In(SDL_Color c) const
+	{
+		return colors.find(c) != colors.end();
+	}
+};
+
+static TileColorsHolder emptyTileColors;
+bool IsTileColorEmpty(SDL_Color c);
+
+
+SDL_Color GetPixel32(PixelMemory mem);
+bool ComputeIsGridIndexEmpty(Bitmap gridElement, SDL_Color transColor, byte solidThreshold);
+
+void ComputeGridBlock(
+GridIndex*& grid,
+	Index index,
+	Bitmap tileElem,
+	Bitmap gridElem,
+	Bitmap tileSet,
+	SDL_Color transColor,
+	byte solidThreshold
+);
+
+void ComputeTileGridBlocks2(
+	const TileMap* map,
+	GridIndex* grid,
+	Bitmap tileSet,
+	SDL_Color transColor,
+	byte solidThreshold
+);
+
+
 
 //Display Grid
 GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* grid);
-void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols ,SDL_Renderer* myrenderer);
+void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols, SDL_Renderer* myrenderer);
