@@ -1,11 +1,10 @@
 #include "../../../Engine/Include/GridCompute.h"
-#include <iostream>
 
+//ComputeGrid1
 bool IsTileIndexAssumedEmpty(Index index) {
 	if (index == 61) return false;
 	else return true;
 }
-
 
 void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid) {
 	for (auto row = 0; row < 42; ++row) //HEIGHT
@@ -18,6 +17,43 @@ void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid) {
 			grid += GRID_ELEMENTS_PER_TILE;
 		}
 }
+
+/*bool IsTileColorEmpty(SDL_Color c)
+{
+	return emptyTileColors.In(c);
+} // return false to disable
+*/
+//ComputeGrid2
+/*
+void ComputeTileGridBlocks2(
+	const TileMap* map,
+	GridIndex* grid,
+	Bitmap tileSet,
+	Color transColor,
+	byte solidThreshold
+) {
+	auto tileElem = BitmapCreate(TILE_WIDTH, TILE_HEIGHT);
+	auto gridElem = BitmapCreate(GRID_ELEMENT_WIDTH, GRID_ELEMENT_HEIGHT);
+	for (auto row = 0; row < MAX_HEIGHT; ++row)
+		for (auto col = 0; col < MAX_WIDTH; ++col) {
+			auto index = GetTile(map, col, row);
+			PutTile(tileElem, 0, 0, tileSet, index);
+			if (IsTileIndexAssumedEmpty(index)) {
+				emptyTileColors.Insert(tileElem, index); // assume tile colors to be empty
+				memset(grid, GRID_EMPTY_TILE, GRID_ELEMENTS_PER_TILE);
+				grid += GRID_ELEMENTS_PER_TILE;
+			}
+			else
+				ComputeGridBlock(// auto increments grid as T*& 
+					grid, index, tileElem, gridElem,
+					tileSet, transColor, solidThreshold
+				);
+		}
+	BitmapDestroy(tileElem);
+	BitmapDestroy(gridElem);
+}*/
+
+
 
 GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* grid) {
 	return grid + (rowTile * tileCols + colTile) * GRID_BLOCK_SIZEOF;

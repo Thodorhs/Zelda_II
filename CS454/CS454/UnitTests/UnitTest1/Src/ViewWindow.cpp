@@ -40,7 +40,7 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 	PTdstrect.x = 0;
 	PTdstrect.y = 0;
 	PTdstrect.h = 240;
-	PTdstrect.w = 240;
+	PTdstrect.w = 320;
 	SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, &PTdstrect); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
 
 	//SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, NULL); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window

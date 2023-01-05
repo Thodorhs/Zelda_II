@@ -77,12 +77,12 @@ void myInput() {
 }
 
 
-GridIndex mygrid[21*42*100];
+GridIndex mygrid[21*42*GRID_ELEMENTS_PER_TILE];
 
 void myRender() {	
 	SDL_RenderClear(GameRenderer);
 	TileTerrainDisplay(GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, TileSetSurface, GameRenderer);
-	DisplayGrid(ViewWIndowR, mygrid, 21 , GameRenderer);
+	DisplayGrid(ViewWIndowR, mygrid, 21, GameRenderer);
 	SDL_RenderPresent(GameRenderer);
 }
 
@@ -115,7 +115,6 @@ void ZeldaApp::Initialise(void) {
 	ReadTextMap(full_asset_path + "\\map1_Kachelebene 1.csv");
 	TileSetSurface = IMG_Load((full_asset_path + "\\overworld_tileset_grass.png").c_str());
 	
-	print();
 	game.SetInput(myInput);
 	game.SetRender(myRender);
 	game.SetDone(myDone);

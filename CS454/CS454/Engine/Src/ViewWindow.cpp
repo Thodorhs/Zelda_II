@@ -31,36 +31,46 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 		SDL_SetRenderTarget(myrenderer, RenderTextureTarget); //Setting the target of SDL_RenderCopy to be the texture
 
 		for (unsigned short row = startRow; row <= endRow; ++row)
-			for (unsigned short col = startCol; col <= endCol; ++col) 
+			for (unsigned short col = startCol; col <= endCol; ++col)
 				PutTile(MUL_TILE_WIDTH(col - startCol), MUL_TILE_HEIGHT(row - startRow), (*map)[row][col], myrenderer, Tileset);
-		
+
 		SDL_SetRenderTarget(myrenderer, NULL); //Unsetting the target of SDL_RenderCopy (now the target is the screen render)
 	}
 
 	PTdstrect.x = 0;
 	PTdstrect.y = 0;
 	PTdstrect.h = 240;
-	PTdstrect.w = 240;
+	PTdstrect.w = 320;
 	SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, &PTdstrect); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
 
 	//SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, NULL); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
 }
 
 
-int GetMapPixelWidth() 
-{ return 336; }
+int GetMapPixelWidth()
+{
+	return 336;
+}
 
-int GetMapPixelHeight() 
-{ return 672; }
+int GetMapPixelHeight()
+{
+	return 672;
+}
 
 void Scroll(SDL_Rect* viewWin, int dx, int dy)
-{viewWin->x += dx; viewWin->y += dy;}
+{
+	viewWin->x += dx; viewWin->y += dy;
+}
 
 bool CanScrollHoriz(const SDL_Rect& viewWin, int dx)
-{return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth();}
+{
+	return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth();
+}
 
 bool CanScrollVert(const SDL_Rect& viewWin, int dy)
-{ return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight();}
+{
+	return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight();
+}
 
 void FilterScrollDistance(
 	int viewStartCoord, // x or y
