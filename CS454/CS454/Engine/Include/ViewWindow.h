@@ -11,41 +11,23 @@
 #define MOD_TILE_WIDTH(i) ((i)&15)
 #define MOD_TILE_HEIGHT(i)((i)&15)
 
-
-struct Rect { int x, y, w, h; };
 struct Point { int x, y; };
 
-class ViewWindow {
-private:
-	int MapPixelWidth;
-	int MapPixelHeight;
+void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer);
+void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);
 
-public:
-	float CameraPosX;
-	float CameraPosY;
+//Scrolling
+int GetMapPixelWidth(void);
+int GetMapPixelHeight(void);
+void Scroll(SDL_Rect* viewWin, int dx, int dy);
+bool CanScrollHoriz(const SDL_Rect& viewWin, int dx);
+bool CanScrollVert(const SDL_Rect& viewWin, int dy);
 
-	int MouseX;
-	int MouseY;
-
-	void TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer);
-	void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);
-
-	//Scrolling
-	int GetMapPixelWidth(void);
-	int GetMapPixelHeight(void);
-	void SetMapPixelWidth(int);
-	void SetMapPixelHeight(int);
-	void Scroll(Rect* viewWin, int dx, int dy);
-	bool CanScrollHoriz(const Rect& viewWin, int dx);
-	bool CanScrollVert(const Rect& viewWin, int dy);
-
-	static void FilterScrollDistance(
-		int viewStartCoord, // x or y
-		int viewSize, // w or h
-		int* d, // dx or dy
-		int maxMapSize // w or h 
-	);
-	void FilterScroll(const Rect& viewWin, int* dx, int* dy);
-	void ScrollWithBoundsCheck(Rect* viewWin, int dx, int dy);
-
-};
+static void FilterScrollDistance(
+	int viewStartCoord, // x or y
+	int viewSize, // w or h
+	int* d, // dx or dy
+	int maxMapSize // w or h 
+);
+void FilterScroll(const SDL_Rect& viewWin, int* dx, int* dy);
+void ScrollWithBoundsCheck(SDL_Rect* viewWin, int dx, int dy);

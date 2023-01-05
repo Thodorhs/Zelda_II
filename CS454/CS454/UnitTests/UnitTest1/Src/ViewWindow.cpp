@@ -5,7 +5,7 @@ Point viewPosCached{ -1, -1 };
 SDL_Rect PTsrcrect;
 SDL_Rect PTdstrect;
 
-void ViewWindow::PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
+void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
 	PTsrcrect.x = MUL_TILE_WIDTH(tile % 12);
 	PTsrcrect.y = MUL_TILE_HEIGHT(tile / 12);
 	PTsrcrect.h = PTsrcrect.w = 16;
@@ -17,7 +17,7 @@ void ViewWindow::PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL
 }
 
 
-void ViewWindow::TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer) {	
+void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer) {
 	if (viewPosCached.x != viewWin.x || viewPosCached.y != viewWin.y) {
 		auto startCol = DIV_TILE_WIDTH(viewWin.x);
 		auto startRow = DIV_TILE_HEIGHT(viewWin.y);
@@ -47,28 +47,22 @@ void ViewWindow::TileTerrainDisplay(TileMap* map, const Rect& viewWin, const Rec
 }
 
 
-int ViewWindow::GetMapPixelWidth() 
-{ return MapPixelWidth; }
+int GetMapPixelWidth() 
+{ return 336; }
 
-int ViewWindow::GetMapPixelHeight() 
-{ return MapPixelHeight; }
+int GetMapPixelHeight() 
+{ return 672; }
 
-void ViewWindow::SetMapPixelWidth(int y)
-{ MapPixelWidth = y; }
-
-void ViewWindow::SetMapPixelHeight(int x)
-{ MapPixelHeight = x; }
-
-void ViewWindow::Scroll(Rect* viewWin, int dx, int dy) 
+void Scroll(SDL_Rect* viewWin, int dx, int dy)
 {viewWin->x += dx; viewWin->y += dy;}
 
-bool ViewWindow::CanScrollHoriz(const Rect& viewWin, int dx) 
+bool CanScrollHoriz(const SDL_Rect& viewWin, int dx)
 {return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth();}
 
-bool ViewWindow::CanScrollVert(const Rect& viewWin, int dy) 
+bool CanScrollVert(const SDL_Rect& viewWin, int dy)
 { return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight();}
 
-void ViewWindow::FilterScrollDistance(
+void FilterScrollDistance(
 	int viewStartCoord, // x or y
 	int viewSize, // w or h
 	int* d, // dx or dy
@@ -85,12 +79,12 @@ void ViewWindow::FilterScrollDistance(
 				*d = maxMapSize - (viewStartCoord + viewSize);
 }
 
-void ViewWindow::FilterScroll(const Rect& viewWin, int* dx, int* dy) {
+void FilterScroll(const SDL_Rect& viewWin, int* dx, int* dy) {
 	FilterScrollDistance(viewWin.x, viewWin.w, dx, GetMapPixelWidth());
 	FilterScrollDistance(viewWin.y, viewWin.h, dy, GetMapPixelHeight());
 }
 
-void ViewWindow::ScrollWithBoundsCheck(Rect* viewWin, int dx, int dy) {
+void ScrollWithBoundsCheck(SDL_Rect* viewWin, int dx, int dy) {
 	FilterScroll(*viewWin, &dx, &dy);
 	Scroll(viewWin, dx, dy);
 }

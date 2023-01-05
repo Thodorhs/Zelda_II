@@ -1,4 +1,6 @@
 #pragma once
+#include "SDL.h"
+
 typedef unsigned short Index;
 typedef unsigned short Dim;
 
@@ -31,7 +33,6 @@ using GridIndex = byte;
 
 typedef GridIndex GridMap[GRID_MAX_WIDTH][GRID_MAX_HEIGHT];
 static GridMap grid; // example of a global static grid
-void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index);
 
 #define GRID_BLOCK_SIZEOF \
 (GRID_ELEMENTS_PER_TILE * sizeof(GridIndex))
@@ -40,3 +41,16 @@ void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index);
 #define DIV_GRID_ELEMENT_HEIGHT(i) ((i)>>2)
 #define MUL_GRID_ELEMENT_WIDTH(i) ((i)<<2)
 #define MUL_GRID_ELEMENT_HEIGHT(i) ((i)<<2)
+
+#define MUL_TILE_WIDTH(i) ((i)<<4)
+#define MUL_TILE_HEIGHT(i)((i)<<4)
+#define DIV_TILE_WIDTH(i) ((i)>>4)
+#define DIV_TILE_HEIGHT(i)((i)>>4)
+#define MOD_TILE_WIDTH(i) ((i)&15)
+#define MOD_TILE_HEIGHT(i)((i)&15)
+
+void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index);
+bool IsTileIndexAssumedEmpty(Index index);
+void ComputeTileGridBlocks1(Index (&MapGetTile)(Dim, Dim), GridIndex* grid);
+GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* grid);
+void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols ,SDL_Renderer* myrenderer);
