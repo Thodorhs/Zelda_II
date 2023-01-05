@@ -13,6 +13,8 @@ int PrevCameraPosX = 0, PrevCameraPosY = 0;
 bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
+GridIndex mygrid[21 * 42 * GRID_ELEMENTS_PER_TILE];
+
 void myInput() {
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
@@ -76,8 +78,6 @@ void myInput() {
 	}
 }
 
-
-GridIndex mygrid[21*42*GRID_ELEMENTS_PER_TILE];
 
 void myRender() {	
 	SDL_RenderClear(GameRenderer);

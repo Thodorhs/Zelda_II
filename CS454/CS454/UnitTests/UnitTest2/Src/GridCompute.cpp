@@ -70,7 +70,7 @@ void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols, SDL_Renderer* 
 
 			auto sx = MUL_TILE_WIDTH(colTile - startCol);
 			auto sy = MUL_TILE_HEIGHT(rowTile - startRow);
-			auto* gridBlock = GetGridTileBlock(rowTile, colTile, tileCols, grid);
+			auto* gridBlock = GetGridTileBlock(colTile, rowTile, tileCols, grid);
 			for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
 				for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem)
 

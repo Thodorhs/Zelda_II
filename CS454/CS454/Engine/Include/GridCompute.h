@@ -57,7 +57,7 @@ bool IsTileIndexAssumedEmpty(Index index);
 void ComputeTileGridBlocks1(Index (&MapGetTile)(Dim, Dim), GridIndex* grid);
 
 ////GridCompute2
-
+/*
 class TileColorsHolder final {
 private:
 	std::set<Index> indices;
@@ -99,7 +99,7 @@ void ComputeTileGridBlocks2(
 	byte solidThreshold
 );
 
-
+*/
 
 //Display Grid
 GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* grid);
