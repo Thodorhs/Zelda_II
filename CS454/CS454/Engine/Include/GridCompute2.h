@@ -68,7 +68,7 @@ void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid);
 
 //VGeneral definitionsV
 typedef SDL_Surface Bitmap;
-typedef unsigned char* PixelMemory;
+typedef uint32_t *PixelMemory;
 
 using BitmapAccessFunctor = std::function<void(PixelMemory*)>;
 void BitmapAccessPixels(Bitmap bmp, const BitmapAccessFunctor& f);
@@ -82,8 +82,11 @@ public:
 	void Insert(Bitmap bmp, Index index) {
 		if (indices.find(index) == indices.end()) {
 			indices.insert(index);
-			BitmapAccessPixels(bmp, [this](PixelMemory mem)
-				{ colors.insert(GetPixel32(mem)); });
+			/*BitmapAccessPixels(
+				bmp,
+				[this](PixelMemory mem)
+				{ colors.insert(GetPixel32(mem)); }
+			);*/
 		}
 	}
 	bool In(SDL_Color c) const
