@@ -120,17 +120,10 @@ void ZeldaApp::Initialise(void) {
 	is_running = true;
 
 	//ComputeTileGridBlocks1(GetTile, mygrid);
-	/*void ComputeTileGridBlocks2(
-		const TileMap * map,
-		GridIndex * grid,
-		Bitmap tileSet,
-		SDL_Color transColor,
-		byte solidThreshold
-	)*/
 	SDL_Color testcolor{};
-	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
+	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 10, 10, 10, 100;
 
-	ComputeTileGridBlocks2(GetMapData(), mygrid, *(TileSetSurface), testcolor, 50);
+	ComputeTileGridBlocks2(GetMapData(), mygrid, *(TileSetSurface), testcolor, 0);
 }	
 
 void ZeldaApp::Load() {
