@@ -78,7 +78,6 @@ void myInput() {
 	}
 }
 
-
 void myRender() {	
 	SDL_RenderClear(GameRenderer);
 	TileTerrainDisplay(GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, TileSetSurface, GameRenderer);
@@ -120,7 +119,18 @@ void ZeldaApp::Initialise(void) {
 	game.SetDone(myDone);
 	is_running = true;
 
-	ComputeTileGridBlocks1(GetTile, mygrid);
+	//ComputeTileGridBlocks1(GetTile, mygrid);
+	/*void ComputeTileGridBlocks2(
+		const TileMap * map,
+		GridIndex * grid,
+		Bitmap tileSet,
+		SDL_Color transColor,
+		byte solidThreshold
+	)*/
+	SDL_Color testcolor{};
+	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
+
+	ComputeTileGridBlocks2(GetMapData(), mygrid, *(TileSetSurface), testcolor, 50);
 }	
 
 void ZeldaApp::Load() {

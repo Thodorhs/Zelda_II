@@ -68,40 +68,42 @@ void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid);
 
 //VGeneral definitionsV
 typedef SDL_Surface Bitmap;
-typedef uint32_t *PixelMemory;
+typedef uint32_t* PixelMemory;
+typedef uint32_t color;
 
-using BitmapAccessFunctor = std::function<void(PixelMemory*)>;
+uint32_t convert_SDLcolor_to_u32(SDL_Color c);
+
+using BitmapAccessFunctor = std::function<void(PixelMemory, const SDL_PixelFormat* format)>;
 void BitmapAccessPixels(Bitmap bmp, const BitmapAccessFunctor& f);
 //end-General definitions-end
+
+SDL_Color GetPixel32(PixelMemory pixel, const SDL_PixelFormat* format);
 
 class TileColorsHolder final {
 private:
 	std::set<Index> indices;
-	std::set<SDL_Color> colors;
+	std::set<color> colors;
 public:
 	void Insert(Bitmap bmp, Index index) {
 		if (indices.find(index) == indices.end()) {
 			indices.insert(index);
-			/*BitmapAccessPixels(
+			BitmapAccessPixels(
 				bmp,
-				[this](PixelMemory mem)
-				{ colors.insert(GetPixel32(mem)); }
-			);*/
+				[this](PixelMemory pixel, const SDL_PixelFormat* format)
+				{ colors.insert(convert_SDLcolor_to_u32(GetPixel32(pixel, format))); }
+			);
 		}
 	}
 	bool In(SDL_Color c) const
 	{
-		return colors.find(c) != colors.end();
+		return colors.find(convert_SDLcolor_to_u32(c)) != colors.end();
 	}
 };
 
 static TileColorsHolder emptyTileColors;
 bool IsTileColorEmpty(SDL_Color c);
 
-
-SDL_Color GetPixel32(PixelMemory mem);
 bool ComputeIsGridIndexEmpty(Bitmap gridElement, SDL_Color transColor, byte solidThreshold);
-
 void ComputeGridBlock(
 GridIndex*& grid,
 	Index index,
