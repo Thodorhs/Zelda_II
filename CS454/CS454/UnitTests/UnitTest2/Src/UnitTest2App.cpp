@@ -140,5 +140,5 @@ void ZeldaApp::RunIteration() {
 }
 
 void ZeldaApp::Clear() {
-
+		
 }
