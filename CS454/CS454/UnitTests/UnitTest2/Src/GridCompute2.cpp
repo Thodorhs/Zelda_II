@@ -1,8 +1,9 @@
 #include "../../../Engine/Include/GridCompute2.h"
 
 bool IsTileColorEmpty(SDL_Color c)
-{
-	return emptyTileColors.In(c);
+{ 
+	//return emptyTileColors.In(c);
+	return false;
 } // return false to disable
 
 bool IsTileIndexAssumedEmpty(Index index) {
@@ -30,8 +31,8 @@ void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols, SDL_Renderer* 
 				for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem)
 
 					if (*gridBlock++ & GRID_SOLID_TILE) {
-						auto x = sx + colElem * 4;//MUL_GRID_ELEMENT_WIDTH(colElem);
-						auto y = sy + rowElem * 4;//MUL_GRID_ELEMENT_HEIGHT(rowElem);
+						auto x = sx + MUL_GRID_ELEMENT_WIDTH(colElem);
+						auto y = sy + MUL_GRID_ELEMENT_HEIGHT(rowElem);
 						auto w = GRID_ELEMENT_WIDTH - 1;
 						auto h = GRID_ELEMENT_HEIGHT - 1;
 						SDL_Rect gridRect;
@@ -45,13 +46,12 @@ void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols, SDL_Renderer* 
 }
 
 
-uint32_t convert_SDLcolor_to_u32(SDL_Color c){
-	uint32_t color_ui32 = (uint32_t(c.r) << 24) | (uint32_t(c.g) << 16) | (uint32_t(c.b) << 8) | uint32_t(c.a);
-	return color_ui32;
+std::string convert_SDLcolor_to_string(SDL_Color c){
+	std::string coded_color = std::to_string(c.r) + std::to_string(c.g) + std::to_string(c.b) + std::to_string(c.a);
+	return coded_color;
 }
 
 //ComputeGrid2
-
 void ComputeTileGridBlocks2(
 	const TileMap* map,
 	GridIndex* grid,
@@ -59,8 +59,9 @@ void ComputeTileGridBlocks2(
 	SDL_Color transColor,
 	byte solidThreshold
 ) {
-	Bitmap tileElem;// = BitmapCreate(TILE_WIDTH, TILE_HEIGHT);
-	Bitmap gridElem{};// = BitmapCreate(GRID_ELEMENT_WIDTH, GRID_ELEMENT_HEIGHT);
+	Bitmap tileElem = *(SDL_CreateRGBSurface(0, TILE_WIDTH, TILE_HEIGHT, 32, 0, 0, 0, 0));
+	Bitmap gridElem = *(SDL_CreateRGBSurface(0, GRID_ELEMENT_WIDTH, GRID_ELEMENT_HEIGHT, 32, 0, 0, 0, 0));
+
 	SDL_Rect tileElemRect{};
 	SDL_Rect tilesetRect{};
 
@@ -70,7 +71,7 @@ void ComputeTileGridBlocks2(
 			tilesetRect.x, tilesetRect.y, tilesetRect.h, tilesetRect.w = MUL_TILE_WIDTH(index % 12), MUL_TILE_HEIGHT(index / 12), TILE_HEIGHT, TILE_WIDTH;
 			tileElemRect.x, tileElemRect.y, tileElemRect.h, tileElemRect.w =  0, 0, TILE_HEIGHT, TILE_WIDTH;
 
-			SDL_BlitSurface(&tileSet, &tilesetRect, &tileElem, &tileElemRect);
+			SDL_BlitSurface(&tileSet, &tilesetRect, &tileElem, NULL);
 
 			if (IsTileIndexAssumedEmpty(index)) {
 				emptyTileColors.Insert(tileElem, index); // assume tile colors to be empty
@@ -83,8 +84,8 @@ void ComputeTileGridBlocks2(
 					tileSet, transColor, solidThreshold
 				);
 		}
-	//BitmapDestroy(tileElem);
-	//BitmapDestroy(gridElem);
+	SDL_FreeSurface(&tileElem);
+	SDL_FreeSurface(&gridElem);
 }
 
 
@@ -114,13 +115,14 @@ void ComputeGridBlock(
 	}
 }
 
-SDL_Color GetPixel32(PixelMemory pixel, const SDL_PixelFormat* format) {
-	SDL_Color PixelColor;
 
+SDL_Color GetPixel32(PixelMemory pixel, const SDL_PixelFormat* format) {
+	SDL_Color PixelColor{};
 	SDL_GetRGBA(*(pixel), format, &PixelColor.r, &PixelColor.g, &PixelColor.b, &PixelColor.a);
 
 	return PixelColor;
 }
+
 
 bool ComputeIsGridIndexEmpty(
 	Bitmap gridElement,
@@ -128,24 +130,29 @@ bool ComputeIsGridIndexEmpty(
 	byte solidThreshold
 ) {
 	auto n = 0;
+	auto counter = 0;
 	BitmapAccessPixels(
 		gridElement,
-		[transColor, &n](PixelMemory pixel, const SDL_PixelFormat* format) {
+		[transColor, &n, &counter](PixelMemory pixel, const SDL_PixelFormat* format) {
 			SDL_Color c = GetPixel32(pixel, format);
-			if (c.r != transColor.r  && 
-				c.g != transColor.g  &&
-				c.b != transColor.b  &&
-				c.a != transColor.a  && !IsTileColorEmpty(c))
-			++n;
+
+			if (c.r != transColor.r && c.g != transColor.g && c.b != transColor.b && c.a != transColor.a)
+				if (!IsTileColorEmpty(c)) 
+					++n;
 		}
 	);
 
-	return n <= solidThreshold;
+	return n <= (unsigned int)solidThreshold;
 }
 
 void BitmapAccessPixels(Bitmap bmp, const BitmapAccessFunctor& f) {
-	auto result = SDL_LockSurface(&bmp);
-	assert(result);
+	bool flag = false;
+	int result = 0;
+	if (SDL_MUSTLOCK(&bmp)) {
+		flag = true;
+		result = SDL_LockSurface(&bmp);
+		assert(result);
+	}
 
 	int bpp = bmp.format->BytesPerPixel;
 	PixelMemory pixel;
@@ -159,5 +166,5 @@ void BitmapAccessPixels(Bitmap bmp, const BitmapAccessFunctor& f) {
 		}
 	}
 
-	SDL_UnlockSurface(&bmp);
+	if(flag) SDL_UnlockSurface(&bmp);
 }

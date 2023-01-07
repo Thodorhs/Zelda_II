@@ -69,9 +69,9 @@ void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid);
 //VGeneral definitionsV
 typedef SDL_Surface Bitmap;
 typedef uint32_t* PixelMemory;
-typedef uint32_t color;
+typedef std::string color;
 
-uint32_t convert_SDLcolor_to_u32(SDL_Color c);
+std::string convert_SDLcolor_to_string(SDL_Color c);
 
 using BitmapAccessFunctor = std::function<void(PixelMemory, const SDL_PixelFormat* format)>;
 void BitmapAccessPixels(Bitmap bmp, const BitmapAccessFunctor& f);
@@ -90,13 +90,21 @@ public:
 			BitmapAccessPixels(
 				bmp,
 				[this](PixelMemory pixel, const SDL_PixelFormat* format)
-				{ colors.insert(convert_SDLcolor_to_u32(GetPixel32(pixel, format))); }
+				{ colors.insert(convert_SDLcolor_to_string(GetPixel32(pixel, format))); }
 			);
 		}
 	}
+	
+	void print() {
+		int counter = 0;
+		for (auto& it : colors) {
+			std::cout << it << std::endl; counter++;
+		}
+		std::cout << counter << std::endl;
+	}
 	bool In(SDL_Color c) const
 	{
-		return colors.find(convert_SDLcolor_to_u32(c)) != colors.end();
+		return colors.find(convert_SDLcolor_to_string(c)) != colors.end();
 	}
 };
 
