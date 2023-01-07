@@ -107,6 +107,14 @@ void ZeldaApp::Initialise(void) {
 		}
 	}
 
+	game.SetInput(myInput);
+	game.SetRender(myRender);
+	game.SetDone(myDone);
+	is_running = true;
+
+}	
+
+void ZeldaApp::Load() {
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::string find_first_part_path = cwd.string();
 	size_t pos = find_first_part_path.find("out");
@@ -115,20 +123,11 @@ void ZeldaApp::Initialise(void) {
 
 	ReadTextMap(full_asset_path + "\\map1_Kachelebene 1.csv");
 	TileSetSurface = IMG_Load((full_asset_path + "\\overworld_tileset_grass.png").c_str());
-	
-	game.SetInput(myInput);
-	game.SetRender(myRender);
-	game.SetDone(myDone);
-	is_running = true;
 
 	SDL_Color testcolor{};
 	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
 
 	ComputeTileGridBlocks2(GetMapData(), mygrid, *(TileSetSurface), testcolor, 0);
-}	
-
-void ZeldaApp::Load() {
-
 }
 
 void ZeldaApp::Run() {
