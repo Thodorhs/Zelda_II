@@ -2,7 +2,8 @@
 
 bool IsTileColorEmpty(SDL_Color c)
 {
-	return emptyTileColors.In(c);
+	//return emptyTileColors.In(c);
+	return false;
 } // return false to disable
 
 bool IsTileIndexAssumedEmpty(Index index) {
@@ -58,8 +59,8 @@ void ComputeTileGridBlocks2(
 	SDL_Color transColor,
 	byte solidThreshold
 ) {
-	Bitmap tileElem;// = BitmapCreate(TILE_WIDTH, TILE_HEIGHT);
-	Bitmap gridElem{};// = BitmapCreate(GRID_ELEMENT_WIDTH, GRID_ELEMENT_HEIGHT);
+	Bitmap tileElem = *(SDL_CreateRGBSurface(0, TILE_WIDTH, TILE_HEIGHT, 32, 0, 0, 0, 0));
+	Bitmap gridElem = *(SDL_CreateRGBSurface(0, GRID_ELEMENT_WIDTH, GRID_ELEMENT_HEIGHT, 32, 0, 0, 0, 0));
 	SDL_Rect tileElemRect{};
 	SDL_Rect tilesetRect{};
 
@@ -144,8 +145,13 @@ bool ComputeIsGridIndexEmpty(
 }
 
 void BitmapAccessPixels(Bitmap bmp, const BitmapAccessFunctor& f) {
-	auto result = SDL_LockSurface(&bmp);
-	assert(result);
+	bool flag = false;
+	int result = 0;
+	if (SDL_MUSTLOCK(&bmp)) {
+		flag = true;
+		result = SDL_LockSurface(&bmp);
+		assert(result);
+	}
 
 	int bpp = bmp.format->BytesPerPixel;
 	PixelMemory pixel;
@@ -159,5 +165,5 @@ void BitmapAccessPixels(Bitmap bmp, const BitmapAccessFunctor& f) {
 		}
 	}
 
-	SDL_UnlockSurface(&bmp);
+	if (flag) SDL_UnlockSurface(&bmp);
 }
