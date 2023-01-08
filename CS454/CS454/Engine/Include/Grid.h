@@ -52,4 +52,10 @@ using GridIndex = byte;
 #define MOD_TILE_WIDTH(i) ((i)&15)
 #define MOD_TILE_HEIGHT(i)((i)&15)
 
+#define GRID_BLOCK_SIZEOF \
+(GRID_ELEMENTS_PER_TILE * sizeof(GridIndex))
+
+typedef GridIndex GridMap[GRID_MAX_HEIGHT][GRID_MAX_WIDTH];
+static GridMap grid; // example of a global static grid
+
 GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* grid);

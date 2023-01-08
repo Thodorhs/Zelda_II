@@ -2,7 +2,7 @@
 
 //ComputeGrid1
 bool IsTileIndexAssumedEmpty(Index index) {
-	if (index == 61) return false;
+	if (index == 200) return false;
 	else return true;
 }
 
@@ -34,9 +34,10 @@ void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols, SDL_Renderer* 
 			auto sx = MUL_TILE_WIDTH(colTile - startCol);
 			auto sy = MUL_TILE_HEIGHT(rowTile - startRow);
 			auto* gridBlock = GetGridTileBlock(colTile, rowTile, tileCols, grid);
-			for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
-				for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem)
 
+
+			for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
+				for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem) 
 					if (*gridBlock++ & GRID_SOLID_TILE) {
 						auto x = sx + colElem * 4;//MUL_GRID_ELEMENT_WIDTH(colElem);
 						auto y = sy + rowElem * 4;//MUL_GRID_ELEMENT_HEIGHT(rowElem);

@@ -6,9 +6,6 @@
 #include <Functional>
 #include "../../../Engine/Include/MapEditor.h"
 
-#define GRID_BLOCK_SIZEOF \
-(GRID_ELEMENTS_PER_TILE * sizeof(GridIndex))
-
 //GridCompute1
 bool IsTileIndexAssumedEmpty(Index index);
 void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid);

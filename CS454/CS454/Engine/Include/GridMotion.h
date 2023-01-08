@@ -3,12 +3,12 @@
 #include "SDL.h"
 #include <cassert>
 
-typedef GridIndex GridMap[GRID_MAX_WIDTH][GRID_MAX_HEIGHT];
-static GridMap grid; // example of a global static grid
+
 
 void PrintMap();
 
 void SetGridMap(GridIndex* g);
+GridMap* GetGridMap();
 
 void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index);
 

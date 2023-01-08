@@ -1,6 +1,6 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/ViewWindow.h"
-#include "../../../Engine/Include/GridCompute2.h"
+#include "../../../Engine/Include/GridCompute.h"
 #include "../../../Engine/Include/GridMotion.h"
 #include <filesystem>
 
@@ -15,7 +15,7 @@ bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
 GridIndex mygrid[21 * 42 * GRID_ELEMENTS_PER_TILE];
-SDL_Rect movingrect = {160,120,10,10};
+SDL_Rect movingrect = {0,0,10,10};
 void myInput() {
 	SDL_Event event;
 	int* dx = new int;
@@ -98,7 +98,7 @@ void myInput() {
 		default:
 			break;
 		}
-		FilterGridMotion(&grid, movingrect, dx, dy);
+		FilterGridMotion(GetGridMap(), movingrect, dx, dy);
 		movingrect.x += *dx;
 		movingrect.y += *dy;
 	}
@@ -154,7 +154,7 @@ void ZeldaApp::Load() {
 	SDL_Color testcolor{};
 	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
 
-	ComputeTileGridBlocks2(GetMapData(), mygrid, *(TileSetSurface), testcolor, 0);
+	ComputeTileGridBlocks1(GetTile, mygrid);
 	SetGridMap(mygrid);
 }
 
