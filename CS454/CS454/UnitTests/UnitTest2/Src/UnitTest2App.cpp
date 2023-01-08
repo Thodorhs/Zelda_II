@@ -1,6 +1,7 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/ViewWindow.h"
 #include "../../../Engine/Include/GridCompute2.h"
+#include "../../../Engine/Include/GridMotion.h"
 #include <filesystem>
 
 SDL_Surface* TileSetSurface;
@@ -14,9 +15,13 @@ bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
 GridIndex mygrid[21 * 42 * GRID_ELEMENTS_PER_TILE];
-
+SDL_Rect movingrect = {160,120,10,10};
 void myInput() {
 	SDL_Event event;
+	int* dx = new int;
+	int* dy = new int;
+	*dx = 0;
+	*dy = 0;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_MOUSEMOTION:
@@ -65,7 +70,25 @@ void myInput() {
 				ViewWIndowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - ViewWIndowR.w;
 				ViewWIndowR.y = MUL_TILE_HEIGHT(GetMapData()->size()) - ViewWIndowR.h;
 				break;
+			case SDLK_w:
+				*dx = 0;
+				*dy = -1;
+				break;
+			case SDLK_a:
+				*dx = -1;
+				*dy = 0;
+				break;
+			case SDLK_s:
+				*dx = 0;
+				*dy = 1;
+				break;
+			case SDLK_d:
+				*dx = 1;
+				*dy = 0;
+				break;
 			default:
+				*dx = 0;
+				*dy = 0;
 				break;
 			}
 			break;
@@ -75,6 +98,9 @@ void myInput() {
 		default:
 			break;
 		}
+		FilterGridMotion(&grid, movingrect, dx, dy);
+		movingrect.x += *dx;
+		movingrect.y += *dy;
 	}
 }
 
@@ -84,6 +110,7 @@ void myRender() {
 	SDL_RenderClear(GameRenderer);
 	TileTerrainDisplay(GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, TileSetSurface, GameRenderer);
 	DisplayGrid(ViewWIndowR, mygrid, 21, GameRenderer);
+	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
 }
 
@@ -128,6 +155,7 @@ void ZeldaApp::Load() {
 	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
 
 	ComputeTileGridBlocks2(GetMapData(), mygrid, *(TileSetSurface), testcolor, 0);
+	SetGridMap(mygrid);
 }
 
 void ZeldaApp::Run() {

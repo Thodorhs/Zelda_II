@@ -34,8 +34,8 @@ typedef unsigned short Dim;
 #define GRID_BLOCK_COLUMNS (16 / GRID_ELEMENT_WIDTH)
 #define GRID_BLOCK_ROWS (16 / GRID_ELEMENT_HEIGHT)
 #define GRID_ELEMENTS_PER_TILE (GRID_BLOCK_ROWS * GRID_BLOCK_COLUMNS)
-#define GRID_MAX_HEIGHT (240 * GRID_BLOCK_ROWS)
-#define GRID_MAX_WIDTH (320 * GRID_BLOCK_COLUMNS)
+#define GRID_MAX_HEIGHT (42 * GRID_BLOCK_ROWS)
+#define GRID_MAX_WIDTH (21 * GRID_BLOCK_COLUMNS)
 typedef unsigned char byte;
 using GridIndex = byte;
 
@@ -51,3 +51,5 @@ using GridIndex = byte;
 #define DIV_TILE_HEIGHT(i)((i)>>4)
 #define MOD_TILE_WIDTH(i) ((i)&15)
 #define MOD_TILE_HEIGHT(i)((i)&15)
+
+GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* grid);

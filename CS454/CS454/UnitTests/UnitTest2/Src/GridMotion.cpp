@@ -1,5 +1,11 @@
 #include "../../../Engine/Include/GridMotion.h"
+void SetGridMap(GridIndex* g) {
+	for(int i = 0; i < GRID_MAX_WIDTH; i++)
+		for(int j = 0; j < GRID_MAX_HEIGHT; j++)
+			SetGridTileFlags(&grid, j, i, *(GetGridTileBlock(j, i, 21, g)));
 
+	PrintMap();
+}
 void SetSolidGridTile(GridMap* m, Dim col, Dim row)
 {
 	SetGridTile(m, col, row, GRID_SOLID_TILE);
@@ -9,7 +15,6 @@ void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index)
 {
 	(*m)[row][col] = index;
 }
-
 
 GridIndex GetGridTile(const GridMap* m, Dim col, Dim row)
 {
@@ -30,9 +35,19 @@ void SetGridTileTopSolidOnly(GridMap* m, Dim col, Dim row)
 }
 bool CanPassGridTile(GridMap* m, Dim col, Dim row, GridIndex flags) // i.e. checks if flags set
 {
-	return GetGridTile(m, row, col) & flags != 0;
+	return GetGridTile(m, col, row) & flags != 0; //was (m,row,col)
 }
-
+void PrintMap() {
+	for (int i = 0; i < GRID_MAX_WIDTH; i++) {
+		for (int j = 0; j < GRID_MAX_HEIGHT; j++) {
+			if (grid[i][j])
+				std::cout << ((int)grid[i][j]);
+			else
+				std::cout << "-";
+		}
+		std::cout << "END"<<std::endl;
+	}
+}
 void FilterGridMotion(GridMap* m, const SDL_Rect& r, int* dx, int* dy) {
 	assert(
 		abs(*dx) <= GRID_ELEMENT_WIDTH && abs(*dy) <= GRID_ELEMENT_HEIGHT
@@ -64,6 +79,7 @@ void FilterGridMotionLeft(GridMap* m, const SDL_Rect& r, int* dx) {
 			auto endRow = DIV_GRID_ELEMENT_HEIGHT(r.y + r.h - 1);
 			for (auto row = startRow; row <= endRow; ++row)
 				if (!CanPassGridTile(m, newCol, row, GRID_RIGHT_SOLID_MASK)) {
+					std::cout << "Cant Move" << std::endl;
 					*dx = MUL_GRID_ELEMENT_WIDTH(currCol) - r.x;
 					break;
 				}

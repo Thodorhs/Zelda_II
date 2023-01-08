@@ -80,7 +80,5 @@ void ComputeTileGridBlocks2(
 );
 
 
-
 //Display Grid
-GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* grid);
 void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols, SDL_Renderer* myrenderer);

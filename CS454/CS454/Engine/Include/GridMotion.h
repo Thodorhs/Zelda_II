@@ -6,6 +6,10 @@
 typedef GridIndex GridMap[GRID_MAX_WIDTH][GRID_MAX_HEIGHT];
 static GridMap grid; // example of a global static grid
 
+void PrintMap();
+
+void SetGridMap(GridIndex* g);
+
 void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index);
 
 GridIndex GetGridTile(const GridMap* m, Dim col, Dim row);

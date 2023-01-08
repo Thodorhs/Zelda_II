@@ -7,7 +7,7 @@ bool IsTileColorEmpty(SDL_Color c)
 } // return false to disable
 
 bool IsTileIndexAssumedEmpty(Index index) {
-	if (index == 61) return false;
+	if (index == 28) return false;
 	else return true;
 }
 
