@@ -1,6 +1,7 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/ViewWindow.h"
 #include "../../../Engine/Include/GridCompute.h"
+#include "../../../Engine/Include/GridCompute2.h"
 #include "../../../Engine/Include/GridMotion.h"
 #include <filesystem>
 
@@ -98,6 +99,7 @@ void myInput() {
 		default:
 			break;
 		}
+		//IF WE WANT TO GET THE TRUE POSITION OF THE RECTANGLE IF THE CAMERA MOVES SO THAT THE GRID WORKS
 		FilterGridMotion(GetGridMap(), movingrect, dx, dy);
 		movingrect.x += *dx;
 		movingrect.y += *dy;

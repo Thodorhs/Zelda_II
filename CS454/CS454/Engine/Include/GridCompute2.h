@@ -6,10 +6,6 @@
 #include <Functional>
 #include "../../../Engine/Include/MapEditor.h"
 
-//GridCompute1
-bool IsTileIndexAssumedEmpty(Index index);
-void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid);
-
 ////GridCompute2
 
 //VGeneral definitionsV
@@ -56,6 +52,7 @@ public:
 
 static TileColorsHolder emptyTileColors;
 bool IsTileColorEmpty(SDL_Color c);
+bool IsTileIndexAssumedEmpty(Index index);
 
 bool ComputeIsGridIndexEmpty(Bitmap gridElement, SDL_Color transColor, byte solidThreshold);
 void ComputeGridBlock(
@@ -75,7 +72,3 @@ void ComputeTileGridBlocks2(
 	SDL_Color transColor,
 	byte solidThreshold
 );
-
-
-//Display Grid
-void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols, SDL_Renderer* myrenderer);

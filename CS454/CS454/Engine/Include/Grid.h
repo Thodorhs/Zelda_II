@@ -58,4 +58,6 @@ using GridIndex = byte;
 typedef GridIndex GridMap[GRID_MAX_HEIGHT][GRID_MAX_WIDTH];
 static GridMap grid; // example of a global static grid
 
+bool IsTileIndexAssumedEmpty(Index index);
 GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* grid);
+void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols, SDL_Renderer* myrenderer);

@@ -3,10 +3,6 @@
 #include "SDL.h"
 #include <cassert>
 
-
-
-void PrintMap();
-
 void SetGridMap(GridIndex* g);
 GridMap* GetGridMap();
 
@@ -23,6 +19,8 @@ void SetGridTileFlags(GridMap* m, Dim col, Dim row, GridIndex flags);
 void SetGridTileTopSolidOnly(GridMap* m, Dim col, Dim row);
 
 bool CanPassGridTile(GridMap* m, Dim col, Dim row, GridIndex flags); // i.e. checks if flags set
+
+void PrintMap(GridMap m);
 
 void FilterGridMotion(GridMap* m, const SDL_Rect& r, int* dx, int* dy);
 
