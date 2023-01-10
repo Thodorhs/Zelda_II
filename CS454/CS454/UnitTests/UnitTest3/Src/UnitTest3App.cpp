@@ -1,8 +1,6 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/ViewWindow.h"
-#include "../../../Engine/Include/GridCompute.h"
-#include "../../../Engine/Include/GridCompute2.h"
-#include "../../../Engine/Include/GridMotion.h"
+#include "../../../Engine/Include/GridLayer.h"
 #include <filesystem>
 
 SDL_Surface* TileSetSurface;
@@ -15,8 +13,9 @@ int PrevCameraPosX = 0, PrevCameraPosY = 0;
 bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
-GridIndex mygrid[21 * 42 * GRID_ELEMENTS_PER_TILE];
+GridLayer GameGrid;
 SDL_Rect movingrect = {0,0,10,10};
+
 void myInput() {
 	SDL_Event event;
 	int* dx = new int;
@@ -100,7 +99,7 @@ void myInput() {
 			break;
 		}
 		//IF WE WANT TO GET THE TRUE POSITION OF THE RECTANGLE IF THE CAMERA MOVES SO THAT THE GRID WORKS
-		FilterGridMotion(GetGridMap(), movingrect, dx, dy);
+		GameGrid.FilterGridMotion(movingrect, dx, dy);
 		movingrect.x += *dx;
 		movingrect.y += *dy;
 	}
@@ -111,7 +110,7 @@ void myInput() {
 void myRender() {	
 	SDL_RenderClear(GameRenderer);
 	TileTerrainDisplay(GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, TileSetSurface, GameRenderer);
-	DisplayGrid(ViewWIndowR, mygrid, 21, GameRenderer);
+	DisplayGrid(ViewWIndowR, GameGrid.GetBuffer(), 21, GameRenderer);
 	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
 }
@@ -155,9 +154,7 @@ void ZeldaApp::Load() {
 
 	SDL_Color testcolor{};
 	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
-
-	ComputeTileGridBlocks1(GetTile, mygrid);
-	SetGridMap(mygrid);
+	GameGrid = GridLayer(42, 21);
 }
 
 void ZeldaApp::Run() {

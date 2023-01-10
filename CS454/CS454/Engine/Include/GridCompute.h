@@ -5,5 +5,5 @@
 
 //GridCompute1
 bool IsTileIndexAssumedEmpty(Index index);
-void ComputeTileGridBlocks1(Index (&MapGetTile)(Dim, Dim), GridIndex* grid);
+void ComputeTileGridBlocks1(Index (&MapGetTile)(Dim, Dim), GridIndex* grid, unsigned rows, unsigned cols);
 

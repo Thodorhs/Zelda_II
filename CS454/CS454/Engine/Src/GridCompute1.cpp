@@ -1,9 +1,9 @@
 #include "../Include/GridCompute.h"
 
 
-void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid) {
-	for (auto row = 0; row < 42; ++row) //HEIGHT
-		for (auto col = 0; col < 21; ++col) { //WIDTH
+void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid, unsigned rows, unsigned cols) {
+	for (auto row = 0; row < rows; ++row) //HEIGHT
+		for (auto col = 0; col < cols; ++col) { //WIDTH
 			memset(
 				grid,
 				IsTileIndexAssumedEmpty(MapGetTile(col, row)) ? GRID_EMPTY_TILE : GRID_SOLID_TILE,
