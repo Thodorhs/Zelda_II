@@ -1,22 +1,24 @@
 #include "../../../Engine/Include/ZeldaApp.h"
-#include "../../../Engine/Include/ViewWindow.h"
+#include "../../../Engine/Include/TileLayer.h"
 #include "../../../Engine/Include/GridLayer.h"
 #include <filesystem>
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
 SDL_Window* GameWindow;
-SDL_Rect ViewWIndowR = { 0,0,320,240 };
 
-int CameraPosX, CameraPosY;
-int PrevCameraPosX = 0, PrevCameraPosY = 0;
 bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
 GridLayer GameGrid;
+TileLayer TileLayerObj;
+
 SDL_Rect movingrect = {0,0,10,10};
+SDL_Rect viewVariable;
 
 void myInput() {
+	int CameraPosX, CameraPosY;
+	int PrevCameraPosX = 0, PrevCameraPosY = 0;
 	SDL_Event event;
 	int* dx = new int;
 	int* dy = new int;
@@ -33,8 +35,7 @@ void myInput() {
 
 				if (CameraPosY - PrevCameraPosY > 0) offsetY = 1;
 				else if (CameraPosY - PrevCameraPosY < 0) offsetY = -1;
-
-				ScrollWithBoundsCheck(&ViewWIndowR, offsetX, offsetY);
+				TileLayerObj.Scroll(offsetX, offsetY);
 				PrevCameraPosX, PrevCameraPosY = CameraPosX, CameraPosY;
 			}
 			break;
@@ -51,24 +52,25 @@ void myInput() {
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
 			case SDLK_DOWN:
-				ScrollWithBoundsCheck(&ViewWIndowR, 0, 8);
+				TileLayerObj.Scroll(0, 8);
 				break;
 			case SDLK_UP:
-				ScrollWithBoundsCheck(&ViewWIndowR, 0, -8);
+				TileLayerObj.Scroll(0, -8);
 				break;
 			case SDLK_LEFT:
-				ScrollWithBoundsCheck(&ViewWIndowR, -8, 0);
+				TileLayerObj.Scroll(-8, 0);
 				break;
 			case SDLK_RIGHT:
-				ScrollWithBoundsCheck(&ViewWIndowR, 8, 0);
+				TileLayerObj.Scroll(8, 0);
 				break;
 			case SDLK_HOME:
-				ViewWIndowR.x = 0;
-				ViewWIndowR.y = 0;
+				TileLayerObj.SetViewWindow({ 0, 0, TileLayerObj.GetViewWindow().w, TileLayerObj.GetViewWindow().h });
 				break;
 			case SDLK_END:
-				ViewWIndowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - ViewWIndowR.w;
-				ViewWIndowR.y = MUL_TILE_HEIGHT(GetMapData()->size()) - ViewWIndowR.h;
+				int newX, newY;
+				newX = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - TileLayerObj.GetViewWindow().w;
+				newY = MUL_TILE_HEIGHT(GetMapData()->size()) - TileLayerObj.GetViewWindow().h;
+				TileLayerObj.SetViewWindow({ newX, newY, TileLayerObj.GetViewWindow().w, TileLayerObj.GetViewWindow().h });
 				break;
 			case SDLK_w:
 				*dx = 0;
@@ -109,8 +111,8 @@ void myInput() {
 
 void myRender() {	
 	SDL_RenderClear(GameRenderer);
-	TileTerrainDisplay(GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, TileSetSurface, GameRenderer);
-	DisplayGrid(ViewWIndowR, GameGrid.GetBuffer(), 21, GameRenderer);
+	TileLayerObj.Display(GetMapData(), TileSetSurface, GameRenderer);
+	DisplayGrid(TileLayerObj.GetViewWindow(), GameGrid.GetBuffer(), 21, GameRenderer);
 	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
 }
@@ -155,6 +157,7 @@ void ZeldaApp::Load() {
 	SDL_Color testcolor{};
 	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
 	GameGrid = GridLayer(42, 21);
+	TileLayerObj = TileLayer(42, 21, *(TileSetSurface), &GameGrid);
 }
 
 void ZeldaApp::Run() {

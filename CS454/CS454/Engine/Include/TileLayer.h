@@ -1,45 +1,41 @@
 ﻿#pragma once
 #include "GridLayer.h"
+#include "ViewWindow.h"
 
 class TileLayer {
 private:
-	Index* map = nullptr;
+	TileMap map;
 	GridLayer* grid = nullptr;
 	Dim totalRows = 0, totalColumns = 0;
 	Bitmap tileSet;
 	SDL_Rect viewWin;
-	Bitmap dpyBuffer;
+	SDL_Texture* dpyBuffer;
+
 	bool dpyChanged = true; //this has changed to cache VW
-	Dim dpyX = 0, dpyY = 0;
 	void Allocate(void) {
-		map = new Index[totalRows * totalColumns];
-		dpyBuffer = BitmapCreate(
+		/*dpyBuffer = BitmapCreate(
 			GetResWidth() + 2 * TILE_WIDTH,
 			GetResHeight() + 2 * TILE_HEIGHT
-		);
+		);*/
 	}
 
 public:
-	void SetTile(Dim col, Dim row, Index index);
-	Index GetTile(Dim col, Dim row) const
-	{
-		return map[row * totalColumns + col];
-	}
-	const Point Pick(Dim x, Dim y) const {
-		return { DIV_TILE_WIDTH(x + viewWin.x),
-		DIV_TILE_HEIGHT(y + viewWin.y) };
-	}
-	const Rect& GetViewWindow(void) const { return viewWin; }
-	void SetViewWindow(const Rect& r)
-	{
-		viewWin = r; dpyChanged = true;
-	}
-	void Display(Bitmap dest, const Rect& displayArea);
-	Bitmap GetBitmap(void) const { return dpyBuffer; }
+	void SetTile(Dim col, Dim row, Index index) { map[row][col] = index;}
+	Index GetTile(Dim col, Dim row) const { return map[row][col];};
+	void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);
+
+	const SDL_Rect& GetViewWindow(void) const { return viewWin;}
+	void SetViewWindow(const SDL_Rect& r) { viewWin = r; dpyChanged = true; }
+	
+	SDL_Texture* GetBitmap(void) const { return dpyBuffer; }
 	int GetPixelWidth(void) const { return viewWin.w; }
 	int GetPixelHeight(void) const { return viewWin.h; }
 	unsigned GetTileWidth(void) const { return DIV_TILE_WIDTH(viewWin.w); }
 	unsigned GetTileHeight(void) const { return DIV_TILE_HEIGHT(viewWin.h); }
+
+	void Display(TileMap* map, /*const SDL_Rect& displayArea,*/ SDL_Surface* ImgSurface, SDL_Renderer* myrenderer);
+	const SDL_Point Pick(Dim x, Dim y) const;
+
 	void Scroll(float dx, float dy);
 	bool CanScrollHoriz(float dx) const;
 	bool CanScrollVert(float dy) const;
@@ -56,6 +52,7 @@ public:
 		fprintf(fp, "%s", ToString().c_str()); return fp;
 	}
 	bool ReadText(FILE* fp); // TODO: carefull generic parsing
-	TileLayer(Dim _rows, Dim _cols, Bitmap _tileSet);
-	~TileLayer(); // cleanup here with care!
+	TileLayer();
+	TileLayer(Dim _rows, Dim _cols, Bitmap _tileSet, GridLayer* grid);
+	//~TileLayer(); // cleanup here with care!
 };

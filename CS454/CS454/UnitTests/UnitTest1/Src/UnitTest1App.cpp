@@ -7,12 +7,14 @@ SDL_Renderer* myrenderer;
 SDL_Window* Gwindow;
 SDL_Rect ViewWIndowR = { 0,0,320,240 };
 
-int CameraPosX, CameraPosY;
-int PrevCameraPosX = 0, PrevCameraPosY = 0;
+
 bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
 void myInput() {
+	int CameraPosX, CameraPosY;
+	int PrevCameraPosX = 0, PrevCameraPosY = 0;
+
 	SDL_Event event;
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
