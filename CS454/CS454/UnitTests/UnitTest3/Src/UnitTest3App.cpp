@@ -69,12 +69,14 @@ void myInput() {
 				ActionLayer.Scroll(4, 0);
 				break;
 			case SDLK_HOME:
+				HorizonLayer.SetViewWindow({ 0, 0, HorizonLayer.GetViewWindow().w, HorizonLayer.GetViewWindow().h });
 				ActionLayer.SetViewWindow({ 0, 0, ActionLayer.GetViewWindow().w, ActionLayer.GetViewWindow().h });
 				break;
 			case SDLK_END:
 				int newX, newY;
 				newX = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - ActionLayer.GetViewWindow().w;
 				newY = MUL_TILE_HEIGHT(GetMapData()->size()) - ActionLayer.GetViewWindow().h;
+				HorizonLayer.SetViewWindow({ newX, newY, HorizonLayer.GetViewWindow().w, HorizonLayer.GetViewWindow().h });
 				ActionLayer.SetViewWindow({ newX, newY, ActionLayer.GetViewWindow().w, ActionLayer.GetViewWindow().h });
 				break;
 			case SDLK_w:
@@ -118,7 +120,7 @@ void myRender() {
 	SDL_RenderClear(GameRenderer);
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
-	//DisplayGrid(TileLayerObj.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
+	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
 	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
 }
@@ -165,7 +167,7 @@ void ZeldaApp::Load() {
 	ClearMap(); // We write the data to a static global vector map so we need to clear it before  we read the data of the next layer
 
 	ReadTextMap(full_asset_path + "\\zeldatest_Tile ActionLayer.csv");
-	//GameGrid = GridLayer(MAPHEIGHT, MAPWIDTH);
+	GameGrid = GridLayer(MAPHEIGHT, MAPWIDTH);
 	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
 }
 

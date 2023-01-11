@@ -5,7 +5,7 @@ void SetGridMap(GridIndex* g, unsigned rows, unsigned cols) {
 
 	for (Dim rowTile = startRow; rowTile < rows; ++rowTile)
 		for (Dim colTile = startCol; colTile < cols; ++colTile) {
-			auto* gridBlock = GetGridTileBlock(colTile, rowTile, 21, g);
+			auto* gridBlock = GetGridTileBlock(colTile, rowTile, cols, g);
 
 			for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
 				for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem) {
