@@ -7,7 +7,7 @@ find_package(SDL2_image REQUIRED)
 #Add source to this project's executable.
 
 
-add_executable(Zelda_II  "Src/main.cpp" "Src/GameLoop.cpp"  "Src/ZeldaApp.cpp"  "Src/MapEditor.cpp" "Src/ViewWindow.cpp" "Include/GridMotion.h" "Include/Grid.h" "Include/CircularBackground.h")
+add_executable(Zelda_II  "Src/main.cpp" "Src/GameLoop.cpp"  "Src/ZeldaApp.cpp"  "Src/MapEditor.cpp" "Src/ViewWindow.cpp" "Include/GridMotion.h" "Include/Grid.h" )
 
 target_link_libraries(Zelda_II  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image)
 

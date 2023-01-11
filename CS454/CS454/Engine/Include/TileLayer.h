@@ -2,6 +2,12 @@
 #include "GridLayer.h"
 #include "ViewWindow.h"
 
+#define MAPHEIGHT 36
+#define MAPWIDTH  60
+
+#define TILESETWIDTH 10
+#define TILESETHEIGHT 10
+
 class TileLayer {
 private:
 	TileMap map;
@@ -33,7 +39,7 @@ public:
 	unsigned GetTileWidth(void) const { return DIV_TILE_WIDTH(viewWin.w); }
 	unsigned GetTileHeight(void) const { return DIV_TILE_HEIGHT(viewWin.h); }
 
-	void Display(TileMap* map, /*const SDL_Rect& displayArea,*/ SDL_Surface* ImgSurface, SDL_Renderer* myrenderer);
+	void Display(SDL_Surface* ImgSurface, SDL_Renderer* myrenderer, SDL_Texture* PrevLayerBuffer, bool FinalLayer);
 	const SDL_Point Pick(Dim x, Dim y) const;
 
 	void Scroll(float dx, float dy);
@@ -53,6 +59,7 @@ public:
 	}
 	bool ReadText(FILE* fp); // TODO: carefull generic parsing
 	TileLayer();
-	TileLayer(Dim _rows, Dim _cols, Bitmap _tileSet, GridLayer* grid);
+	TileLayer(Dim _rows, Dim _cols, Bitmap _tileSet, TileMap _map);
+	TileLayer(Dim _rows, Dim _cols, Bitmap _tileSet, TileMap _map, GridLayer* grid);
 	//~TileLayer(); // cleanup here with care!
 };

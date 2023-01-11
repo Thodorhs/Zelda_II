@@ -11,7 +11,8 @@ bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
 GridLayer GameGrid;
-TileLayer TileLayerObj;
+TileLayer ActionLayer;
+TileLayer HorizonLayer;
 
 SDL_Rect movingrect = {0,0,10,10};
 SDL_Rect viewVariable;
@@ -35,7 +36,7 @@ void myInput() {
 
 				if (CameraPosY - PrevCameraPosY > 0) offsetY = 1;
 				else if (CameraPosY - PrevCameraPosY < 0) offsetY = -1;
-				TileLayerObj.Scroll(offsetX, offsetY);
+				ActionLayer.Scroll(offsetX, offsetY);
 				PrevCameraPosX, PrevCameraPosY = CameraPosX, CameraPosY;
 			}
 			break;
@@ -52,25 +53,29 @@ void myInput() {
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
 			case SDLK_DOWN:
-				TileLayerObj.Scroll(0, 8);
+				HorizonLayer.Scroll(0, 1);
+				ActionLayer.Scroll(0, 4);
 				break;
 			case SDLK_UP:
-				TileLayerObj.Scroll(0, -8);
+				HorizonLayer.Scroll(0, -1);
+				ActionLayer.Scroll(0, -4);
 				break;
 			case SDLK_LEFT:
-				TileLayerObj.Scroll(-8, 0);
+				HorizonLayer.Scroll(-1, 0);
+				ActionLayer.Scroll(-4, 0);
 				break;
 			case SDLK_RIGHT:
-				TileLayerObj.Scroll(8, 0);
+				HorizonLayer.Scroll(1, 0);
+				ActionLayer.Scroll(4, 0);
 				break;
 			case SDLK_HOME:
-				TileLayerObj.SetViewWindow({ 0, 0, TileLayerObj.GetViewWindow().w, TileLayerObj.GetViewWindow().h });
+				ActionLayer.SetViewWindow({ 0, 0, ActionLayer.GetViewWindow().w, ActionLayer.GetViewWindow().h });
 				break;
 			case SDLK_END:
 				int newX, newY;
-				newX = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - TileLayerObj.GetViewWindow().w;
-				newY = MUL_TILE_HEIGHT(GetMapData()->size()) - TileLayerObj.GetViewWindow().h;
-				TileLayerObj.SetViewWindow({ newX, newY, TileLayerObj.GetViewWindow().w, TileLayerObj.GetViewWindow().h });
+				newX = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - ActionLayer.GetViewWindow().w;
+				newY = MUL_TILE_HEIGHT(GetMapData()->size()) - ActionLayer.GetViewWindow().h;
+				ActionLayer.SetViewWindow({ newX, newY, ActionLayer.GetViewWindow().w, ActionLayer.GetViewWindow().h });
 				break;
 			case SDLK_w:
 				*dx = 0;
@@ -111,8 +116,9 @@ void myInput() {
 
 void myRender() {	
 	SDL_RenderClear(GameRenderer);
-	TileLayerObj.Display(GetMapData(), TileSetSurface, GameRenderer);
-	DisplayGrid(TileLayerObj.GetViewWindow(), GameGrid.GetBuffer(), 21, GameRenderer);
+	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
+	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
+	//DisplayGrid(TileLayerObj.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
 	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
 }
@@ -132,7 +138,7 @@ void ZeldaApp::Initialise(void) {
 		GameRenderer = SDL_CreateRenderer(GameWindow, -1, 0);
 		if (GameRenderer)
 		{
-			SDL_SetRenderDrawColor(GameRenderer, 255, 0, 0, 0);
+			SDL_SetRenderDrawColor(GameRenderer, 255, 255, 0, 0);
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
@@ -149,15 +155,18 @@ void ZeldaApp::Load() {
 	std::string find_first_part_path = cwd.string();
 	size_t pos = find_first_part_path.find("out");
 	std::string half_path = find_first_part_path.substr(0, pos);
-	std::string full_asset_path = half_path + "UnitTests\\UnitTest2\\UnitTest2Media";
+	std::string full_asset_path = half_path + "UnitTests\\UnitTest3\\UnitTest3Media";
 
-	ReadTextMap(full_asset_path + "\\map1_Kachelebene 1.csv");
-	TileSetSurface = IMG_Load((full_asset_path + "\\overworld_tileset_grass.png").c_str());
+	TileSetSurface = IMG_Load((full_asset_path + "\\Zelda-II-Parapa-Palace-Tileset.png").c_str());
 
-	SDL_Color testcolor{};
-	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
-	GameGrid = GridLayer(42, 21);
-	TileLayerObj = TileLayer(42, 21, *(TileSetSurface), &GameGrid);
+	ReadTextMap(full_asset_path + "\\zeldatest_Tile BgLayer.csv");
+	HorizonLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()));
+
+	ClearMap(); // We write the data to a static global vector map so we need to clear it before  we read the data of the next layer
+
+	ReadTextMap(full_asset_path + "\\zeldatest_Tile ActionLayer.csv");
+	//GameGrid = GridLayer(MAPHEIGHT, MAPWIDTH);
+	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
 }
 
 void ZeldaApp::Run() {

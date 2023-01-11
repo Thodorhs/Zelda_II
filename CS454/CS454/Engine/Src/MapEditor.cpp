@@ -44,6 +44,13 @@ void ReadTextMap(const std::string path) {
 	else std::cout << "Could not open the file\n";
 }
 
+void ClearMap() {
+	for (auto it : MapData) 
+		it.clear();
+
+	MapData.clear();
+}
+
 void print() {
 	for (auto it : MapData) {
 		for (int i = 0; i < it.size(); i++) {

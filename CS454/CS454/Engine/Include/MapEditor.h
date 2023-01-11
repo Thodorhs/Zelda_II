@@ -18,5 +18,7 @@ bool ReadBinMap(TileMap* m, FILE* fp);
 void WriteTextMap(const TileMap*, FILE* fp);
 void ReadTextMap(const std::string path);
 
+void ClearMap(void);
+
 void print(void);
 TileMap* GetMapData(void);
