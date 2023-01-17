@@ -66,6 +66,7 @@ const SDL_Point TileLayer::Pick(Dim x, Dim y) const {
 	DIV_TILE_HEIGHT(y + viewWin.y) };
 }
 
+
 void TileLayer::Scroll(float dx, float dy) {
 	dpyChanged = true;
 	viewWin.x += dx; viewWin.y += dy;
@@ -78,3 +79,4 @@ bool TileLayer::CanScrollHoriz(float dx) const {
 bool TileLayer::CanScrollVert(float dy) const {
 	return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= 672;
 }
+

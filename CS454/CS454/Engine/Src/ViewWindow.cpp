@@ -49,12 +49,12 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 
 int GetMapPixelWidth()
 {
-	return 336;
+	return 36*16;
 }
 
 int GetMapPixelHeight()
 {
-	return 672;
+	return 60*16;
 }
 
 void Scroll(SDL_Rect* viewWin, int dx, int dy)

@@ -9,7 +9,6 @@
 ////GridCompute2
 
 //VGeneral definitionsV
-typedef SDL_Surface Bitmap;
 typedef uint32_t* PixelMemory;
 typedef std::string color;
 

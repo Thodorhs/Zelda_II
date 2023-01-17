@@ -53,11 +53,11 @@ void myInput() {
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
 			case SDLK_DOWN:
-				HorizonLayer.Scroll(0, 1);
+				//HorizonLayer.Scroll(0, 1);
 				ActionLayer.Scroll(0, 4);
 				break;
 			case SDLK_UP:
-				HorizonLayer.Scroll(0, -1);
+				//HorizonLayer.Scroll(0, -1);
 				ActionLayer.Scroll(0, -4);
 				break;
 			case SDLK_LEFT:

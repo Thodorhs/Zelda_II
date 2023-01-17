@@ -7,7 +7,7 @@ GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* g
 
 
 bool IsTileIndexAssumedEmpty(Index index) {
-	if (index == 41) return false;
+	if (index == 35) return false;
 	else return true;
 }
 

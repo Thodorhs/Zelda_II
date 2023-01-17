@@ -2,7 +2,7 @@
 #include "../../../Engine/Include/Grid.h"
 #include "../../../Engine/Include/GridMotion.h"
 #include "../../../Engine/Include/GridCompute.h"
-#include "../../../Engine/Include/GridCompute2.h"
+//#include "../../../Engine/Include/GridCompute2.h"
 
 class GridLayer {
 private:
@@ -27,7 +27,7 @@ public:
 		FilterGridMotionDown(r, &dy);
 		return dy == 0; // if true IS attached to solid ground
 	}
-	GridIndex*& GetBuffer(void) { return grid; }
+	GridIndex* &GetBuffer(void) { return grid; }
 	//const GridIndex*& GetBuffer(void) const { return grid; }
 	GridLayer();
 	GridLayer(unsigned rows, unsigned cols);

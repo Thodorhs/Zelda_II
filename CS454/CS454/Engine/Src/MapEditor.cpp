@@ -45,7 +45,7 @@ void ReadTextMap(const std::string path) {
 }
 
 void ClearMap() {
-	for (auto it : MapData) 
+	for (auto it : MapData)
 		it.clear();
 
 	MapData.clear();

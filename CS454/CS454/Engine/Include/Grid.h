@@ -1,14 +1,6 @@
 #pragma once
-#include "SDL.h"
+#include"../Include/EngineDefines.h"
 #include <iostream>
-
-typedef unsigned short Index;
-typedef unsigned short Dim;
-
-#define MAX_WIDTH 21
-#define MAX_HEIGHT 42
-#define TILE_WIDTH 16
-#define TILE_HEIGHT 16
 
 #define GRID_THIN_AIR_MASK 0x0000 // element is ignored
 #define GRID_LEFT_SOLID_MASK 0x0001 // bit 0
@@ -36,9 +28,6 @@ typedef unsigned short Dim;
 #define GRID_ELEMENTS_PER_TILE (GRID_BLOCK_ROWS * GRID_BLOCK_COLUMNS)
 #define GRID_MAX_HEIGHT (42 * GRID_BLOCK_ROWS)
 #define GRID_MAX_WIDTH (21 * GRID_BLOCK_COLUMNS)
-typedef unsigned char byte;
-using GridIndex = byte;
-
 
 #define DIV_GRID_ELEMENT_WIDTH(i) ((i)>>2)
 #define DIV_GRID_ELEMENT_HEIGHT(i) ((i)>>2)

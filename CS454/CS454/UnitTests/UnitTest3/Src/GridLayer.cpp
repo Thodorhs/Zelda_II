@@ -7,8 +7,10 @@ GridLayer::GridLayer(unsigned rows, unsigned cols) {
 
 	Allocate();
 
-	ComputeTileGridBlocks1(GetTile, grid, rows, cols);
+	ComputeTileGridBlocks1(GetTile,grid, rows, cols);
+	printgrid(grid, rows, cols);
 	SetGridMap(grid, rows, cols);
+	PrintMap(*(GetGridMap()));
 }
 
 void GridLayer::FilterGridMotion(const SDL_Rect& r, int* dx, int* dy) const {

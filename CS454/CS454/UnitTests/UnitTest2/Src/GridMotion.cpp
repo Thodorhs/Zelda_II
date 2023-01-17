@@ -1,10 +1,10 @@
 #include "../../../Engine/Include/GridMotion.h"
-void SetGridMap(GridIndex* g) {
+void SetGridMap(GridIndex* g, unsigned rows, unsigned cols) {
 	auto startCol = 0;
 	auto startRow = 0;
 
-	for (Dim rowTile = startRow; rowTile <= 42; ++rowTile)
-		for (Dim colTile = startCol; colTile <= 21; ++colTile) {
+	for (Dim rowTile = startRow; rowTile < rows; ++rowTile)
+		for (Dim colTile = startCol; colTile < cols; ++colTile) {
 			auto* gridBlock = GetGridTileBlock(colTile, rowTile, 21, g);
 
 			for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
@@ -14,7 +14,7 @@ void SetGridMap(GridIndex* g) {
 		
 		}
 	
-	//PrintMap(*(GetGridMap()));
+	PrintMap(*(GetGridMap()));
 }
 
 GridMap* GetGridMap() {
@@ -70,7 +70,7 @@ void PrintMap(GridMap m) {
 			else
 				std::cout << "-";
 		}
-		std::cout << "END"<<std::endl;
+		//std::cout << "END"<<std::endl;
 	}
 }
 

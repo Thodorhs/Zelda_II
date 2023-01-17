@@ -1,20 +1,18 @@
 #include "../Include/GridMotion.h"
 void SetGridMap(GridIndex* g, unsigned rows, unsigned cols) {
-	auto startCol = 0;
-	auto startRow = 0;
+	auto startCol = 0, startRow = 0;
 
 	for (Dim rowTile = startRow; rowTile < rows; ++rowTile)
 		for (Dim colTile = startCol; colTile < cols; ++colTile) {
+
 			auto* gridBlock = GetGridTileBlock(colTile, rowTile, cols, g);
 
-			for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
-				for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem) {
-					grid[rowTile*4 + rowElem][colTile*4 + colElem] = *(gridBlock)++;
-				}
-		
+			if (*(gridBlock) == GRID_SOLID_TILE)
+				for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
+					for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem) 
+						grid[rowTile * 4 + rowElem][colTile * 4 + colElem] = GRID_SOLID_TILE;
+					
 		}
-	
-	//PrintMap(*(GetGridMap()));
 }
 
 GridMap* GetGridMap() {

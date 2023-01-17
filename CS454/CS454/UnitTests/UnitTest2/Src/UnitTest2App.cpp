@@ -1,7 +1,7 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/ViewWindow.h"
 #include "../../../Engine/Include/GridCompute.h"
-#include "../../../Engine/Include/GridCompute2.h"
+//#include "../../../Engine/Include/GridCompute2.h"
 #include "../../../Engine/Include/GridMotion.h"
 #include <filesystem>
 
@@ -156,8 +156,15 @@ void ZeldaApp::Load() {
 	SDL_Color testcolor{};
 	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
 
-	ComputeTileGridBlocks1(GetTile, mygrid);
-	SetGridMap(mygrid);
+	ComputeTileGridBlocks1(GetTile, mygrid, MAX_HEIGHT,MAX_WIDTH);
+	for (auto c = 0; c < 42 * 21 * GRID_ELEMENTS_PER_TILE; ++c) {
+		if (mygrid[c] == GRID_SOLID_TILE)
+			std::cout << "O";
+		else
+			std::cout << "-";
+	}
+	std::cout << "STOP" << std::endl;
+	SetGridMap(mygrid, MAX_HEIGHT, MAX_WIDTH);
 }
 
 void ZeldaApp::Run() {

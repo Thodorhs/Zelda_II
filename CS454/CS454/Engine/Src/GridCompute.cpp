@@ -1,5 +1,14 @@
 #include "../Include/GridCompute.h"
 
+void printgrid(GridIndex* grid, unsigned rows, unsigned cols) {
+	for (auto c = 0; c < rows * cols * GRID_ELEMENTS_PER_TILE; ++c) {
+		if (grid[c] == GRID_SOLID_TILE)
+			std::cout << "O";
+		else
+			std::cout << "-";
+	}
+	std::cout <<"Last" << std::endl;
+}
 
 void ComputeTileGridBlocks1(Index(&MapGetTile)(Dim, Dim), GridIndex* grid, unsigned rows, unsigned cols) {
 	for (auto row = 0; row < rows; ++row) //HEIGHT

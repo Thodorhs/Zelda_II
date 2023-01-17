@@ -4,6 +4,7 @@
 #include <cassert>
 
 void SetGridMap(GridIndex* g, unsigned rows, unsigned cols);
+
 GridMap* GetGridMap();
 
 void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index);
