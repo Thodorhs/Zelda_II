@@ -1,6 +1,8 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/TileLayer.h"
 #include "../../../Engine/Include/GridLayer.h"
+
+#include "../../../Engine/Include/AnimationFilmHolder.h"
 #include <filesystem>
 
 SDL_Surface* TileSetSurface;
@@ -14,8 +16,13 @@ GridLayer GameGrid;
 TileLayer ActionLayer;
 TileLayer HorizonLayer;
 
+AnimationFilmHolder AnimationFilmHolder::holder; // Set this so that the Linker can find it
+static AnimationFilmHolder& FilmHolder = AnimationFilmHolder::getInstance(); // Take the singleton
+std::string full_asset_path;
+
 SDL_Rect movingrect = {0,0,10,10};
 SDL_Rect viewVariable;
+
 
 void myInput() {
 	int CameraPosX, CameraPosY;
@@ -114,15 +121,36 @@ void myInput() {
 	}
 }
 
+int testi = 0;
+void Animate(const AnimationFilm& film, const Point& at) { //THIS IS FOR TEST ONLY
+	Uint32 frameStart;
+	uint64_t t = 0;
+
+	film.DisplayFrame(GameRenderer, { at.x, at.y, 35, 35 }, testi);
+	frameStart = SDL_GetTicks();
+	testi++;
+	if (testi > 3) testi = 0;
+
+	Uint32 frameTime = SDL_GetTicks() - frameStart;
+	Uint32 frameDelay = 500;
+	if (frameDelay > frameTime) {
+		SDL_Delay(frameDelay - frameTime);
+	}
+}
 
 
 void myRender() {	
+
 	SDL_RenderClear(GameRenderer);
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
+	Animate(*(FilmHolder.GetFilm("Link.Run")), { 320, 240 });
+	
+
 	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
 	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
+	
 }
 
 bool myDone() {
@@ -152,12 +180,35 @@ void ZeldaApp::Initialise(void) {
 
 }	
 
+int testparser(int startPos,
+	const std::string& input,
+	std::string& idOutput,
+	std::string& pathOutput,
+	std::vector<SDL_Rect>& rectsOutput) {
+
+	idOutput = "Link.Run";
+	pathOutput = full_asset_path + "\\link-sprites.png";
+
+	SDL_Rect test_anim1 = { 0, 0, 34, 34 };
+	rectsOutput.push_back(test_anim1);
+
+	SDL_Rect test_anim2 = { 0, 35, 34, 34 };
+	rectsOutput.push_back(test_anim2);
+
+	SDL_Rect test_anim3 = { 0, 70, 34, 34 };
+	rectsOutput.push_back(test_anim1);
+
+	SDL_Rect test_anim4 = { 0, 105, 34, 34 };
+	rectsOutput.push_back(test_anim4);
+	return 0;
+}
+
 void ZeldaApp::Load() {
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::string find_first_part_path = cwd.string();
 	size_t pos = find_first_part_path.find("out");
 	std::string half_path = find_first_part_path.substr(0, pos);
-	std::string full_asset_path = half_path + "UnitTests\\UnitTest3\\UnitTest3Media";
+	full_asset_path = half_path + "UnitTests\\UnitTest3\\UnitTest3Media";
 
 	TileSetSurface = IMG_Load((full_asset_path + "\\Zelda-II-Parapa-Palace-Tileset.png").c_str());
 
@@ -169,6 +220,9 @@ void ZeldaApp::Load() {
 	ReadTextMap(full_asset_path + "\\zeldatest_Tile ActionLayer.csv");
 	GameGrid = GridLayer(MAPHEIGHT, MAPWIDTH);
 	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
+
+	FilmHolder.Load("TEST", testparser, GameRenderer);
+	
 }
 
 void ZeldaApp::Run() {

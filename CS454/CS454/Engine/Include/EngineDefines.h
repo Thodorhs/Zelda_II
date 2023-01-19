@@ -1,7 +1,8 @@
 #pragma once
 #include "SDL.h"
 
-typedef SDL_Surface Bitmap;
+typedef SDL_Surface BitmapSurface;
+typedef SDL_Texture BitmapTexture;
 
 typedef unsigned short Index;
 typedef unsigned short Dim;

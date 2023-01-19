@@ -1,5 +1,4 @@
 #pragma once
-#include "../Include/EngineDefines.h"
 #include <iostream>
 #include <functional>
 #include <vector>
@@ -31,7 +30,6 @@ namespace app {
 			bool IsFinished(void) const { return !done(); }
 			void MainLoop(void);
 			void MainLoopIteration(void);
-			//SDL_Renderer* myrenderer;
 	};
 
 

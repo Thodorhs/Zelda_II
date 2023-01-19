@@ -1,13 +1,13 @@
 #include "../../../Engine/Include/TileLayer.h"
 
 TileLayer::TileLayer() {}
-TileLayer::TileLayer(Dim _rows, Dim _cols, Bitmap _tileSet, TileMap _map) { // BackGround Layer
+TileLayer::TileLayer(Dim _rows, Dim _cols, BitmapSurface _tileSet, TileMap _map) { // BackGround Layer
 	map = _map;
 	totalRows = _rows, totalColumns = _cols;
 	tileSet = _tileSet;
 	viewWin = { 0, 0, 640, 480 };
 }
-TileLayer::TileLayer(Dim _rows, Dim _cols, Bitmap _tileSet, TileMap _map, GridLayer* _grid) { //Action Layer
+TileLayer::TileLayer(Dim _rows, Dim _cols, BitmapSurface _tileSet, TileMap _map, GridLayer* _grid) { //Action Layer
 	map = _map;
 	totalRows = _rows, totalColumns = _cols;
 	grid = _grid;

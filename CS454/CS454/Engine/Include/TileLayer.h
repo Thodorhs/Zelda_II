@@ -13,7 +13,7 @@ private:
 	TileMap map;
 	GridLayer* grid = nullptr;
 	Dim totalRows = 0, totalColumns = 0;
-	Bitmap tileSet;
+	BitmapSurface tileSet;
 	SDL_Rect viewWin;
 	SDL_Texture* dpyBuffer;
 
@@ -33,7 +33,7 @@ public:
 	const SDL_Rect& GetViewWindow(void) const { return viewWin;}
 	void SetViewWindow(const SDL_Rect& r) { viewWin = r; dpyChanged = true; }
 	
-	SDL_Texture* GetBitmap(void) const { return dpyBuffer; }
+	BitmapTexture* GetBitmap(void) const { return dpyBuffer; }
 	int GetPixelWidth(void) const { return viewWin.w; }
 	int GetPixelHeight(void) const { return viewWin.h; }
 	unsigned GetTileWidth(void) const { return DIV_TILE_WIDTH(viewWin.w); }
@@ -59,7 +59,7 @@ public:
 	}
 	bool ReadText(FILE* fp); // TODO: carefull generic parsing
 	TileLayer();
-	TileLayer(Dim _rows, Dim _cols, Bitmap _tileSet, TileMap _map);
-	TileLayer(Dim _rows, Dim _cols, Bitmap _tileSet, TileMap _map, GridLayer* grid);
+	TileLayer(Dim _rows, Dim _cols, BitmapSurface _tileSet, TileMap _map);
+	TileLayer(Dim _rows, Dim _cols, BitmapSurface _tileSet, TileMap _map, GridLayer* grid);
 	//~TileLayer(); // cleanup here with care!
 };
