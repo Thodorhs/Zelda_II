@@ -2,7 +2,8 @@
 #include "../../../Engine/Include/TileLayer.h"
 #include "../../../Engine/Include/GridLayer.h"
 
-#include "../../../Engine/Include/AnimationFilmHolder.h"
+#include "../../../Engine/Include/Animators/AnimatorManager.h"
+#include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
 #include <filesystem>
 
 SDL_Surface* TileSetSurface;

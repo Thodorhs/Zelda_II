@@ -1,9 +1,14 @@
 #pragma once
-#include "../Include/EngineDefines.h"
+#include "../../Include/EngineDefines.h"
+#include "SDL_image.h"
 #include <iostream>
 #include <cassert>
 #include <functional>
 #include <vector>
+#include <map>
+
+
+
 
 class AnimationFilm {
 	std::vector<SDL_Rect> boxes;
@@ -16,7 +21,7 @@ public:
 		std::string path;
 	};
 
-	byte GetTotalFrames(void) const{ return boxes.size(); }
+	byte GetTotalFrames(void) const { return boxes.size(); }
 	BitmapTexture* GetBitmap(void) const { return bitmap; }
 	auto GetId(void) const -> const std::string& { return id; }
 

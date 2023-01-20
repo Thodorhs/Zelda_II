@@ -1,4 +1,5 @@
 #pragma once
+
 #include "BitmapLoader.h"
 #include "AnimationFilm.h"
 
@@ -17,7 +18,7 @@ public:
 			std::vector<SDL_Rect>& rectsOutput
 			)
 	>;
-	static AnimationFilmHolder &getInstance() { return holder; }
+	static AnimationFilmHolder& getInstance() { return holder; }
 
 	void Load(const std::string& text, const EntryParser& entryParser, SDL_Renderer* GameRenderer);
 	void Load(const std::string& text, const Parser& parser, SDL_Renderer* GameRenderer);
