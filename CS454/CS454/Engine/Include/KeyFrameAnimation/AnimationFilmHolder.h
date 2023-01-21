@@ -7,7 +7,7 @@
 class AnimationFilmHolder final {
 public:
 	using Parser = std::function<
-		bool(std::list<AnimationFilm::Data>& output, const std::string& input)
+		bool(std::list<AnimationFilm::Data>& output, const std::string& path)
 	>;
 	using EntryParser = std::function<
 		int(// -1=error, 0=ended gracefully, else #chars read

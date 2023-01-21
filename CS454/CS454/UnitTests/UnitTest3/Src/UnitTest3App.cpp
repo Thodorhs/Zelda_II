@@ -4,6 +4,8 @@
 
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
 #include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
+#include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
+
 #include <filesystem>
 
 SDL_Surface* TileSetSurface;
@@ -146,7 +148,7 @@ void myRender() {
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
 	Animate(*(FilmHolder.GetFilm("Link.Run")), { 320, 240 });
-	
+	//Animate(*(FilmHolder.GetFilm("Link.Attack")), { 280, 240 });
 
 	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
 	SDL_RenderDrawRect(GameRenderer, &movingrect);
@@ -181,29 +183,6 @@ void ZeldaApp::Initialise(void) {
 
 }	
 
-int testparser(int startPos,
-	const std::string& input,
-	std::string& idOutput,
-	std::string& pathOutput,
-	std::vector<SDL_Rect>& rectsOutput) {
-
-	idOutput = "Link.Run";
-	pathOutput = full_asset_path + "\\link-sprites.png";
-
-	SDL_Rect test_anim1 = { 0, 0, 34, 34 };
-	rectsOutput.push_back(test_anim1);
-
-	SDL_Rect test_anim2 = { 0, 35, 34, 34 };
-	rectsOutput.push_back(test_anim2);
-
-	SDL_Rect test_anim3 = { 0, 70, 34, 34 };
-	rectsOutput.push_back(test_anim1);
-
-	SDL_Rect test_anim4 = { 0, 105, 34, 34 };
-	rectsOutput.push_back(test_anim4);
-	return 0;
-}
-
 void ZeldaApp::Load() {
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::string find_first_part_path = cwd.string();
@@ -222,7 +201,7 @@ void ZeldaApp::Load() {
 	GameGrid = GridLayer(MAPHEIGHT, MAPWIDTH);
 	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
 
-	FilmHolder.Load("TEST", testparser, GameRenderer);
+	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer);
 	
 }
 

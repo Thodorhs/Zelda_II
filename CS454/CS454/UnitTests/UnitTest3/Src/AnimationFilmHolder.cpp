@@ -15,9 +15,9 @@ void AnimationFilmHolder::Load(const std::string& text, const EntryParser& entry
 	}
 
 }
-void AnimationFilmHolder::Load(const std::string& text, const Parser& parser, SDL_Renderer* GameRenderer) {
+void AnimationFilmHolder::Load(const std::string& path, const Parser& parser, SDL_Renderer* GameRenderer) {
 	std::list<AnimationFilm::Data> output;
-	auto result = parser(output, text);
+	auto result = parser(output, path);
 	assert(result);
 	for (auto& entry : output) {
 		assert(!GetFilm(entry.id));
