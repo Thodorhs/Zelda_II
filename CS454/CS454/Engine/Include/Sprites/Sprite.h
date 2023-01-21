@@ -4,6 +4,8 @@
 #include "../EngineDefines.h"
 #include "../GridLayer.h"
 #include "../TileLayer.h"
+#include "SDL.h"
+
 class Clipper;
 class Sprite {
 public:
@@ -36,7 +38,35 @@ public:
 	void SetPos(int _x, int _y) { x = _x; y = _y; }
 	void SetZorder(unsigned z) { zorder = z; }
 	unsigned GetZorder(void) { return zorder; }
-	void Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper& clipper) const;
+	void Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper& clipper, SDL_Renderer* GameRender) const;
+	void SetFrame(byte i) {
+		if (i != frameNo) {
+			assert(i < currFilm->GetTotalFrames());
+			frameBox = currFilm->GetFrameBox(frameNo = i);
+		}
+	}
+	byte GetFrame(void) const { return frameNo; }
+	/*void SetBoundingArea(const BoundingArea& area)
+	{
+		assert(!boundingArea); boundingArea = area.Clone();
+	}
+	void SetBoundingArea(BoundingArea* area)
+	{
+		assert(!boundingArea); boundingArea = area;
+	}
+	auto GetBoundingArea(void) const -> const BoundingArea*
+	{
+		return boundingArea;
+	}*/
+	auto GetTypeId(void) -> const std::string& { return typeId; }
+	void SetVisibility(bool v) { isVisible = v; }
+	bool IsVisible(void) const { return isVisible; }
+	bool CollisionCheck(const Sprite* s) const;
+	void Display(BitmapTexture dest, const SDL_Rect& dpyArea, const Clipper& clipper, SDL_Renderer* GameRenderer) const;
+	Sprite(int _x, int _y, AnimationFilm* film, const std::string& _typeId = "") :
+	x(_x), y(_y), currFilm(film), typeId(_typeId){
+		frameNo = currFilm->GetTotalFrames(); SetFrame(0);
+	}
 };
 
 // generic clipper assuming any terrain-based view

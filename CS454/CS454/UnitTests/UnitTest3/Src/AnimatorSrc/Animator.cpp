@@ -35,7 +35,6 @@ void Animator::TimeShift(timestamp_t offset)
 }
 
 
-
 Animator::Animator(void)
 {
 	AnimatorManager::GetSingleton().Register(this);

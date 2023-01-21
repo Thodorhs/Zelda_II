@@ -1,23 +1,30 @@
-
 #include "../../../../Engine/Include/Sprites/Sprite.h"
-void Sprite::Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper& clipper) const {
+
+
+
+void Sprite::Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper& clipper, SDL_Renderer* GameRenderer) const {
 	SDL_Rect clippedBox;
 	Point dpyPos;
-	if (clipper.Clip(GetBox(), dpyArea, &dpyPos, &clippedBox)) {
+	/*if (clipper.Clip(GetBox(), dpyArea, &dpyPos, &clippedBox)) {
 		SDL_Rect clippedFrame{
 		frameBox.x + clippedBox.x,
 		frameBox.y + clippedBox.y,
 		clippedBox.w,
 		clippedBox.h
 		};
-		/*MaskedBlit(
+		MaskedBlit(
 			currFilm->GetBitmap(),
 			clippedFrame,
 			dest,
 			dpyPos
-		);*/ //the fuck is dis
-	}
-}const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprite) {
+		); //the fuck is dis
+	}*/
+	SDL_Rect test = { frameBox.x, frameBox.y, frameBox.w, frameBox.h };
+	SDL_Rect dpyTest = { 320, 240, frameBox.w, frameBox.h };
+	SDL_RenderCopy(GameRenderer, currFilm->GetBitmap(), &test, &dpyTest);
+}
+
+const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprite) {
 	return [gridLayer, sprite](const SDL_Rect& r, int* dx, int* dy) {
 		// the r is actually awlays the sprite->GetBox():
 		assert(r.x == sprite->GetBox().x && 
@@ -28,7 +35,10 @@
 		if (*dx || *dy){}
 			//sprite->SetHasDirectMotion(true).Move(*dx, *dy).SetHasDirectMotion(false); //kati einai auto twra den kserw fua
 	};
-};template <class T> bool clip_rect(
+};
+
+
+template <class T> bool clip_rect(
 	T x, T y, T w, T h,
 	T wx, T wy, T ww, T wh,
 	T* cx, T* cy, T* cw, T* ch
@@ -52,7 +62,11 @@ bool clip_rect(const SDL_Rect& r, const SDL_Rect& area, SDL_Rect* result) {
 		&result->w,
 		&result->h
 	);
-}bool Clipper::Clip(const SDL_Rect& r, const SDL_Rect& dpyArea, Point* dpyPos, SDL_Rect* clippedBox) const {
+}
+
+
+
+bool Clipper::Clip(const SDL_Rect& r, const SDL_Rect& dpyArea, Point* dpyPos, SDL_Rect* clippedBox) const {
 	SDL_Rect visibleArea;
 	if (!clip_rect(r, view(), &visibleArea))
 	{

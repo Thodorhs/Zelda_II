@@ -7,6 +7,8 @@
 #include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
 
 #include <filesystem>
+#include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
+#include "../../../Engine/Include/Sprites/Sprite.h"
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
@@ -21,6 +23,9 @@ TileLayer HorizonLayer;
 
 AnimationFilmHolder AnimationFilmHolder::holder; // Set this so that the Linker can find it
 static AnimationFilmHolder& FilmHolder = AnimationFilmHolder::getInstance(); // Take the singleton
+
+Sprite* Link; //
+
 std::string full_asset_path;
 
 SDL_Rect movingrect = {0,0,10,10};
@@ -147,13 +152,14 @@ void myRender() {
 	SDL_RenderClear(GameRenderer);
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
-	Animate(*(FilmHolder.GetFilm("Link.Run")), { 320, 240 });
+	//Animate(*(FilmHolder.GetFilm("Link.Run")), { 320, 240 });
 	//Animate(*(FilmHolder.GetFilm("Link.Attack")), { 280, 240 });
+	BitmapSurface dest{}; const SDL_Rect dpyArea;  const Clipper clipper;
+	Link->Display(dest, dpyArea, clipper, GameRenderer);
 
 	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
 	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
-	
 }
 
 bool myDone() {
@@ -192,6 +198,7 @@ void ZeldaApp::Load() {
 
 	TileSetSurface = IMG_Load((full_asset_path + "\\Zelda-II-Parapa-Palace-Tileset.png").c_str());
 
+	// LAYERS
 	ReadTextMap(full_asset_path + "\\zeldatest_Tile BgLayer.csv");
 	HorizonLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()));
 
@@ -201,8 +208,14 @@ void ZeldaApp::Load() {
 	GameGrid = GridLayer(MAPHEIGHT, MAPWIDTH);
 	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
 
-	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer);
-	
+
+	// ANIMATIONS
+	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer); // LOAD ANIMATIONS
+	FrameRangeAnimator *TestAnimator =new FrameRangeAnimator();
+	AnimationFilm* TestAnimation = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run"));
+	TestAnimator->Start((FrameRangeAnimation*)TestAnimation, 0);
+	Link = new Sprite(320, 240, TestAnimation, "peos");
+	//FrameRange_Action(Sprite* sprite, Animator* animator, const FrameRangeAnimation& anim)
 }
 
 void ZeldaApp::Run() {

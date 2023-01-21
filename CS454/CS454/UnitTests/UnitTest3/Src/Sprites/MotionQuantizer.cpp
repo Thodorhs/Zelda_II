@@ -1,4 +1,4 @@
-#include "../../../Engine/Include/Sprites/MotionQuantizer.h"
+#include "../../../../Engine/Include/Sprites/MotionQuantizer.h"
 
 void MotionQuantizer::Move(const SDL_Rect& r, int* dx, int* dy) {
 	if (!used)

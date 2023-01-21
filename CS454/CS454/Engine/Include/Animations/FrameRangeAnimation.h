@@ -20,4 +20,6 @@ public:
 		unsigned s, unsigned e,
 		unsigned r, int dx, int dy, int d
 	) : start(s), end(e), MovingAnimation(id, r, dx, dy, d) {}
+	
 };
+void FrameRange_Action(Sprite* sprite, Animator* animator, const FrameRangeAnimation& anim);
