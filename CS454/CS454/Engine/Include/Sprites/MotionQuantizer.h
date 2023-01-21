@@ -29,4 +29,4 @@ public:
 	void Move(const SDL_Rect& r, int* dx, int* dy);
 	MotionQuantizer(void) = default;
 	MotionQuantizer(const MotionQuantizer&) = default;
-};
+};
