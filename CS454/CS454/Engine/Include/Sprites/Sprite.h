@@ -26,6 +26,8 @@ protected:
 	bool directMotion = false;
 	GravityHandler gravity;
 public:
+	void change_film(AnimationFilm* new_film) { currFilm = new_film; }
+
 	template <typename Tfunc>
 	void SetMover(const Tfunc& f)
 	{

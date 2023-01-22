@@ -20,7 +20,7 @@ void Sprite::Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper&
 		); //the fuck is dis
 	}*/
 	SDL_Rect test = { frameBox.x, frameBox.y, frameBox.w, frameBox.h };
-	SDL_Rect dpyTest = { x, y, frameBox.w, frameBox.h };
+	SDL_Rect dpyTest = { 10, 10, frameBox.w, frameBox.h };
 	SDL_RenderCopy(GameRenderer, currFilm->GetBitmap(), &test, &dpyTest);
 }
 

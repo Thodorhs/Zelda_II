@@ -32,6 +32,7 @@ public:
 		for (auto* a : copied) 
 			a->Progress(currTime);
 	}
+	
 	static auto GetSingleton(void) -> AnimatorManager& { return singleton; }
 	static auto GetSingletonConst(void) -> const AnimatorManager& { return singleton; }
 };
