@@ -21,7 +21,7 @@ public:
 		std::string path;
 	};
 
-	byte GetTotalFrames(void) const { return boxes.size(); }
+	byte GetTotalFrames(void) const {  return boxes.size(); }
 	BitmapTexture* GetBitmap(void) const { return bitmap; }
 	auto GetId(void) const -> const std::string& { return id; }
 

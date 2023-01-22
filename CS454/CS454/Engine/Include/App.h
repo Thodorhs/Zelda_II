@@ -18,9 +18,10 @@ namespace app {
 			void SetRender(const Action& f) { render = f; }
 			void SetInput(const Action& f) { input = f; }
 			void SetDone(const Pred& f) { done = f; }
+			void SetAnim(const Action& f) { anim = f;  }
 			// rest of setters are similary defined
 			void Render(void){ Invoke(render); }
-			//void ProgressAnimations(void) { Invoke(anim); }
+			void ProgressAnimations(void) { Invoke(anim); }
 			void Input(void) { Invoke(input); }
 			//void AI(void) { Invoke(ai); }
 			//void Physics(void) { Invoke(physics); }

@@ -2,10 +2,14 @@
 #include <assert.h>
 
 void FrameRangeAnimator::Progress(timestamp_t currTime) {
+	currTime = 1000;
+	
 	while (currTime > lastTime && (currTime - lastTime) >= anim->GetDelay()) {
+		
 		if (currFrame == anim->GetEndFrame()) {
 			assert(anim->IsForever() || currRep < anim->GetReps());
 			currFrame = anim->GetStartFrame(); // flip to start
+			
 		}
 		else
 			++currFrame;
