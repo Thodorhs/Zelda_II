@@ -1,15 +1,15 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/TileLayer.h"
-#include "../../../Engine/Include/GridLayer.h"
+#include "../../../Engine/Include/Grid/GridLayer.h"
 
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
 #include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
 #include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
 
-#include <filesystem>
 #include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
 #include "../../../Engine/Include/Sprites/Sprite.h"
-#include <chrono>
+
+#include "../../../Engine/Include/SystemClock.h"
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
@@ -24,10 +24,12 @@ TileLayer HorizonLayer;
 
 AnimationFilmHolder AnimationFilmHolder::holder; // Set this so that the Linker can find it
 static AnimationFilmHolder& FilmHolder = AnimationFilmHolder::getInstance(); // Take the singleton
+static AnimatorManager& AnimManager = AnimatorManager::GetSingleton(); // Take the singleton
+
 FrameRangeAnimator* my_animator_test;
 AnimationFilm* my_animation;
 Sprite* Link; //
-
+static SystemClock& my_system_clock = SystemClock::Get();
 std::string full_asset_path;
 
 SDL_Rect movingrect = {0,0,10,10};
@@ -142,52 +144,49 @@ void myInput() {
 }
 
 int testi = 0;
-void Animate(const AnimationFilm& film, const Point& at) { //THIS IS FOR TEST ONLY
-	Uint32 frameStart;
-	uint64_t t = 0;
-
-	film.DisplayFrame(GameRenderer, { at.x, at.y, 35, 35 }, testi);
-	frameStart = SDL_GetTicks();
-	testi++;
-	if (testi > 3) testi = 0;
-
-	Uint32 frameTime = SDL_GetTicks() - frameStart;
-	Uint32 frameDelay = 500;
-	if (frameDelay > frameTime) {
-		SDL_Delay(frameDelay - frameTime);
-	}
-}
 
 void do_smth() {
 	Link->SetFrame(1);
 }
 
+void initialize_animators() {
+	Animator* moving = new FrameRangeAnimator();
+	FrameRangeAnimator* attacking = new FrameRangeAnimator();
+	attacking->SetOnAction([](Animator* animator, const Animation& anim) {
+		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
+		});
+	
+	attacking->Start(my_fr_animation, getgametime());
+	
+}
+
+
 void animation_handler() {
 	
-	
-	std::function<void(void)> sumFunc;
-	sumFunc = []() {Link->SetFrame(1); };
+
+	AnimManager.Progress(getgametime());
 	//Link->SetFrame(testi);
 	//my_animator_test->Progress(getgametime());
 	//FrameRange_Action(Link, my_animator_test, *my_fr_animation);
 	
 	
-		Uint32 frameStart;
-		frameStart = SDL_GetTicks();
-		uint64_t t = 0;
-		Uint32 frameTime = SDL_GetTicks() - frameStart;
-		Uint32 frameDelay = 500;
-		if (frameDelay > frameTime) {
+	/*Uint32 frameStart;
+	frameStart = SDL_GetTicks();
+	uint64_t t = 0;
+	Uint32 frameTime = SDL_GetTicks() - frameStart;
+	Uint32 frameDelay = 500;
+	if (frameDelay > frameTime) {
 			SDL_Delay(frameDelay - frameTime);
-		}
-		if (testi > 3) testi = 0;
-		Link->SetFrame(testi);
+	}
+	if (testi > 3) testi = 0;
+	Link->SetFrame(testi); */
 		
 		
-	my_animator_test->Progress(getgametime());
+	//my_animator_test->Progress(getgametime());
+	
 	//Link->SetFrame(my_animator_test->GetCurrFrame());
 	//std::cout << my_animator_test->GetCurrFrame();
-	testi++;
+	
 }
 
 void myRender() {	
@@ -195,8 +194,7 @@ void myRender() {
 	SDL_RenderClear(GameRenderer);
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
-	//Animate(*(FilmHolder.GetFilm("Link.Run")), { 320, 240 });
-	//Animate(*(FilmHolder.GetFilm("Link.Attack")), { 280, 240 });
+
 	BitmapSurface dest{}; const SDL_Rect dpyArea;  const Clipper clipper;
 	Link->Display(dest, dpyArea, clipper, GameRenderer);
 	//my_animation->DisplayFrame(GameRenderer, dpyArea, testi);
@@ -254,38 +252,34 @@ void ZeldaApp::Load() {
 
 
 	// ANIMATIONS
+	// commented for testing nigg
 	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer); // LOAD ANIMATIONS
-	FrameRangeAnimator *TestAnimator =new FrameRangeAnimator();
-	AnimationFilm* TestAnimation = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack"));
+	//FrameRangeAnimator *TestAnimator =new FrameRangeAnimator();
+	AnimationFilm* TestAnimation_film = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack"));
 	
 	FrameRangeAnimation* an = new FrameRangeAnimation("Link.attack", 0, 4, 100, 1, 1, 1);
 	//TestAnimator->Start((FrameRangeAnimation*)TestAnimation, getgametime());
-	an->SetDelay(100);
-	TestAnimator->Start(an, getgametime());
-	Link = new Sprite(320, 240, TestAnimation, "peos");
+	//an->SetDelay(100);
+	//TestAnimator->Start(an, getgametime());
+	Link = new Sprite(320, 240, TestAnimation_film, "peos");
 	
 	my_fr_animation = an;
-	my_animator_test = TestAnimator;
-	my_animation = TestAnimation;
+	//my_animator_test = TestAnimator;
+	my_animation = TestAnimation_film;
+	initialize_animators();
 	
 }
 
 void ZeldaApp::Run() {
 	
 	game.MainLoop();
-	std::cout << getgametime();
-	
-
 
 }
 
 void ZeldaApp::RunIteration() {
-	//auto startTime = std::chrono::high_resolution_clock().now();
+	auto time = my_system_clock.milli_secs();
 	game.MainLoopIteration();
-	
-	//auto stopTime = std::chrono::high_resolution_clock().now();
-	//auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stopTime - startTime);
-	//setgametime(duration.count());
+	setgametime(time);
 	
 }
 

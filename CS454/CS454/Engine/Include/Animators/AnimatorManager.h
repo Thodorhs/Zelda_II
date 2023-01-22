@@ -29,7 +29,7 @@ public:
 	}
 	void Progress(timestamp_t currTime) {
 		auto copied(running);
-		for (auto* a : copied)
+		for (auto* a : copied) 
 			a->Progress(currTime);
 	}
 	static auto GetSingleton(void) -> AnimatorManager& { return singleton; }

@@ -1,4 +1,4 @@
-#include "../Include/GridMotion.h"
+#include "../Include/Grid/GridMotion.h"
 void SetGridMap(GridIndex* g, unsigned rows, unsigned cols) {
 	auto startCol = 0, startRow = 0;
 

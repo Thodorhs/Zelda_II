@@ -1,4 +1,4 @@
-#include "../../../Engine/Include/GridCompute2.h"
+#include "../../../Engine/Include/Grid/GridCompute2.h"
 
 bool IsTileColorEmpty(SDL_Color c)
 {

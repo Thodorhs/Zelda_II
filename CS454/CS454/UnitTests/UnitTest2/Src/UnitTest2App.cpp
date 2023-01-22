@@ -1,8 +1,8 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/ViewWindow.h"
-#include "../../../Engine/Include/GridCompute.h"
+#include "../../../Engine/Include/Grid/GridCompute.h"
 //#include "../../../Engine/Include/GridCompute2.h"
-#include "../../../Engine/Include/GridMotion.h"
+#include "../../../Engine/Include/Grid/GridMotion.h"
 #include <filesystem>
 
 SDL_Surface* TileSetSurface;

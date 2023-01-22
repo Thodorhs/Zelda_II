@@ -3,7 +3,7 @@
 #include <set>
 #include <cassert>
 #include <Functional>
-#include "../Include/MapEditor.h"
+#include "../MapEditor.h"
 
 void printgrid(GridIndex* grid, unsigned rows, unsigned cols);
 void ComputeTileGridBlocks1(Index (&MapGetTile)(Dim, Dim), GridIndex* grid, unsigned rows, unsigned cols);

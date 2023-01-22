@@ -2,7 +2,7 @@
 #include "MotionQuantizer.h"
 #include "../KeyFrameAnimation/AnimationFilm.h"
 #include "../EngineDefines.h"
-#include "../GridLayer.h"
+#include "../Grid/GridLayer.h"
 #include "../TileLayer.h"
 #include "SDL.h"
 

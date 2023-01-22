@@ -2,7 +2,6 @@
 #include <assert.h>
 
 void FrameRangeAnimator::Progress(timestamp_t currTime) {
-	currTime = 1000;
 	
 	while (currTime > lastTime && (currTime - lastTime) >= anim->GetDelay()) {
 		

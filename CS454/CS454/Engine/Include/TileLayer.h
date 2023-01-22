@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "GridLayer.h"
+#include "Grid/GridLayer.h"
 #include "ViewWindow.h"
 
 #define MAPHEIGHT 36

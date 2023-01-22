@@ -1,4 +1,4 @@
-#include "../../../Engine/Include/GridCompute.h"
+#include "../../../Engine/Include/Grid/GridCompute.h"
 
 void printgrid(GridIndex* grid, unsigned rows, unsigned cols) {
 	for (auto c = 0; c < rows * cols * GRID_ELEMENTS_PER_TILE; ++c) {

@@ -4,7 +4,7 @@
 #include <set>
 #include <cassert>
 #include <Functional>
-#include "../Include/MapEditor.h"
+#include "../MapEditor.h"
 
 ////GridCompute2
 
