@@ -1,5 +1,5 @@
 #pragma once
-#include "../../Include/EngineDefines.h"
+#include "../../Include/Util/EngineDefines.h"
 #include "SDL_image.h"
 #include <iostream>
 #include <cassert>

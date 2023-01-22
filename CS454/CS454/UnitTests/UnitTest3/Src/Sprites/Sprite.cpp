@@ -4,7 +4,7 @@
 
 void Sprite::Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper& clipper, SDL_Renderer* GameRenderer) const {
 	SDL_Rect clippedBox;
-	Point dpyPos;
+	SDL_Point dpyPos;
 	/*if (clipper.Clip(GetBox(), dpyArea, &dpyPos, &clippedBox)) {
 		SDL_Rect clippedFrame{
 		frameBox.x + clippedBox.x,
@@ -37,59 +37,11 @@ const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprit
 	};
 };
 
-
-template <class T> bool clip_rect(
-	T x, T y, T w, T h,
-	T wx, T wy, T ww, T wh,
-	T* cx, T* cy, T* cw, T* ch
-) {
-	*cw = T(std::min(wx + ww, x + w)) - (*cx = T(std::max(wx, x)));
-	*ch = T(std::min(wy + wh, y + h)) - (*cy = T(std::max(wy, y)));
-	return *cw > 0 && *ch > 0;
-}
-bool clip_rect(const SDL_Rect& r, const SDL_Rect& area, SDL_Rect* result) {
-	return clip_rect(
-		r.x,
-		r.y,
-		r.w,
-		r.h,
-		area.x,
-		area.y,
-		area.w,
-		area.h,
-		&result->x,
-		&result->y,
-		&result->w,
-		&result->h
-	);
+bool Sprite::CollisionCheck(const Sprite* s) const {
+	//return this->boundingArea->Intersects(*(s->boundingArea));
+	return true; //neeed to fix this.
 }
 
-
-
-bool Clipper::Clip(const SDL_Rect& r, const SDL_Rect& dpyArea, Point* dpyPos, SDL_Rect* clippedBox) const {
-	SDL_Rect visibleArea;
-	if (!clip_rect(r, view(), &visibleArea))
-	{
-		clippedBox->w = clippedBox->h = 0; return false;
-	}
-	else {
-		// clippedBox is in ‘r’ coordinates, sub-rectangle of the input rectangle
-		clippedBox->x = r.x - visibleArea.x;
-		clippedBox->y = r.y - visibleArea.y;
-		clippedBox->w = visibleArea.w;
-		clippedBox->h = visibleArea.h;
-		dpyPos->x = dpyArea.x + (visibleArea.x - view().x);
-		dpyPos->y = dpyArea.y + (visibleArea.y - view().y);
-		return true;
-	}
-}
-
-const Clipper MakeTileLayerClipper(TileLayer* layer) {
-	return Clipper().SetView(
-		[layer](void)
-		{ return layer->GetViewWindow(); }
-	);
-}
 
 void PrepareSpriteGravityHandler(GridLayer* gridLayer, Sprite* sprite) {
 	sprite->GetGravityHandler().SetOnSolidGround(

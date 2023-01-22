@@ -1,5 +1,5 @@
 #pragma once
-#include"../EngineDefines.h"
+#include"../Util/EngineDefines.h"
 #include <iostream>
 
 #define GRID_THIN_AIR_MASK 0x0000 // element is ignored

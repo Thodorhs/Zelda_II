@@ -8,8 +8,7 @@
 
 #include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
 #include "../../../Engine/Include/Sprites/Sprite.h"
-
-#include "../../../Engine/Include/SystemClock.h"
+#include "../../../Engine/Include/Util/SystemClock.h"
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
@@ -23,18 +22,20 @@ TileLayer ActionLayer;
 TileLayer HorizonLayer;
 
 AnimationFilmHolder AnimationFilmHolder::holder; // Set this so that the Linker can find it
+
 static AnimationFilmHolder& FilmHolder = AnimationFilmHolder::getInstance(); // Take the singleton
 static AnimatorManager& AnimManager = AnimatorManager::GetSingleton(); // Take the singleton
-
-FrameRangeAnimator* my_animator_test;
-AnimationFilm* my_animation;
-Sprite* Link; //
 static SystemClock& my_system_clock = SystemClock::Get();
+
+FrameRangeAnimation* my_fr_animation;
+AnimationFilm* my_animation;
+Sprite* Link;
+
 std::string full_asset_path;
 
 SDL_Rect movingrect = {0,0,10,10};
 SDL_Rect viewVariable;
-FrameRangeAnimation* my_fr_animation;
+
 
 void myInput() {
 	int CameraPosX, CameraPosY;
