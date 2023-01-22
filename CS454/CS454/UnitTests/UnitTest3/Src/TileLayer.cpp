@@ -20,13 +20,13 @@ void TileLayer::PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_
 	SDL_Rect PTsrcrect{};
 	SDL_Rect PTdstrect{};
 
-	PTsrcrect.x = MUL_TILE_WIDTH(tile % TILESETWIDTH);
-	PTsrcrect.y = MUL_TILE_HEIGHT(tile / TILESETHEIGHT);
+	PTsrcrect.x = ((tile % TILESETWIDTH) << 4);
+	PTsrcrect.y = ((tile / TILESETHEIGHT) << 4);
 	PTsrcrect.h = PTsrcrect.w = 16;
 
 	PTdstrect.x = x;
 	PTdstrect.y = y;
-	PTdstrect.h = PTdstrect.w = 16;
+	PTdstrect.h = PTdstrect.w = 32;
 	SDL_RenderCopy(myrenderer, texture, &PTsrcrect, &PTdstrect); //Same as SDL_BlitSurface but uses the gpu so its faster
 }
 
@@ -48,7 +48,7 @@ void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_
 
 		SDL_SetRenderTarget(myrenderer, dpyBuffer); //Setting the target of SDL_RenderCopy to be the texture
 
-		for (unsigned short row = startRow; row <= 15; ++row)
+		for (unsigned short row = startRow; row <= endRow; ++row)
 			for (unsigned short col = startCol; col <= endCol; ++col) {
 				if (map[row][col] == -1) continue;
 				PutTile(MUL_TILE_WIDTH(col - startCol), MUL_TILE_HEIGHT(row - startRow), map[row][col], myrenderer, Tileset);

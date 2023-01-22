@@ -1,5 +1,6 @@
 #pragma once
 #include "Clipper.h"
+#include "BoundingArea.h"
 #include "MotionQuantizer.h"
 #include "GravityHandler.h"
 #include "../KeyFrameAnimation/AnimationFilm.h"
@@ -17,7 +18,7 @@ protected:
 	int x = 0, y = 0;
 	bool isVisible = false;
 	AnimationFilm* currFilm = nullptr;
-	//BoundingArea* boundingArea = nullptr;
+	BoundingArea* boundingArea = nullptr;
 	unsigned zorder = 0;
 	std::string typeId, stateId;
 	Mover mover;

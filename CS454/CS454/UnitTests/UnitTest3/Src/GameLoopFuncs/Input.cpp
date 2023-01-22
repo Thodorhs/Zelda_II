@@ -1,6 +1,6 @@
 #include "../../../../Engine/Include/GameLoopFuncs/Input.h"
 
-void myInput(TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, SDL_Rect& movingrect, bool& is_running, bool& mouse_down) {
+void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, SDL_Rect& movingrect, bool& is_running, bool& mouse_down) {
 	int CameraPosX, CameraPosY;
 	int PrevCameraPosX = 0, PrevCameraPosY = 0;
 	SDL_Event event;
@@ -36,20 +36,24 @@ void myInput(TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGri
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
 			case SDLK_DOWN:
-				//HorizonLayer.Scroll(0, 1);
-				ActionLayer.Scroll(0, 4);
+				//HorizonLayer.Scroll(0, 4);
+				//ActionLayer.Scroll(0, 4);
+				Link->Move(0, 4);
 				break;
 			case SDLK_UP:
-				//HorizonLayer.Scroll(0, -1);
-				ActionLayer.Scroll(0, -4);
+				//HorizonLayer.Scroll(0, -4);
+				//ActionLayer.Scroll(0, -4);
+				Link->Move(0, -4);
 				break;
 			case SDLK_LEFT:
-				HorizonLayer.Scroll(-1, 0);
-				ActionLayer.Scroll(-4, 0);
+				//HorizonLayer.Scroll(-4, 0);
+				//ActionLayer.Scroll(-4, 0);
+				Link->Move(-4, 0);
 				break;
 			case SDLK_RIGHT:
-				HorizonLayer.Scroll(1, 0);
-				ActionLayer.Scroll(4, 0);
+				//HorizonLayer.Scroll(4, 0);
+				//ActionLayer.Scroll(4, 0);
+				Link->Move(4, 0);
 				break;
 			case SDLK_HOME:
 				HorizonLayer.SetViewWindow({ 0, 0, HorizonLayer.GetViewWindow().w, HorizonLayer.GetViewWindow().h });
@@ -91,8 +95,7 @@ void myInput(TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGri
 			break;
 		}
 		//IF WE WANT TO GET THE TRUE POSITION OF THE RECTANGLE IF THE CAMERA MOVES SO THAT THE GRID WORKS
-		GameGrid.FilterGridMotion(movingrect, dx, dy);
-		movingrect.x += *dx;
-		movingrect.y += *dy;
+		GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
+		Link->Move(*dx, *dy);
 	}
 }

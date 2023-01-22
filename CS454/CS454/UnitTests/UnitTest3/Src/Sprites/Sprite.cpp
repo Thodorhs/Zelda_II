@@ -20,7 +20,7 @@ void Sprite::Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper&
 		); //the fuck is dis
 	}*/
 	SDL_Rect test = { frameBox.x, frameBox.y, frameBox.w, frameBox.h };
-	SDL_Rect dpyTest = { 10, 10, frameBox.w, frameBox.h };
+	SDL_Rect dpyTest = { x , y, frameBox.w, frameBox.h};
 	SDL_RenderCopy(GameRenderer, currFilm->GetBitmap(), &test, &dpyTest);
 }
 
@@ -39,7 +39,7 @@ const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprit
 
 bool Sprite::CollisionCheck(const Sprite* s) const {
 	//return this->boundingArea->Intersects(*(s->boundingArea));
-	return true; //neeed to fix this.
+	return false; //neeed to fix this.
 }
 
 
