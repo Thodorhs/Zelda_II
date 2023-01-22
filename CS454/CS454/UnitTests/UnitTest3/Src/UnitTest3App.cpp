@@ -36,16 +36,6 @@ SDL_Rect movingrect = {0,0,10,10};
 SDL_Rect viewVariable;
 FrameRangeAnimation* my_fr_animation;
 
-static unsigned long currTime = 0;
-void setgametime(unsigned long time) {
-	currTime = time;
-}
-unsigned long getgametime() { return currTime; }
-
-
-
-
-
 void myInput() {
 	int CameraPosX, CameraPosY;
 	int PrevCameraPosX = 0, PrevCameraPosY = 0;
@@ -156,37 +146,12 @@ void initialize_animators() {
 		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
 		});
 	
-	attacking->Start(my_fr_animation, getgametime());
-	
+	attacking->Start(my_fr_animation, GetSystemTime());
 }
 
 
 void animation_handler() {
-	
-
-	AnimManager.Progress(getgametime());
-	//Link->SetFrame(testi);
-	//my_animator_test->Progress(getgametime());
-	//FrameRange_Action(Link, my_animator_test, *my_fr_animation);
-	
-	
-	/*Uint32 frameStart;
-	frameStart = SDL_GetTicks();
-	uint64_t t = 0;
-	Uint32 frameTime = SDL_GetTicks() - frameStart;
-	Uint32 frameDelay = 500;
-	if (frameDelay > frameTime) {
-			SDL_Delay(frameDelay - frameTime);
-	}
-	if (testi > 3) testi = 0;
-	Link->SetFrame(testi); */
-		
-		
-	//my_animator_test->Progress(getgametime());
-	
-	//Link->SetFrame(my_animator_test->GetCurrFrame());
-	//std::cout << my_animator_test->GetCurrFrame();
-	
+	AnimManager.Progress(GetSystemTime());
 }
 
 void myRender() {	
@@ -197,7 +162,7 @@ void myRender() {
 
 	BitmapSurface dest{}; const SDL_Rect dpyArea;  const Clipper clipper;
 	Link->Display(dest, dpyArea, clipper, GameRenderer);
-	//my_animation->DisplayFrame(GameRenderer, dpyArea, testi);
+
 	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
 	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
@@ -257,15 +222,12 @@ void ZeldaApp::Load() {
 	//FrameRangeAnimator *TestAnimator =new FrameRangeAnimator();
 	AnimationFilm* TestAnimation_film = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack"));
 	
-	FrameRangeAnimation* an = new FrameRangeAnimation("Link.attack", 0, 4, 100, 1, 1, 1);
+	my_fr_animation = new FrameRangeAnimation("Link.attack", 0, 1, 0, 0, 0, 500);
 	//TestAnimator->Start((FrameRangeAnimation*)TestAnimation, getgametime());
 	//an->SetDelay(100);
 	//TestAnimator->Start(an, getgametime());
 	Link = new Sprite(320, 240, TestAnimation_film, "peos");
 	
-	my_fr_animation = an;
-	//my_animator_test = TestAnimator;
-	my_animation = TestAnimation_film;
 	initialize_animators();
 	
 }
@@ -277,10 +239,7 @@ void ZeldaApp::Run() {
 }
 
 void ZeldaApp::RunIteration() {
-	auto time = my_system_clock.milli_secs();
 	game.MainLoopIteration();
-	setgametime(time);
-	
 }
 
 void ZeldaApp::Clear() {

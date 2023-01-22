@@ -13,3 +13,5 @@ public:
 	uint64_t micro_secs(void) const;
 	uint64_t nano_secs(void) const;
 };
+
+uint64_t GetSystemTime(void);
