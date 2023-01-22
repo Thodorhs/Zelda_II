@@ -10,7 +10,7 @@ typedef unsigned short Dim;
 typedef unsigned char byte;
 using GridIndex = byte;
 
-#define MAX_WIDTH 21
-#define MAX_HEIGHT 42
-#define TILE_WIDTH 16
-#define TILE_HEIGHT 16
+#define MAPHEIGHT 16
+#define MAPWIDTH  50
+#define TILESETWIDTH 10
+#define TILESETHEIGHT 10

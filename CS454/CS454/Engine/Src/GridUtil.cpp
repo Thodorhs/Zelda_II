@@ -7,7 +7,7 @@ GridIndex* GetGridTileBlock(Dim colTile, Dim rowTile, Dim tileCols, GridIndex* g
 
 
 bool IsTileIndexAssumedEmpty(Index index) {
-	if (index == 35) return false;
+	if (index == 31) return false;
 	else return true;
 }
 
@@ -17,7 +17,8 @@ void DisplayGrid(SDL_Rect viewWin, GridIndex* grid, Dim tileCols, SDL_Renderer* 
 	auto startRow = DIV_TILE_HEIGHT(viewWin.y);
 	auto endCol = DIV_TILE_WIDTH(viewWin.x + viewWin.w - 1);
 	auto endRow = DIV_TILE_HEIGHT(viewWin.y + viewWin.h - 1);
-	for (Dim rowTile = startRow; rowTile <= endRow; ++rowTile)
+
+	for (Dim rowTile = startRow; rowTile <= 15; ++rowTile)
 		for (Dim colTile = startCol; colTile <= endCol; ++colTile) {
 
 			auto sx = MUL_TILE_WIDTH(colTile - startCol);

@@ -48,7 +48,7 @@ void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_
 
 		SDL_SetRenderTarget(myrenderer, dpyBuffer); //Setting the target of SDL_RenderCopy to be the texture
 
-		for (unsigned short row = startRow; row <= endRow; ++row)
+		for (unsigned short row = startRow; row <= 15; ++row)
 			for (unsigned short col = startCol; col <= endCol; ++col) {
 				if (map[row][col] == -1) continue;
 				PutTile(MUL_TILE_WIDTH(col - startCol), MUL_TILE_HEIGHT(row - startRow), map[row][col], myrenderer, Tileset);

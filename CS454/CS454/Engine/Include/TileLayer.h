@@ -2,12 +2,6 @@
 #include "Grid/GridLayer.h"
 #include "ViewWindow.h"
 
-#define MAPHEIGHT 36
-#define MAPWIDTH  60
-
-#define TILESETWIDTH 10
-#define TILESETHEIGHT 10
-
 class TileLayer {
 private:
 	TileMap map;

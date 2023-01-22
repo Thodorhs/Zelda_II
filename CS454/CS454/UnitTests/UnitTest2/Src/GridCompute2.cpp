@@ -25,8 +25,8 @@ void ComputeTileGridBlocks2(
 	SDL_Rect tileElemRect{};
 	SDL_Rect tilesetRect{};
 
-	for (auto row = 0; row < MAX_HEIGHT; ++row)
-		for (auto col = 0; col < MAX_WIDTH; ++col) {
+	for (auto row = 0; row < MAPHEIGHT; ++row)
+		for (auto col = 0; col < MAPWIDTH; ++col) {
 			auto index = GetTile(col, row);
 			tilesetRect.x, tilesetRect.y, tilesetRect.h, tilesetRect.w = MUL_TILE_WIDTH(index % 12), MUL_TILE_HEIGHT(index / 12), TILE_HEIGHT, TILE_WIDTH;
 			tileElemRect.x, tileElemRect.y, tileElemRect.h, tileElemRect.w =  0, 0, TILE_HEIGHT, TILE_WIDTH;

@@ -105,12 +105,12 @@ void ZeldaApp::Load() {
 	TileSetSurface = IMG_Load((full_asset_path + "\\Zelda-II-Parapa-Palace-Tileset.png").c_str());
 
 	// LAYERS
-	ReadTextMap(full_asset_path + "\\zeldatest_Tile BgLayer.csv");
+	ReadTextMap(full_asset_path + "\\Entrance._BackroundEntrance.csv");
 	HorizonLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()));
 
 	ClearMap(); // We write the data to a static global vector map so we need to clear it before  we read the data of the next layer
 
-	ReadTextMap(full_asset_path + "\\zeldatest_Tile ActionLayer.csv");
+	ReadTextMap(full_asset_path + "\\Entrance._ForegroundEntrance.csv");
 	GameGrid = GridLayer(MAPHEIGHT, MAPWIDTH);
 	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
 
