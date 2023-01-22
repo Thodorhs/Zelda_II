@@ -29,7 +29,7 @@ void FrameRange_Action(Sprite* sprite, Animator* animator, const FrameRangeAnima
 	auto* frameRangeAnimator = (FrameRangeAnimator*)animator;
 	if (frameRangeAnimator->GetCurrFrame() != anim.GetStartFrame() ||
 		frameRangeAnimator->GetCurrRep())
-		//sprite->Move(anim.GetDx(), anim.GetDy());
+		sprite->Move(anim.GetDx(), anim.GetDy());
 	sprite->SetFrame(frameRangeAnimator->GetCurrFrame());
 	animator->SetOnAction(
 		[sprite](Animator* animator, const Animation& anim) {

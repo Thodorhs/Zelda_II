@@ -219,9 +219,12 @@ void ZeldaApp::Load() {
 	// ANIMATIONS
 	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer); // LOAD ANIMATIONS
 	AnimationFilm* TestAnimation_film = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack"));
-	my_fr_animation = new FrameRangeAnimation("Link.attack", 0, 3, 0, 0, 0, 500);
+	my_fr_animation = new FrameRangeAnimation("Link.attack", 0, 3, 0, 10, 10, 500);
 	Link = new Sprite(320, 240, TestAnimation_film, "peos");
-	
+	Link->SetMover([](const SDL_Rect& r, int* dx, int* dy) {
+		Link->SetPos(r.x + *dx, r.y + *dy);
+		});
+
 	initialize_animators();
 	
 }

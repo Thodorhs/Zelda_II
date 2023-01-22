@@ -1,5 +1,6 @@
 #pragma once
 #include "MotionQuantizer.h"
+#include "GravityHandler.h"
 #include "../KeyFrameAnimation/AnimationFilm.h"
 #include "../EngineDefines.h"
 #include "../Grid/GridLayer.h"
@@ -21,6 +22,9 @@ protected:
 	std::string typeId, stateId;
 	Mover mover;
 	MotionQuantizer quantizer;
+
+	bool directMotion = false;
+	GravityHandler gravity;
 public:
 	template <typename Tfunc>
 	void SetMover(const Tfunc& f)
@@ -31,9 +35,21 @@ public:
 	{
 		return { x, y, frameBox.w, frameBox.h };
 	}
-	void Move(int dx, int dy)
+
+	GravityHandler& GetGravityHandler(void)
 	{
-		quantizer.Move(GetBox(), &dx, &dy);
+		return gravity;
+	}
+	Sprite& SetHasDirectMotion(bool v) { directMotion = true; return *this; }
+	bool GetHasDirectMotion(void) const { return directMotion; }
+	Sprite& Move(int dx, int dy) {
+		if (directMotion) // apply unconditionally offsets!
+			x += dx, y += dy;
+		else {
+			quantizer.Move(GetBox(), &dx, &dy);
+			gravity.Check(GetBox());
+		}
+		return *this;
 	}
 	void SetPos(int _x, int _y) { x = _x; y = _y; }
 	void SetZorder(unsigned z) { zorder = z; }
@@ -68,6 +84,8 @@ public:
 		frameNo = currFilm->GetTotalFrames(); SetFrame(0);
 	}
 };
+
+void PrepareSpriteGravityHandler(GridLayer* gridLayer, Sprite* sprite);
 
 // generic clipper assuming any terrain-based view
 // and any bitmap-based display area

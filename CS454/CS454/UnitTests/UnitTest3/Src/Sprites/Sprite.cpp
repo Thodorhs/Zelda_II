@@ -20,7 +20,7 @@ void Sprite::Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper&
 		); //the fuck is dis
 	}*/
 	SDL_Rect test = { frameBox.x, frameBox.y, frameBox.w, frameBox.h };
-	SDL_Rect dpyTest = { 320, 240, frameBox.w, frameBox.h };
+	SDL_Rect dpyTest = { x, y, frameBox.w, frameBox.h };
 	SDL_RenderCopy(GameRenderer, currFilm->GetBitmap(), &test, &dpyTest);
 }
 
@@ -33,7 +33,7 @@ const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprit
 			   r.w == sprite->GetBox().w);
 		gridLayer->FilterGridMotion(r, dx, dy);
 		if (*dx || *dy){}
-			//sprite->SetHasDirectMotion(true).Move(*dx, *dy).SetHasDirectMotion(false); //kati einai auto twra den kserw fua
+			sprite->SetHasDirectMotion(true).Move(*dx, *dy).SetHasDirectMotion(false); //kati einai auto twra den kserw fua
 	};
 };
 
@@ -88,5 +88,12 @@ const Clipper MakeTileLayerClipper(TileLayer* layer) {
 	return Clipper().SetView(
 		[layer](void)
 		{ return layer->GetViewWindow(); }
+	);
+}
+
+void PrepareSpriteGravityHandler(GridLayer* gridLayer, Sprite* sprite) {
+	sprite->GetGravityHandler().SetOnSolidGround(
+		[gridLayer](const SDL_Rect& r)
+		{ return gridLayer->IsOnSolidGround(r); }
 	);
 }
