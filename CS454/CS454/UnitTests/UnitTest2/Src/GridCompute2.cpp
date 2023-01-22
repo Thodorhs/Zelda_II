@@ -16,12 +16,12 @@ std::string convert_SDLcolor_to_string(SDL_Color c){
 void ComputeTileGridBlocks2(
 	const TileMap* map,
 	GridIndex* grid,
-	Bitmap tileSet,
+	BitmapSurface tileSet,
 	SDL_Color transColor,
 	byte solidThreshold
 ) {
-	Bitmap tileElem = *(SDL_CreateRGBSurface(0, TILE_WIDTH, TILE_HEIGHT, 32, 0, 0, 0, 0));
-	Bitmap gridElem = *(SDL_CreateRGBSurface(0, GRID_ELEMENT_WIDTH, GRID_ELEMENT_HEIGHT, 32, 0, 0, 0, 0));
+	BitmapSurface tileElem = *(SDL_CreateRGBSurface(0, TILE_WIDTH, TILE_HEIGHT, 32, 0, 0, 0, 0));
+	BitmapSurface gridElem = *(SDL_CreateRGBSurface(0, GRID_ELEMENT_WIDTH, GRID_ELEMENT_HEIGHT, 32, 0, 0, 0, 0));
 	SDL_Rect tileElemRect{};
 	SDL_Rect tilesetRect{};
 
@@ -52,9 +52,9 @@ void ComputeTileGridBlocks2(
 void ComputeGridBlock(
 	GridIndex*& grid,
 	Index index,
-	Bitmap tileElem,
-	Bitmap gridElem,
-	Bitmap tileSet,
+	BitmapSurface tileElem,
+	BitmapSurface gridElem,
+	BitmapSurface tileSet,
 	SDL_Color transColor,
 	byte solidThreshold
 ) {
@@ -85,7 +85,7 @@ SDL_Color GetPixel32(PixelMemory pixel, const SDL_PixelFormat* format) {
 
 
 bool ComputeIsGridIndexEmpty(
-	Bitmap gridElement,
+	BitmapSurface gridElement,
 	SDL_Color transColor,
 	byte solidThreshold
 ) {
@@ -105,7 +105,7 @@ bool ComputeIsGridIndexEmpty(
 	return n <= (unsigned int)solidThreshold;
 }
 
-void BitmapAccessPixels(Bitmap bmp, const BitmapAccessFunctor& f) {
+void BitmapAccessPixels(BitmapSurface bmp, const BitmapAccessFunctor& f) {
 	bool flag = false;
 	int result = 0;
 	if (SDL_MUSTLOCK(&bmp)) {

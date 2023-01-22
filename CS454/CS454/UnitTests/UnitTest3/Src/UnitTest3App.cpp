@@ -217,15 +217,9 @@ void ZeldaApp::Load() {
 
 
 	// ANIMATIONS
-	// commented for testing nigg
 	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer); // LOAD ANIMATIONS
-	//FrameRangeAnimator *TestAnimator =new FrameRangeAnimator();
 	AnimationFilm* TestAnimation_film = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack"));
-	
-	my_fr_animation = new FrameRangeAnimation("Link.attack", 0, 1, 0, 0, 0, 500);
-	//TestAnimator->Start((FrameRangeAnimation*)TestAnimation, getgametime());
-	//an->SetDelay(100);
-	//TestAnimator->Start(an, getgametime());
+	my_fr_animation = new FrameRangeAnimation("Link.attack", 0, 3, 0, 0, 0, 500);
 	Link = new Sprite(320, 240, TestAnimation_film, "peos");
 	
 	initialize_animators();
