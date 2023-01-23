@@ -75,8 +75,8 @@ void initialize_animators() {
 	Animator* move = new MovingAnimator();
 	Animator* fr = new FrameRangeAnimator();
 
-	Animation* move_anim = new MovingAnimation("link.move",100,5,5,100);
-	Animation* run_anim = new FrameRangeAnimation("link.run", 0, 3, 100, 5, 5, 100);
+	Animation* move_anim = new MovingAnimation("link.move",100,0,0,100);
+	Animation* run_anim = new FrameRangeAnimation("link.run", 0, 3, 100, 0, 0, 100);
 	
 	move->SetOnAction([](Animator* animator, const Animation& anim) {
 		Sprite_MoveAction(Link, animator, (const MovingAnimation&)anim);

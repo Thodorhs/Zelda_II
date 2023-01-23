@@ -82,10 +82,17 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 				break;
 			case SDLK_s:
 				*dx = 0;
-				*dy = 1;
+				*dy = 5;
+				mv->Stop();
+				fr->Stop();
+
+				m_a->SetDx(*dx);
+				m_a->SetDy(*dy);
+				mv->Start(m_a, GetSystemTime());
+				fr->Start(r_a, GetSystemTime());
 				break;
 			case SDLK_d:
-				*dx = 1;
+				*dx = 5;
 				*dy = 0;
 				mv->Stop();
 				fr->Stop();
