@@ -27,8 +27,13 @@ protected:
 	bool directMotion = false;
 	GravityHandler gravity;
 public:
-	void change_film(AnimationFilm* new_film) { currFilm = new_film; }
-
+	void change_film(AnimationFilm* new_film) { 
+		currFilm = new_film;
+		frameNo = new_film->GetTotalFrames();
+		SetFrame(0);
+	
+	}
+	
 	template <typename Tfunc>
 	void SetMover(const Tfunc& f)
 	{
@@ -89,3 +94,4 @@ public:
 };
 
 void PrepareSpriteGravityHandler(GridLayer* gridLayer, Sprite* sprite);
+const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprite);

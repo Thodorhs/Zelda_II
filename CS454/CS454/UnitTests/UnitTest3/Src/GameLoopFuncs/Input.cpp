@@ -1,6 +1,6 @@
 #include "../../../../Engine/Include/GameLoopFuncs/Input.h"
-
-void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, SDL_Rect& movingrect, bool& is_running, bool& mouse_down) {
+Link_Class Link_Class::singleton;
+void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, SDL_Rect& movingrect, bool& is_running, bool& mouse_down,Link_Class& link) {
 	int CameraPosX, CameraPosY;
 	int PrevCameraPosX = 0, PrevCameraPosY = 0;
 	SDL_Event event;
@@ -8,6 +8,10 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 	int* dy = new int;
 	*dx = 0;
 	*dy = 0;
+	MovingAnimator* mv = (MovingAnimator*)link.get_animator("move");
+	FrameRangeAnimator* fr = (FrameRangeAnimator*)link.get_animator("fr");
+	MovingAnimation* m_a = (MovingAnimation*)link.get_animation("link.move");
+	FrameRangeAnimation* r_a = (FrameRangeAnimation*)link.get_animation("link.run");
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_MOUSEMOTION:
@@ -73,6 +77,8 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 			case SDLK_a:
 				*dx = -1;
 				*dy = 0;
+				mv->Stop();
+				fr->Stop();
 				break;
 			case SDLK_s:
 				*dx = 0;
@@ -81,6 +87,16 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 			case SDLK_d:
 				*dx = 1;
 				*dy = 0;
+				mv->Stop();
+				fr->Stop();
+
+				m_a->SetDx(*dx);
+				m_a->SetDy(*dy);
+				mv->Start(m_a, GetSystemTime());
+				fr->Start(r_a, GetSystemTime());
+				
+				//mv->Progress(GetSystemTime());
+				//fr->Progress(GetSystemTime());
 				break;
 			default:
 				*dx = 0;
@@ -95,7 +111,10 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 			break;
 		}
 		//IF WE WANT TO GET THE TRUE POSITION OF THE RECTANGLE IF THE CAMERA MOVES SO THAT THE GRID WORKS
-		GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
-		Link->Move(*dx, *dy);
+		//GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
+
+		
+
+		//Link->Move(*dx, *dy);
 	}
 }

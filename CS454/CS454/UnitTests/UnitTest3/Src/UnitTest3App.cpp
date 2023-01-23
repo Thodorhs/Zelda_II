@@ -1,13 +1,10 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/GameLoopFuncs/Input.h"
+#include "Link_test/Link.h"
 
-#include "../../../Engine/Include/Animators/AnimatorManager.h"
-#include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
-#include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
-
-#include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
-#include "../../../Engine/Include/Util/SystemClock.h"
+static Link_Class& link_cl = Link_Class::GetSingleton(); 
 #include "../../../Engine/Include/Sprites/GravityHandler.h"
+//#include "Link_test/Link.h"
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
@@ -41,22 +38,22 @@ SDL_Rect movingrect = {0,0,10,10};
 SDL_Rect viewVariable;
 
 
-void Input() { myInput(Link, ActionLayer, HorizonLayer, GameGrid, movingrect, is_running, mouse_down); }
+void Input() { myInput(Link, ActionLayer, HorizonLayer, GameGrid, movingrect, is_running, mouse_down,link_cl); }
 
 FrameRangeAnimator* fall_antor;
 FrameRangeAnimator* attacking;
 void initialize_animators() {
-	/*Animator* moving = new FrameRangeAnimator();
+	//Animator* moving = new FrameRangeAnimator();
 	
-    attacking = new FrameRangeAnimator();
-	attacking->SetOnAction([](Animator* animator, const Animation& anim) {
-		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
-		});
-
+   // attacking = new FrameRangeAnimator();
+	//attacking->SetOnAction([](Animator* animator, const Animation& anim) {
+	//	FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
+	//	});
+	/*
 	fall_antor = new FrameRangeAnimator();
-	fall_antor ->SetOnAction([](Animator* animator, const Animation& anim) {
-		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
-		});
+	//fall_antor ->SetOnAction([](Animator* animator, const Animation& anim) {
+		//FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
+		//});
 
 	PrepareSpriteGravityHandler(&GameGrid, Link); // SET GRAVITY HANDLER THAT CHECKS IF LINK IS ON GROUND
 	
@@ -64,20 +61,54 @@ void initialize_animators() {
 	Link->GetGravityHandler().SetOnStartFalling([]() {
 	Link->change_film(falling);
 	Link->SetMover([](const SDL_Rect& r, int* dx, int* dy) {
-		Link->SetPos(r.x - *dx, r.y -*dy);
+		Link->SetPos(r.x +0, r.y +*dy);
 			});
 		});
 	Link->GetGravityHandler().SetOnStopFalling([]() {
 		Link->change_film(attack_film);
 		});
 	Link->GetGravityHandler().Check(Link->GetBox());
-	fall_antor->Start(fall_test, GetSystemTime());
-	attacking->Start(my_fr_animation, GetSystemTime());*/
+	fall_antor->Start(fall_test, GetSystemTime()); */
+	//attacking->Start(my_fr_animation, GetSystemTime());
+
+
+	Animator* move = new MovingAnimator();
+	Animator* fr = new FrameRangeAnimator();
+
+	Animation* move_anim = new MovingAnimation("link.move",100,5,5,100);
+	Animation* run_anim = new FrameRangeAnimation("link.run", 0, 3, 100, 5, 5, 100);
+	
+	move->SetOnAction([](Animator* animator, const Animation& anim) {
+		Sprite_MoveAction(Link, animator, (const MovingAnimation&)anim);
+		});
+	move->SetOnStart([](Animator* animator) {
+		Link->change_film(attack_film);
+		});
+	move->SetOnFinish([](Animator* animator ){
+		Link->change_film(falling);
+		});
+    
+	fr->SetOnAction([](Animator* animator, const Animation& anim) {
+		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
+		});
+	fr->SetOnStart([](Animator* animator) {
+		Link->change_film(attack_film);
+		});
+	fr->SetOnFinish([](Animator* animator) {
+		Link->change_film(falling);
+		});
+	
+	link_cl.set_animation("link.move", move_anim);
+	link_cl.set_animation("link.run", run_anim);
+	link_cl.set_animator("move", move);
+	link_cl.set_animator("fr", fr);
+
+
 }
 
 
 void animation_handler() {
-	//AnimManager.Progress(GetSystemTime());
+	AnimManager.Progress(GetSystemTime());
 }
 
 void myRender() {	
@@ -149,11 +180,9 @@ void ZeldaApp::Load() {
 	fall_test = new FrameRangeAnimation("Link.run", 0, 3, 0, 10, 10, 500);
 	Link = new Sprite(10, 10, TestAnimation_film, "peos");
 	attack_film = TestAnimation_film;
-	Link->SetMover([](const SDL_Rect& r, int* dx, int* dy) {
-		Link->SetPos(r.x + *dx, r.y + *dy);
-	    
-		});
-
+	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid,Link));
+	//Link->Move(1, 0);
+	//Link->GetGravityHandler().gravityAddicted = false;
 	initialize_animators();
 	
 }

@@ -22,3 +22,4 @@ public:
 	}
 	MovingAnimator(void) = default;
 };
+void Sprite_MoveAction(Sprite* sprite, Animator* animator, const MovingAnimation& anim);

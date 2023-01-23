@@ -3,7 +3,7 @@
 
 class MovingAnimation : public Animation {
 protected:
-	unsigned reps = 0; // 0=forever
+	unsigned reps = 1; // 0=forever
 	int dx = 0, dy = 0;
 	unsigned delay = 0;
 public:

@@ -13,16 +13,14 @@ void MovingAnimator::Progress(timestamp_t currTime) {
 }
 
 //WILL IMPLEMENT WHEN WE ARE AT SPRITES
-/*
-void Sprite_MoveAction(Sprite* sprite, const MovingAnimation& anim) {
+
+void Sprite_MoveAction(Sprite* sprite, Animator* animator, const MovingAnimation& anim) {
 	sprite->Move(anim.GetDx(), anim.GetDy());
-}
-animator->SetOnAction(
-	[sprite](Animator* animator, const Animation& anim) {
+	animator->SetOnAction(
+		[sprite](Animator* animator, const Animation& anim) {
 		assert(dynamic_cast<const MovingAnimation*>(&anim));
-Sprite_MoveAction(
-	sprite,
-	(const MovingAnimation&)anim
-);
-	}
-);*/
+		Sprite_MoveAction(sprite,animator,(const MovingAnimation&)anim);
+		}
+	);
+
+}
