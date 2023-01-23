@@ -75,8 +75,8 @@ void initialize_animators() {
 	Animator* move = new MovingAnimator();
 	Animator* fr = new FrameRangeAnimator();
 
-	Animation* move_anim = new MovingAnimation("link.move",100,0,0,100);
-	Animation* run_anim = new FrameRangeAnimation("link.run", 0, 3, 100, 0, 0, 100);
+	Animation* move_anim = new MovingAnimation("link.move",4,0,0,150);
+	Animation* run_anim = new FrameRangeAnimation("link.run", 0, 3, 1, 0, 0, 100);
 	
 	move->SetOnAction([](Animator* animator, const Animation& anim) {
 		Sprite_MoveAction(Link, animator, (const MovingAnimation&)anim);
@@ -102,7 +102,21 @@ void initialize_animators() {
 	link_cl.set_animation("link.run", run_anim);
 	link_cl.set_animator("move", move);
 	link_cl.set_animator("fr", fr);
-
+	Link->GetGravityHandler().SetOnStartFalling(
+		[](){MovingAnimator* moving = (MovingAnimator*)link_cl.get_animator("move");
+		FrameRangeAnimator* running = (FrameRangeAnimator*)link_cl.get_animator("fr");
+		//moving->Stop();
+		//running->Stop();
+		MovingAnimation* a = (MovingAnimation*)link_cl.get_animation("link.move");
+		FrameRangeAnimation* b = (FrameRangeAnimation*)link_cl.get_animation("link.run");
+		//a->SetDx(0);
+		//b->SetDy(5);
+		//moving->Start(a, GetSystemTime());
+		//running->Start(b, GetSystemTime());
+		return;
+		});
+	Link->GetGravityHandler().SetOnStopFalling(
+		[]() {});
 
 }
 
@@ -174,15 +188,16 @@ void ZeldaApp::Load() {
 
 	// ANIMATIONS
 	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer); // LOAD ANIMATIONS
-	AnimationFilm* TestAnimation_film = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack"));
+	AnimationFilm* TestAnimation_film = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run"));
 	falling = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run"));
-	my_fr_animation = new FrameRangeAnimation("Link.attack", 0, 3, 0, 10, 10, 500);
-	fall_test = new FrameRangeAnimation("Link.run", 0, 3, 0, 10, 10, 500);
-	Link = new Sprite(10, 10, TestAnimation_film, "peos");
+	my_fr_animation = new FrameRangeAnimation("Link.attack", 0, 3, 1, 10, 10, 500);
+	fall_test = new FrameRangeAnimation("Link.run", 0, 3, 1, 10, 10, 500);
+	Link = new Sprite(300, 100, TestAnimation_film, "peos");
 	attack_film = TestAnimation_film;
 	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid,Link));
-	//Link->Move(1, 0);
-	//Link->GetGravityHandler().gravityAddicted = false;
+	PrepareSpriteGravityHandler(&GameGrid, Link);
+	
+	Link->GetGravityHandler().gravityAddicted = true;
 	initialize_animators();
 	
 }
