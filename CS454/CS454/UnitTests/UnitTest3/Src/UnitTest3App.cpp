@@ -72,8 +72,24 @@ void gravity() {
 	//}
 }
 
+void initialise_films_link() {
+	AnimationFilm* run_left = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.left"));
+	AnimationFilm* attack_left = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack.left"));
+	AnimationFilm* attack_right = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack.right"));
+	AnimationFilm* fall_left = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.falling.left"));
+	AnimationFilm* fall_right = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.falling.right"));
+	link_cl.set_film("Link.Run.left", run_left);
+	link_cl.set_film("Link.Attack.left", attack_left);
+	link_cl.set_film("Link.Attack.right", attack_right);
+	link_cl.set_film("Link.falling.left", fall_left);
+	link_cl.set_film("Link.falling.right", fall_right);
+
+}
+
 void Initialise_sprites() {
-	Link = new Sprite(300, 345, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")), "Link");
+	Link = new Sprite(300, 350, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")), "Link");
+	link_cl.set_film("Link.Run.right", const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")));
+	
 	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid, Link));
 	PrepareSpriteGravityHandler(&GameGrid, Link);
 	
@@ -107,6 +123,29 @@ void initialize_animators() {
 	Animation* move_anim = new MovingAnimation("link.move",1,0,0,30);
 	Animation* run_anim = new FrameRangeAnimation("link.run", 0, 3, 1, 0, 0, 0);
 	
+	
+
+	Animator* attack = new FrameRangeAnimator();
+	Animation* attack_anim = new FrameRangeAnimation("link.attack", 0, 3, 1, 0, 0, 100);
+
+	//ATTACK
+
+
+	attack->SetOnAction([](Animator* animator, const Animation& anim) {
+		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
+		});
+	attack->SetOnStart([](Animator* animator) {
+		
+		//Link->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")));
+		});
+	attack->SetOnFinish([](Animator* animator) {
+		//Link->change_film(falling);
+		});
+
+
+
+	//MOVE
+
 	move->SetOnAction([](Animator* animator, const Animation& anim) {
 		Sprite_MoveAction(Link, animator, (const MovingAnimation&)anim);
 		});
@@ -121,7 +160,7 @@ void initialize_animators() {
 		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
 		});
 	fr->SetOnStart([](Animator* animator) {
-		Link->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")));
+		//Link->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")));
 		});
 	fr->SetOnFinish([](Animator* animator) {
 		//Link->change_film(falling);
@@ -131,6 +170,8 @@ void initialize_animators() {
 	link_cl.set_animation("link.run", run_anim);
 	link_cl.set_animator("move", move);
 	link_cl.set_animator("fr", fr);
+	link_cl.set_animation("link.attack", attack_anim);
+	link_cl.set_animator("attack", attack);
 	link_cl.set_current(Link);
 
 }
@@ -203,7 +244,7 @@ void ZeldaApp::Load() {
 	// ANIMATIONS
 	Initialise_sprites();
 	initialize_animators();
-	
+	initialise_films_link();
 	
 	
 }

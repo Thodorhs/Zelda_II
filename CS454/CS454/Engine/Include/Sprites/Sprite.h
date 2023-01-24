@@ -27,6 +27,10 @@ protected:
 	bool directMotion = false;
 	GravityHandler gravity;
 public:
+
+	void set_state(std::string id) { stateId = id; }
+	std::string get_state() { return stateId; }
+
 	std::string get_type() { return typeId; }
 	void change_film(AnimationFilm* new_film) { 
 		currFilm = new_film;

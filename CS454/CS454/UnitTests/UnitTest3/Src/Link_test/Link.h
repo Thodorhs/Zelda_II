@@ -13,6 +13,7 @@ class Link_Class final {
 private:
 	std::map<std::string, Animator*> animators;
 	std::map<std::string, Animation*>animations;
+	std::map<std::string, AnimationFilm*> link_films;
 	static  Link_Class singleton;
 	Sprite* current;
 public:
@@ -38,6 +39,20 @@ public:
 			return NULL;
 		return it->second;
 	}
+
+	void set_film(std::string id, AnimationFilm* anim) {
+		link_films.insert({ id,anim });
+	}
+
+	AnimationFilm* get_film(std::string id) {
+		auto it = link_films.find(id);
+		if (it == link_films.end())
+			return NULL;
+		return it->second;
+	}
+
+
+
 
 	void stop_animators() {
 		for (auto it : animators) {

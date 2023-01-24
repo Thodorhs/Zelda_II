@@ -13,6 +13,10 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 	FrameRangeAnimator* fr = (FrameRangeAnimator*)link.get_animator("fr");
 	MovingAnimation* m_a = (MovingAnimation*)link.get_animation("link.move");
 	FrameRangeAnimation* r_a = (FrameRangeAnimation*)link.get_animation("link.run");
+	FrameRangeAnimation* f_attack = (FrameRangeAnimation*)link.get_animation("link.attack");
+	FrameRangeAnimator* attack = (FrameRangeAnimator*)link.get_animator("attack");
+	assert(f_attack && attack);
+
 	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 		case SDL_MOUSEMOTION:
@@ -41,24 +45,24 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
 			case SDLK_DOWN:
-				//HorizonLayer.Scroll(0, 4);
+				HorizonLayer.Scroll(0, 4);
 				//ActionLayer.Scroll(0, 4);
-				Link->Move(0, 4);
+				//Link->Move(0, 4);
 				break;
 			case SDLK_UP:
-				//HorizonLayer.Scroll(0, -4);
+				HorizonLayer.Scroll(0, -4);
 				//ActionLayer.Scroll(0, -4);
-				Link->Move(0, -4);
+				//Link->Move(0, -4);
 				break;
 			case SDLK_LEFT:
-				//HorizonLayer.Scroll(-4, 0);
+				HorizonLayer.Scroll(-4, 0);
 				//ActionLayer.Scroll(-4, 0);
-				Link->Move(-4, 0);
+				//Link->Move(-4, 0);
 				break;
 			case SDLK_RIGHT:
-				//HorizonLayer.Scroll(4, 0);
+				HorizonLayer.Scroll(4, 0);
 				//ActionLayer.Scroll(4, 0);
-				Link->Move(4, 0);
+				//Link->Move(4, 0);
 				break;
 			case SDLK_HOME:
 				HorizonLayer.SetViewWindow({ 0, 0, HorizonLayer.GetViewWindow().w, HorizonLayer.GetViewWindow().h });
@@ -82,8 +86,9 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 			case SDLK_a:
 				*dx = -5;
 				*dy = 0;
-
-				GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
+				link.get_current().set_state("moving_left");
+				link.get_current().change_film(link.get_film("Link.Run.left"));
+				//GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
 				link.stop_animators();
 				walk_left(m_a, r_a, fr, mv, *dx, *dy);
 				break;
@@ -95,9 +100,22 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 			case SDLK_d:
 				*dx = 5;
 				*dy = 0;
-				GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
+				link.get_current().set_state("moving_right");
+				//GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
+				link.get_current().change_film(link.get_film("Link.Run.right"));
 				link.stop_animators();
+				
 				walk_left(m_a, r_a, fr, mv, *dx, *dy);
+				break;
+			case SDLK_b:
+				if (link.get_current().get_state() == "moving_right") {
+					link.get_current().change_film(link.get_film("Link.Attack.right"));
+				}else{ link.get_current().change_film(link.get_film("Link.Attack.left")); }
+				link.stop_animators();
+				
+				f_attack->SetDelay(200);
+				attack->Start(f_attack, GetSystemTime());
+
 				break;
 			default:
 				*dx = 0;
@@ -132,3 +150,6 @@ void walk_left(MovingAnimation* animation,FrameRangeAnimation *f_animation, Fram
 }
 void walk_right(MovingAnimation* animation, FrameRangeAnimation* f_animation, FrameRangeAnimator* f_animator, MovingAnimator* m_animator,int dx,int dy){}
 
+void attack(FrameRangeAnimation* f_animation, FrameRangeAnimator* f_animator,std::string state) {
+
+}
