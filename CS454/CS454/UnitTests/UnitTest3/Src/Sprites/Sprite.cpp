@@ -32,8 +32,10 @@ const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprit
 			   r.h == sprite->GetBox().h && 
 			   r.w == sprite->GetBox().w);
 		gridLayer->FilterGridMotion(r, dx, dy);
-		if (*dx || *dy)
-			sprite->SetHasDirectMotion(true).Move(*dx, *dy).SetHasDirectMotion(false); //kati einai auto twra den kserw fua
+		if (*dx || *dy) {
+			sprite->SetHasDirectMotion(true).Move(*dx, *dy);
+			sprite->SetHasDirectMotion(false);
+		} //kati einai auto twra den kserw fua
 	};
 };
 

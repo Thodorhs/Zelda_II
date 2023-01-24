@@ -1,5 +1,5 @@
 #include "../../../../Engine/Include/GameLoopFuncs/Input.h"
-Link_Class Link_Class::singleton;
+
 void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, SDL_Rect& movingrect, bool& is_running, bool& mouse_down,Link_Class& link) {
 	int CameraPosX, CameraPosY;
 	int PrevCameraPosX = 0, PrevCameraPosY = 0;
@@ -8,6 +8,7 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 	int* dy = new int;
 	*dx = 0;
 	*dy = 0;
+	Sprite s = link.get_current();
 	MovingAnimator* mv = (MovingAnimator*)link.get_animator("move");
 	FrameRangeAnimator* fr = (FrameRangeAnimator*)link.get_animator("fr");
 	MovingAnimation* m_a = (MovingAnimation*)link.get_animation("link.move");
@@ -72,12 +73,16 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 				break;
 			case SDLK_w:
 				*dx = 0;
-				*dy = -5;
+				*dy = -8;
+				GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
+				link.stop_animators();
+				
 				
 				break;
 			case SDLK_a:
 				*dx = -5;
 				*dy = 0;
+
 				GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
 				link.stop_animators();
 				walk_left(m_a, r_a, fr, mv, *dx, *dy);
@@ -118,8 +123,9 @@ void walk_left(MovingAnimation* animation,FrameRangeAnimation *f_animation, Fram
 	
 	animation->SetDx(dx);
 	animation->SetDy(dy);
-	//f_animation->SetDx(dx);
-	//f_animation->SetDy(dy);
+	f_animation->SetDx(dx);
+	f_animation->SetDy(dy);
+	f_animation->SetDelay(200);
 	m_animator->Start(animation, GetSystemTime());
 	f_animator->Start(f_animation, GetSystemTime());
 

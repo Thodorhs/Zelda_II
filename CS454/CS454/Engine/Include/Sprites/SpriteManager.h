@@ -10,7 +10,7 @@ private:
 	TypeLists types;
 	static SpriteManager singleton;
 public:
-	void Add(Sprite* s); // insert by ascending zorder
+	void Add(Sprite* s) { dpyList.push_back(s); } // insert by ascending zorder
 	void Remove(Sprite* s);
 	auto GetDisplayList(void) -> const SpriteList&
 	{

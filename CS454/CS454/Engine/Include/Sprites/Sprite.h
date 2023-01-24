@@ -27,6 +27,7 @@ protected:
 	bool directMotion = false;
 	GravityHandler gravity;
 public:
+	std::string get_type() { return typeId; }
 	void change_film(AnimationFilm* new_film) { 
 		currFilm = new_film;
 		frameNo = new_film->GetTotalFrames();
@@ -48,7 +49,7 @@ public:
 	{
 		return gravity;
 	}
-	Sprite& SetHasDirectMotion(bool v) { directMotion = true; return *this; }
+	Sprite& SetHasDirectMotion(bool v) { directMotion = v; return *this; }
 	bool GetHasDirectMotion(void) const { return directMotion; }
 	Sprite& Move(int dx, int dy) {
 		if (directMotion) // apply unconditionally offsets!

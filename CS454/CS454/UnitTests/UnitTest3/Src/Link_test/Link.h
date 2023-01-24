@@ -14,8 +14,10 @@ private:
 	std::map<std::string, Animator*> animators;
 	std::map<std::string, Animation*>animations;
 	static  Link_Class singleton;
+	Sprite* current;
 public:
-
+	void set_current(Sprite* s) { current = s; }
+	Sprite& get_current(){return *current;}
 	void set_animator(std::string id, Animator* anim) {
 		animators.insert({ id,anim });
 	}

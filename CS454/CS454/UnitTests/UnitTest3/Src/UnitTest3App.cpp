@@ -4,6 +4,7 @@
 
 static Link_Class& link_cl = Link_Class::GetSingleton(); 
 #include "../../../Engine/Include/Sprites/GravityHandler.h"
+#include "../../../Engine/Include/Sprites/SpriteManager.h"
 //#include "Link_test/Link.h"
 
 SDL_Surface* TileSetSurface;
@@ -18,11 +19,13 @@ TileLayer ActionLayer;
 TileLayer HorizonLayer;
 
 AnimationFilmHolder AnimationFilmHolder::holder; // Set this so that the Linker can find it
+Link_Class Link_Class::singleton;//this as well ffff u aa
+
 
 static AnimationFilmHolder& FilmHolder = AnimationFilmHolder::getInstance(); // Take the singleton
 static AnimatorManager& AnimManager = AnimatorManager::GetSingleton(); // Take the singleton
 static SystemClock& my_system_clock = SystemClock::Get();
-
+static SpriteManager& sprite_manager = SpriteManager::GetSingleton();
 FrameRangeAnimation* my_fr_animation;
 //testtt
 FrameRangeAnimation* fall_test;
@@ -38,38 +41,56 @@ SDL_Rect movingrect = {0,0,10,10};
 SDL_Rect viewVariable;
 
 
-void Input() { myInput(Link, ActionLayer, HorizonLayer, GameGrid, movingrect, is_running, mouse_down,link_cl); }
+void Input() {
+	myInput(Link, ActionLayer, HorizonLayer, GameGrid, movingrect, is_running, mouse_down,link_cl); }
 
-void gravity() {
-	if (Link->GetGravityHandler().isFalling) {
-		int* dx, * dy;
-		dx = dy = new int;
-		*dx = 0;
-		*dy = 1;
-		GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
-		Link->Move(0, *dy);
+//sprite displaY FUAA
+void Display_all_Sprites() {
+	BitmapSurface dest{}; const SDL_Rect dpyArea;  const Clipper clipper;
+	for (auto it : sprite_manager.GetDisplayList()) {
+		it->Display(dest, dpyArea, clipper, GameRenderer);
+	}
+}
+void Display_Sprite_byType(std::string type) {
+	BitmapSurface dest{}; const SDL_Rect dpyArea;  const Clipper clipper;
+	for (auto it : sprite_manager.GetTypeList(type)) {
+		it->Display(dest, dpyArea, clipper, GameRenderer);
 	}
 }
 
+//simantiko : i move exei ena themataki einai sinexia se direct motion meta apo ena simeio oso anafora to gravity fua poonaww
+void gravity() {
+	for (auto it : sprite_manager.GetDisplayList()) {
+		if (it->GetGravityHandler().isFalling) {
+			*it = it->Move(0, 1);
+		}
+
+		
+	}
+
+		
+	//}
+}
+
 void Initialise_sprites() {
-	Link = new Sprite(300, 150, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")), "peos");
+	Link = new Sprite(300, 345, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")), "Link");
 	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid, Link));
 	PrepareSpriteGravityHandler(&GameGrid, Link);
+	
 
 	Link->GetGravityHandler().gravityAddicted = true;
 	Link->GetGravityHandler().SetOnStartFalling(
-		[]() {MovingAnimator* moving = (MovingAnimator*)link_cl.get_animator("move");
-	FrameRangeAnimator* running = (FrameRangeAnimator*)link_cl.get_animator("fr");
-	link_cl.stop_animators();
-
-	
-
-	return;
-		});
+		[]() {link_cl.stop_animators();
+					return;});
 	Link->GetGravityHandler().SetOnStopFalling(
 		[]() {
-			Link->GetGravityHandler().isFalling = false;
+			//Link->GetGravityHandler().isFalling = false;
+			//std::cout << "called";
+			//Link->SetHasDirectMotion(false);
+			
 		});
+
+	sprite_manager.Add(Link);
 }
 
 
@@ -83,8 +104,8 @@ void initialize_animators() {
 	Animator* move = new MovingAnimator();
 	Animator* fr = new FrameRangeAnimator();
 
-	Animation* move_anim = new MovingAnimation("link.move",4,0,0,150);
-	Animation* run_anim = new FrameRangeAnimation("link.run", 0, 3, 1, 0, 0, 100);
+	Animation* move_anim = new MovingAnimation("link.move",1,0,0,30);
+	Animation* run_anim = new FrameRangeAnimation("link.run", 0, 3, 1, 0, 0, 0);
 	
 	move->SetOnAction([](Animator* animator, const Animation& anim) {
 		Sprite_MoveAction(Link, animator, (const MovingAnimation&)anim);
@@ -110,7 +131,7 @@ void initialize_animators() {
 	link_cl.set_animation("link.run", run_anim);
 	link_cl.set_animator("move", move);
 	link_cl.set_animator("fr", fr);
-	
+	link_cl.set_current(Link);
 
 }
 
@@ -124,9 +145,7 @@ void myRender() {
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
 
-	BitmapSurface dest{}; const SDL_Rect dpyArea;  const Clipper clipper;
-	Link->Display(dest, dpyArea, clipper, GameRenderer);
-
+	Display_all_Sprites();
 	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
 	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
