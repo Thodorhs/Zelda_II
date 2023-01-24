@@ -37,7 +37,11 @@ public:
 		return it->second;
 	}
 
-
+	void stop_animators() {
+		for (auto it : animators) {
+			it.second->Stop();
+		}
+	}
 	static auto GetSingleton(void) -> Link_Class& { return singleton; }
 	static auto GetSingletonConst(void) -> const Link_Class& { return singleton; }
 

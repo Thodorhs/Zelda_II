@@ -78,7 +78,9 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 			case SDLK_a:
 				*dx = -5;
 				*dy = 0;
-				
+				GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
+				link.stop_animators();
+				walk_left(m_a, r_a, fr, mv, *dx, *dy);
 				break;
 			case SDLK_s:
 				*dx = 0;
@@ -88,7 +90,9 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 			case SDLK_d:
 				*dx = 5;
 				*dy = 0;
-			
+				GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
+				link.stop_animators();
+				walk_left(m_a, r_a, fr, mv, *dx, *dy);
 				break;
 			default:
 				*dx = 0;
@@ -103,16 +107,22 @@ void myInput(Sprite* Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, Grid
 			break;
 		}
 		//IF WE WANT TO GET THE TRUE POSITION OF THE RECTANGLE IF THE CAMERA MOVES SO THAT THE GRID WORKS
-		mv->Stop();
-		fr->Stop();
-		GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
-
-		
-		m_a->SetDx(*dx);
-		m_a->SetDy(*dy);
-		mv->Start(m_a, GetSystemTime());
-		fr->Start(r_a, GetSystemTime());
+	
 
 		//Link->Move(*dx, *dy);
 	}
 }
+
+void walk_left(MovingAnimation* animation,FrameRangeAnimation *f_animation, FrameRangeAnimator* f_animator, MovingAnimator* m_animator,int dx,int dy) {
+	
+	
+	animation->SetDx(dx);
+	animation->SetDy(dy);
+	//f_animation->SetDx(dx);
+	//f_animation->SetDy(dy);
+	m_animator->Start(animation, GetSystemTime());
+	f_animator->Start(f_animation, GetSystemTime());
+
+}
+void walk_right(MovingAnimation* animation, FrameRangeAnimation* f_animation, FrameRangeAnimator* f_animator, MovingAnimator* m_animator,int dx,int dy){}
+

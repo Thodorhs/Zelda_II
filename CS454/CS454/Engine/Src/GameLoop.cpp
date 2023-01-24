@@ -9,7 +9,7 @@ void app::Game::MainLoopIteration(void) {
 	Input();
 	ProgressAnimations();
 	//AI();
-	//Physics();
+	Physics();
 	//CollisionChecking();
 	//UserCode(); // hook for custom code at end
 	//CommitDestructions();

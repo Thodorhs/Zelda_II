@@ -40,36 +40,44 @@ SDL_Rect viewVariable;
 
 void Input() { myInput(Link, ActionLayer, HorizonLayer, GameGrid, movingrect, is_running, mouse_down,link_cl); }
 
+void gravity() {
+	if (Link->GetGravityHandler().isFalling) {
+		int* dx, * dy;
+		dx = dy = new int;
+		*dx = 0;
+		*dy = 1;
+		GameGrid.FilterGridMotion(Link->GetBox(), dx, dy);
+		Link->Move(0, *dy);
+	}
+}
+
+void Initialise_sprites() {
+	Link = new Sprite(300, 150, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")), "peos");
+	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid, Link));
+	PrepareSpriteGravityHandler(&GameGrid, Link);
+
+	Link->GetGravityHandler().gravityAddicted = true;
+	Link->GetGravityHandler().SetOnStartFalling(
+		[]() {MovingAnimator* moving = (MovingAnimator*)link_cl.get_animator("move");
+	FrameRangeAnimator* running = (FrameRangeAnimator*)link_cl.get_animator("fr");
+	link_cl.stop_animators();
+
+	
+
+	return;
+		});
+	Link->GetGravityHandler().SetOnStopFalling(
+		[]() {
+			Link->GetGravityHandler().isFalling = false;
+		});
+}
+
+
+
 FrameRangeAnimator* fall_antor;
 FrameRangeAnimator* attacking;
 void initialize_animators() {
-	//Animator* moving = new FrameRangeAnimator();
-	
-   // attacking = new FrameRangeAnimator();
-	//attacking->SetOnAction([](Animator* animator, const Animation& anim) {
-	//	FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
-	//	});
-	/*
-	fall_antor = new FrameRangeAnimator();
-	//fall_antor ->SetOnAction([](Animator* animator, const Animation& anim) {
-		//FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
-		//});
 
-	PrepareSpriteGravityHandler(&GameGrid, Link); // SET GRAVITY HANDLER THAT CHECKS IF LINK IS ON GROUND
-	
-	Link->GetGravityHandler().gravityAddicted = true;
-	Link->GetGravityHandler().SetOnStartFalling([]() {
-	Link->change_film(falling);
-	Link->SetMover([](const SDL_Rect& r, int* dx, int* dy) {
-		Link->SetPos(r.x +0, r.y +*dy);
-			});
-		});
-	Link->GetGravityHandler().SetOnStopFalling([]() {
-		Link->change_film(attack_film);
-		});
-	Link->GetGravityHandler().Check(Link->GetBox());
-	fall_antor->Start(fall_test, GetSystemTime()); */
-	//attacking->Start(my_fr_animation, GetSystemTime());
 
 
 	Animator* move = new MovingAnimator();
@@ -82,41 +90,27 @@ void initialize_animators() {
 		Sprite_MoveAction(Link, animator, (const MovingAnimation&)anim);
 		});
 	move->SetOnStart([](Animator* animator) {
-		Link->change_film(attack_film);
+		//Link->change_film(attack_film);
 		});
 	move->SetOnFinish([](Animator* animator ){
-		Link->change_film(falling);
+		//Link->change_film(falling);
 		});
     
 	fr->SetOnAction([](Animator* animator, const Animation& anim) {
 		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
 		});
 	fr->SetOnStart([](Animator* animator) {
-		Link->change_film(attack_film);
+		Link->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")));
 		});
 	fr->SetOnFinish([](Animator* animator) {
-		Link->change_film(falling);
+		//Link->change_film(falling);
 		});
 	
 	link_cl.set_animation("link.move", move_anim);
 	link_cl.set_animation("link.run", run_anim);
 	link_cl.set_animator("move", move);
 	link_cl.set_animator("fr", fr);
-	Link->GetGravityHandler().SetOnStartFalling(
-		[](){MovingAnimator* moving = (MovingAnimator*)link_cl.get_animator("move");
-		FrameRangeAnimator* running = (FrameRangeAnimator*)link_cl.get_animator("fr");
-		//moving->Stop();
-		//running->Stop();
-		MovingAnimation* a = (MovingAnimation*)link_cl.get_animation("link.move");
-		FrameRangeAnimation* b = (FrameRangeAnimation*)link_cl.get_animation("link.run");
-		//a->SetDx(0);
-		//b->SetDy(5);
-		//moving->Start(a, GetSystemTime());
-		//running->Start(b, GetSystemTime());
-		return;
-		});
-	Link->GetGravityHandler().SetOnStopFalling(
-		[]() {});
+	
 
 }
 
@@ -162,6 +156,7 @@ void ZeldaApp::Initialise(void) {
 	game.SetRender(myRender);
 	game.SetDone(myDone);
 	game.SetAnim(animation_handler);
+	game.Set_Physics(gravity);
 	is_running = true;
 
 }	
@@ -185,20 +180,12 @@ void ZeldaApp::Load() {
 	GameGrid = GridLayer(MAPHEIGHT, MAPWIDTH);
 	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
 
-
+	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer);
 	// ANIMATIONS
-	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer); // LOAD ANIMATIONS
-	AnimationFilm* TestAnimation_film = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run"));
-	falling = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run"));
-	my_fr_animation = new FrameRangeAnimation("Link.attack", 0, 3, 1, 10, 10, 500);
-	fall_test = new FrameRangeAnimation("Link.run", 0, 3, 1, 10, 10, 500);
-	Link = new Sprite(300, 100, TestAnimation_film, "peos");
-	attack_film = TestAnimation_film;
-	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid,Link));
-	PrepareSpriteGravityHandler(&GameGrid, Link);
-	
-	Link->GetGravityHandler().gravityAddicted = true;
+	Initialise_sprites();
 	initialize_animators();
+	
+	
 	
 }
 

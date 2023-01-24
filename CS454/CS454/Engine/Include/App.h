@@ -19,12 +19,13 @@ namespace app {
 			void SetInput(const Action& f) { input = f; }
 			void SetDone(const Pred& f) { done = f; }
 			void SetAnim(const Action& f) { anim = f;  }
+			void Set_Physics(const Action& f) { physics = f; }
 			// rest of setters are similary defined
 			void Render(void){ Invoke(render); }
 			void ProgressAnimations(void) { Invoke(anim); }
 			void Input(void) { Invoke(input); }
 			//void AI(void) { Invoke(ai); }
-			//void Physics(void) { Invoke(physics); }
+			void Physics(void) { Invoke(physics); }
 			//void CollisionChecking(void) { Invoke(collisions); }
 			//void CommitDestructions(void) { Invoke(destruct); }
 			//void UserCode(void) { Invoke(user); }
