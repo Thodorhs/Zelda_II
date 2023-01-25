@@ -2,8 +2,8 @@
 #include "../../../Engine/Include/GameLoopFuncs/Input.h"
 #include "../../../Engine/Include/Sprites/GravityHandler.h"
 #include "../../../Engine/Include/Sprites/SpriteManager.h"
-#include "Link_test/Link.h"
-
+#include "Link_test/GameCharacters.h"
+#include "Link_test/Enemytest.h"
 static Link_Class& link_cl = Link_Class::GetSingleton();
 Link_Class Link_Class::singleton;//this as well ffff u aa
 
@@ -70,7 +70,60 @@ void gravity() {
 		}
 	}
 }
+//still link films (only for testing)
+//to kanw gia arxi mia global ton enemy link 
 
+GameCharacters* enemy = new Enemy();
+
+void initialise_films_enemy_link() {
+	AnimationFilm* attack_left = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack.left"));
+	enemy->set_film("Link.Attack.left",attack_left);
+}
+//ENEMYYY
+void init_enemy_sprite() {
+
+	//initialise animators
+	Animator* attack = new FrameRangeAnimator();
+	Animation* attack_anim = new FrameRangeAnimation("link.attack", 0, 3, 1, 0, 0, 100);
+	attack->SetOnAction([](Animator* animator, const Animation& anim) {
+		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
+		});
+	attack->SetOnStart([](Animator* animator) {
+
+		//Link->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")));
+		});
+	attack->SetOnFinish([](Animator* animator) {
+		//Link->change_film(falling);
+		});
+
+	enemy->set_animation("link.attack", attack_anim);
+	enemy->set_animator("attack", attack);
+	Sprite *en = new Sprite(300, 200, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")), "enemy");
+	
+
+	en->SetMover(MakeSpriteGridLayerMover(&GameGrid, en));
+	PrepareSpriteGravityHandler(&GameGrid,en);
+
+
+	en->GetGravityHandler().gravityAddicted = true;
+	en->GetGravityHandler().SetOnStartFalling(
+		[]() {enemy->stop_animators();
+	return; });
+	en->GetGravityHandler().SetOnStopFalling(
+		[]() {
+			//Link->GetGravityHandler().isFalling = false;
+			//std::cout << "called";
+			//Link->SetHasDirectMotion(false);
+		});
+
+	sprite_manager.Add(en);
+	enemy->set_current(en);
+	en->Move(1, 0);
+}
+//END ENEMY
+
+
+//LINK
 void initialise_films_link() {
 	AnimationFilm* run_left = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.left"));
 	AnimationFilm* attack_left = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack.left"));
@@ -87,6 +140,12 @@ void initialise_films_link() {
 	link_cl.set_film("Link.jump.left", jump_left);
 	link_cl.set_film("Link.jump.right", jump_right);
 }
+
+
+
+
+
+
 
 void Initialise_sprites() {
 	Link = new Sprite(200, 200, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")), "Link");
@@ -178,7 +237,7 @@ void initialize_animators() {
 	link_cl.set_current(Link);
 
 }
-
+//END LINK
 
 void animation_handler() {
 	AnimManager.Progress(GetSystemTime());
@@ -248,6 +307,8 @@ void ZeldaApp::Load() {
 	Initialise_sprites();
 	initialize_animators();
 	initialise_films_link();
+	initialise_films_enemy_link();
+	init_enemy_sprite();
 	
 	
 }

@@ -1,17 +1,17 @@
 #pragma once
-
 #include "GameCharacters.h"
 
-class Link_Class final {
+
+class Enemy : public GameCharacters {
+
 private:
 	std::map<std::string, Animator*> animators;
 	std::map<std::string, Animation*>animations;
 	std::map<std::string, AnimationFilm*> link_films;
-	static  Link_Class singleton;
 	Sprite* current;
 public:
-	void set_current(Sprite* s) { current = s; }
-	Sprite& get_current(){return *current;}
+	void set_current(Sprite* s) override { current = s; }
+	Sprite& get_current() override { return *current; }
 	void set_animator(std::string id, Animator* anim) {
 		animators.insert({ id,anim });
 	}
@@ -44,13 +44,14 @@ public:
 		return it->second;
 	}
 
+
+
+
 	void stop_animators() {
 		for (auto it : animators) {
 			it.second->Stop();
 		}
 	}
-	static auto GetSingleton(void) -> Link_Class& { return singleton; }
-	static auto GetSingletonConst(void) -> const Link_Class& { return singleton; }
 
-	
+
 };
