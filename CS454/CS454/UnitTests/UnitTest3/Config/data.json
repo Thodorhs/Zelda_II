@@ -120,6 +120,30 @@
       ]
     },
 
+    "Link.jump.left": {
+      "bmp": "link-sprites.png",
+      "frames": [
+        {
+          "x": 48,
+          "y": 40,
+          "w": 16,
+          "h": 27
+        }
+      ]
+    },
+
+    "Link.jump.right": {
+      "bmp": "link-sprites.png",
+      "frames": [
+        {
+          "x": 248,
+          "y": 40,
+          "w": 16,
+          "h": 27
+        }
+      ]
+    },
+
     "Link.falling.left": {
       "bmp": "link-sprites.png",
       "frames": [

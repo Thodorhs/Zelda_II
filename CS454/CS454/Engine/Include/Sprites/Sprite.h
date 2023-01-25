@@ -15,7 +15,8 @@ public:
 protected:
 	byte frameNo = 0;
 	SDL_Rect frameBox; // inside the film
-	int x = 0, y = 0;
+	float x = 0, y = 0;
+	int w, h;
 	bool isVisible = false;
 	AnimationFilm* currFilm = nullptr;
 	BoundingArea* boundingArea = nullptr;
@@ -23,7 +24,6 @@ protected:
 	std::string typeId, stateId;
 	Mover mover;
 	MotionQuantizer quantizer;
-
 	bool directMotion = false;
 	GravityHandler gravity;
 public:
@@ -46,7 +46,7 @@ public:
 	}
 	const SDL_Rect GetBox(void) const
 	{
-		return { x, y, frameBox.w, frameBox.h };
+		return { (int)x, (int)y, w, h };
 	}
 
 	GravityHandler& GetGravityHandler(void)
@@ -56,8 +56,12 @@ public:
 	Sprite& SetHasDirectMotion(bool v) { directMotion = v; return *this; }
 	bool GetHasDirectMotion(void) const { return directMotion; }
 	Sprite& Move(int dx, int dy) {
-		if (directMotion) // apply unconditionally offsets!
-			x += dx, y += dy;
+		if (directMotion) { // apply unconditionally offsets!
+			if (gravity.gravityAddicted)
+				if (dy == 1) x += dx, y += 1;
+				else x += dx, y += dy;
+			else x += dx, y += dy;
+		}
 		else {
 			quantizer.Move(GetBox(), &dx, &dy);
 			gravity.Check(GetBox());
@@ -72,6 +76,8 @@ public:
 		if (i != frameNo) {
 			assert(i < currFilm->GetTotalFrames());
 			frameBox = currFilm->GetFrameBox(frameNo = i);
+			w = frameBox.w << 1;
+			h = frameBox.h << 1;
 		}
 	}
 	byte GetFrame(void) const { return frameNo; }

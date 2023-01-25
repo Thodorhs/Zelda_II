@@ -5,7 +5,6 @@
 #include "../../../Engine/Include/Animators/MovingAnimator.h"
 #include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
 #include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
-
 #include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
 
 
@@ -50,9 +49,6 @@ public:
 			return NULL;
 		return it->second;
 	}
-
-
-
 
 	void stop_animators() {
 		for (auto it : animators) {

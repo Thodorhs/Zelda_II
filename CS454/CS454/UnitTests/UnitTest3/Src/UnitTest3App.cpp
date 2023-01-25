@@ -1,11 +1,14 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/GameLoopFuncs/Input.h"
-#include "Link_test/Link.h"
-
-static Link_Class& link_cl = Link_Class::GetSingleton(); 
 #include "../../../Engine/Include/Sprites/GravityHandler.h"
 #include "../../../Engine/Include/Sprites/SpriteManager.h"
-//#include "Link_test/Link.h"
+#include "Link_test/Link.h"
+
+static Link_Class& link_cl = Link_Class::GetSingleton();
+Link_Class Link_Class::singleton;//this as well ffff u aa
+
+static InputKeys& InputHandler = InputKeys::GetSingleton();
+InputKeys InputKeys::singleton;//this as well ffff u aa
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
@@ -19,7 +22,6 @@ TileLayer ActionLayer;
 TileLayer HorizonLayer;
 
 AnimationFilmHolder AnimationFilmHolder::holder; // Set this so that the Linker can find it
-Link_Class Link_Class::singleton;//this as well ffff u aa
 
 
 static AnimationFilmHolder& FilmHolder = AnimationFilmHolder::getInstance(); // Take the singleton
@@ -41,8 +43,10 @@ SDL_Rect movingrect = {0,0,10,10};
 SDL_Rect viewVariable;
 
 
-void Input() {
-	myInput(Link, ActionLayer, HorizonLayer, GameGrid, movingrect, is_running, mouse_down,link_cl); }
+void Input() { 
+	InputHandler.InputRead(is_running);
+	InputHandler.InputExecution(link_cl, ActionLayer, HorizonLayer, GameGrid, movingrect, mouse_down);
+}
 
 //sprite displaY FUAA
 void Display_all_Sprites() {
@@ -64,12 +68,7 @@ void gravity() {
 		if (it->GetGravityHandler().isFalling) {
 			*it = it->Move(0, 1);
 		}
-
-		
 	}
-
-		
-	//}
 }
 
 void initialise_films_link() {
@@ -78,16 +77,19 @@ void initialise_films_link() {
 	AnimationFilm* attack_right = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack.right"));
 	AnimationFilm* fall_left = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.falling.left"));
 	AnimationFilm* fall_right = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.falling.right"));
+	AnimationFilm* jump_left = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.jump.left"));
+	AnimationFilm* jump_right = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.jump.right"));
 	link_cl.set_film("Link.Run.left", run_left);
 	link_cl.set_film("Link.Attack.left", attack_left);
 	link_cl.set_film("Link.Attack.right", attack_right);
 	link_cl.set_film("Link.falling.left", fall_left);
 	link_cl.set_film("Link.falling.right", fall_right);
-
+	link_cl.set_film("Link.jump.left", jump_left);
+	link_cl.set_film("Link.jump.right", jump_right);
 }
 
 void Initialise_sprites() {
-	Link = new Sprite(300, 350, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")), "Link");
+	Link = new Sprite(200, 200, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")), "Link");
 	link_cl.set_film("Link.Run.right", const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")));
 	
 	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid, Link));
@@ -103,7 +105,6 @@ void Initialise_sprites() {
 			//Link->GetGravityHandler().isFalling = false;
 			//std::cout << "called";
 			//Link->SetHasDirectMotion(false);
-			
 		});
 
 	sprite_manager.Add(Link);
@@ -114,22 +115,19 @@ void Initialise_sprites() {
 FrameRangeAnimator* fall_antor;
 FrameRangeAnimator* attacking;
 void initialize_animators() {
-
-
-
 	Animator* move = new MovingAnimator();
-	Animator* fr = new FrameRangeAnimator();
+	Animation* move_anim = new MovingAnimation("link.move", 1, 0, 0, 100);
 
-	Animation* move_anim = new MovingAnimation("link.move",1,0,0,30);
+	Animator* fr = new FrameRangeAnimator();
 	Animation* run_anim = new FrameRangeAnimation("link.run", 0, 3, 1, 0, 0, 0);
 	
-	
-
 	Animator* attack = new FrameRangeAnimator();
 	Animation* attack_anim = new FrameRangeAnimation("link.attack", 0, 3, 1, 0, 0, 100);
 
-	//ATTACK
+	Animator* jump = new FrameRangeAnimator();
+	Animation* jump_anim = new FrameRangeAnimation("link.jump", 0, 1, 0, 0, 0, 50);
 
+	//ATTACK
 
 	attack->SetOnAction([](Animator* animator, const Animation& anim) {
 		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
@@ -168,10 +166,15 @@ void initialize_animators() {
 	
 	link_cl.set_animation("link.move", move_anim);
 	link_cl.set_animation("link.run", run_anim);
+
 	link_cl.set_animator("move", move);
 	link_cl.set_animator("fr", fr);
+
 	link_cl.set_animation("link.attack", attack_anim);
 	link_cl.set_animator("attack", attack);
+
+	link_cl.set_animation("link.jump", jump_anim);
+	link_cl.set_animator("jump", jump);
 	link_cl.set_current(Link);
 
 }
