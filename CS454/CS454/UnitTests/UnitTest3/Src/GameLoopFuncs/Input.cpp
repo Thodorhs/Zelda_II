@@ -7,12 +7,16 @@ void InputKeys::InputRead(bool& is_running) {
 
 	SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
     while (SDL_PollEvent(&event)) {
+		if (event.type == SDL_QUIT) {
+			is_running = false;
+		}
         if (event.type == SDL_KEYDOWN) {
 			SetKeyState(event.key.keysym.sym, true);
         }
         if (event.type == SDL_KEYUP) {
 			SetKeyState(event.key.keysym.sym, false);
         }
+
     }
 }
 

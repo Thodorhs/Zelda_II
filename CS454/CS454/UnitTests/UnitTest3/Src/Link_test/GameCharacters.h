@@ -26,5 +26,4 @@ class GameCharacters {
 		virtual void set_id(std::string id) { id = id; }
 		virtual std::string get_type() { return type; }
 		virtual std::string get_id() { return id; }
-	
 };
