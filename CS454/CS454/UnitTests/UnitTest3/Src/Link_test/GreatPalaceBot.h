@@ -1,20 +1,19 @@
 #pragma once
-
 #include "GameCharacters.h"
 
-class Link_Class : public GameCharacter {
+class GreatPalaceBot : public GameCharacter {
 private:
 	std::map<std::string, Animator*> animators;
 	std::map<std::string, Animation*>animations;
-	std::map<std::string, AnimationFilm*> link_films;
-	static  Link_Class singleton;
+	std::map<std::string, AnimationFilm*> bot_films;
+	
 	Sprite* current;
 public:
 
-	void print_character() { std::cout << "Link!" << "\n"; }
+	void print_character() { std::cout << "GreatPalaceBot!" << "\n"; }
 
 	void set_current(Sprite* s) { current = s; }
-	Sprite& get_current(){return *current;}
+	Sprite& get_current() { return *current; }
 	void set_animator(std::string id, Animator* anim) {
 		animators.insert({ id,anim });
 	}
@@ -37,12 +36,12 @@ public:
 	}
 
 	void set_film(std::string id, AnimationFilm* anim) {
-		link_films.insert({ id,anim });
+		bot_films.insert({ id,anim });
 	}
 
 	AnimationFilm* get_film(std::string id) {
-		auto it = link_films.find(id);
-		if (it == link_films.end())
+		auto it = bot_films.find(id);
+		if (it == bot_films.end())
 			return NULL;
 		return it->second;
 	}
@@ -52,8 +51,5 @@ public:
 			it.second->Stop();
 		}
 	}
-	static auto GetSingleton(void) -> Link_Class& { return singleton; }
-	static auto GetSingletonConst(void) -> const Link_Class& { return singleton; }
 
-	
 };

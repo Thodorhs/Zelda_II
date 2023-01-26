@@ -2,7 +2,7 @@
 #include "GameCharacters.h"
 
 
-class Enemy : public GameCharacters {
+class Enemy : public GameCharacter {
 
 private:
 	std::map<std::string, Animator*> animators;
@@ -10,6 +10,7 @@ private:
 	std::map<std::string, AnimationFilm*> link_films;
 	Sprite* current;
 public:
+	void print_character() { std::cout << "Enemy!" << "\n"; }
 	void set_current(Sprite* s) override { current = s; }
 	Sprite& get_current() override { return *current; }
 	void set_animator(std::string id, Animator* anim) {
