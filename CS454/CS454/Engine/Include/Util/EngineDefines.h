@@ -11,7 +11,7 @@ typedef unsigned char byte;
 using GridIndex = byte;
 
 #define MAPHEIGHT 16
-#define MAPWIDTH  50
+#define MAPWIDTH  250
 #define TILESETWIDTH 10
 #define TILESETHEIGHT 10
 
