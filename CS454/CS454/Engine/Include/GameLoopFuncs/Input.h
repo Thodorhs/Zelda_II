@@ -28,6 +28,7 @@ public:
 
     void InputRead(bool& is_running);
     void InputExecution(Link_Class& link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, SDL_Rect& movingrect, bool& mouse_down);
+    void SetAction(Link_Class& link, std::string StateCheck, std::string film, auto animator, auto animation, int dx, int dy);
     void LinkAction(auto animation, auto animator, int dx, int dy);
     static auto GetSingleton(void) -> InputKeys& { return singleton; }
 };
