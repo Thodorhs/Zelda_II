@@ -183,46 +183,40 @@ void initialize_animators() {
 	Animator* attack = new FrameRangeAnimator();
 	Animation* attack_anim = new FrameRangeAnimation("link.attack", 0, 3, 1, 0, 0, 100);
 
-	Animator* jump = new FrameRangeAnimator();
-	Animation* jump_anim = new FrameRangeAnimation("link.jump", 0, 1, 0, 0, 0, 50);
+	Animator* jump = new MovingAnimator();
+	Animation* jump_anim = new MovingAnimation("link.jump", 1, 0, 0, 40);
 
 	//ATTACK
 
 	attack->SetOnAction([](Animator* animator, const Animation& anim) {
 		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
 		});
-	attack->SetOnStart([](Animator* animator) {
-		
-		//Link->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")));
-		});
-	attack->SetOnFinish([](Animator* animator) {
-		//Link->change_film(falling);
-		});
-
+	attack->SetOnStart([](Animator* animator) {});
+	attack->SetOnFinish([](Animator* animator) {});
 
 
 	//MOVE
 
 	move->SetOnAction([](Animator* animator, const Animation& anim) {
 		Sprite_MoveAction(Link, animator, (const MovingAnimation&)anim);
-		});
-	move->SetOnStart([](Animator* animator) {
-		//Link->change_film(attack_film);
-		});
-	move->SetOnFinish([](Animator* animator ){
-		//Link->change_film(falling);
-		});
+	});
+	move->SetOnStart([](Animator* animator) {});
+	move->SetOnFinish([](Animator* animator ){});
+
     
 	fr->SetOnAction([](Animator* animator, const Animation& anim) {
 		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
 		});
-	fr->SetOnStart([](Animator* animator) {
-		//Link->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run")));
-		});
-	fr->SetOnFinish([](Animator* animator) {
-		//Link->change_film(falling);
-		});
+	fr->SetOnStart([](Animator* animator) {});
+	fr->SetOnFinish([](Animator* animator) {});
 	
+
+	jump->SetOnAction([](Animator* animator, const Animation& anim) {
+		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
+	});
+	jump->SetOnStart([](Animator* animator) {});
+	jump->SetOnFinish([](Animator* animator) {});
+
 	link_cl.set_animation("link.move", move_anim);
 	link_cl.set_animation("link.run", run_anim);
 
@@ -234,6 +228,7 @@ void initialize_animators() {
 
 	link_cl.set_animation("link.jump", jump_anim);
 	link_cl.set_animator("jump", jump);
+
 	link_cl.set_current(Link);
 
 }

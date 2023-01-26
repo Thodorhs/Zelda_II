@@ -9,17 +9,14 @@ void InputKeys::InputRead(bool& is_running) {
     SDL_Event event;
     int* dx = new int, * dy = new int;
     *dy = *dy = 0;
-	int x_vel = 0;
 
 	SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
-    if (SDL_PollEvent(&event)) {
+    while (SDL_PollEvent(&event)) {
         if (event.type == SDL_KEYDOWN) {
 			SetKeyState(event.key.keysym.sym, true);
-			x_vel = 1;
         }
-        else if (event.type == SDL_KEYUP) {
+        if (event.type == SDL_KEYUP) {
 			SetKeyState(event.key.keysym.sym, false);
-			x_vel = 0;
         }
     }
 }
@@ -34,8 +31,28 @@ void InputKeys::InputExecution(Link_Class& link, TileLayer& ActionLayer, TileLay
 	prev_frame_left = c_frame_left;
 	c_frame_left++;
 	Sprite s = link.get_current();
+	
+	if (isKeyPressed(SDLK_d) && isKeyPressed(SDLK_SPACE)) {
+		link.get_current().change_film(link.get_film("Link.jump.right"));
+		link.stop_animators();
 
-	if (isKeyPressed(SDLK_a) == true) {
+		*dx = 8; *dy = -8;
+
+		LinkAction((MovingAnimation*)link.get_animation("link.jump"), (MovingAnimator*)link.get_animator("jump"), *dx, *dy);
+		return;
+	}
+
+	if (isKeyPressed(SDLK_a) && isKeyPressed(SDLK_SPACE)) {
+		link.get_current().change_film(link.get_film("Link.jump.left"));
+		link.stop_animators();
+
+		*dx = -8; *dy = -8;
+
+		LinkAction((MovingAnimation*)link.get_animation("link.jump"), (MovingAnimator*)link.get_animator("jump"), *dx, *dy);
+		return;
+	}
+
+	if (isKeyPressed(SDLK_a)) {
 		link.get_current().set_state("moving_left");
 		link.get_current().change_film(link.get_film("Link.Run.left"));
 		link.stop_animators();
@@ -50,8 +67,9 @@ void InputKeys::InputExecution(Link_Class& link, TileLayer& ActionLayer, TileLay
 
 		*dx = -8; *dy = 0;
 		LinkAction(run_anim_left, (FrameRangeAnimator*)link.get_animator("fr"), *dx, *dy);
+		return;
 	}
-	
+
 	if (isKeyPressed(SDLK_d) == true) {
 		link.get_current().set_state("moving_right");
 		link.get_current().change_film(link.get_film("Link.Run.right"));
@@ -67,7 +85,7 @@ void InputKeys::InputExecution(Link_Class& link, TileLayer& ActionLayer, TileLay
 
 		*dx = 8; *dy = 0;
 		LinkAction(run_anim_right, (FrameRangeAnimator*)link.get_animator("fr"), *dx, *dy);
-		SetKeyState(SDLK_d, false);
+		return;
 	}
 
 	if (isKeyPressed(SDLK_SPACE) == true) {
@@ -78,8 +96,10 @@ void InputKeys::InputExecution(Link_Class& link, TileLayer& ActionLayer, TileLay
 
 		*dx = 0; *dy = -8;
 
-		LinkAction((MovingAnimation*)link.get_animation("link.move"), (MovingAnimator*)link.get_animator("move"), *dx, *dy);
+		LinkAction((MovingAnimation*)link.get_animation("link.jump"), (MovingAnimator*)link.get_animator("jump"), *dx, *dy);
+		return;
 	}
+
 	
 	if (isKeyPressed(SDLK_b) == true) {
 		check_state = link.get_current().get_state() == "moving_right";
@@ -89,13 +109,14 @@ void InputKeys::InputExecution(Link_Class& link, TileLayer& ActionLayer, TileLay
 
 		*dx = 0; *dy = 0;
 		LinkAction((FrameRangeAnimation*)link.get_animation("link.attack"), (FrameRangeAnimator*)link.get_animator("attack"), *dx, *dy);
+		return;
 	}
-
-	keyState.clear();
 }
+
+
 void InputKeys::LinkAction(auto animation, auto animator, int dx, int dy) {
 	animation->SetDx(dx);
-	animation->SetDy(dy);
+	if(dy != 0) animation->SetDy(dy);
 	animation->SetDelay(50);
 	animator->Start(animation, GetSystemTime());
 	SDL_Delay(60);
