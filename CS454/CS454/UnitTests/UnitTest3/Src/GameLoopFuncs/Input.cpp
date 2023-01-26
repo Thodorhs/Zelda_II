@@ -86,6 +86,9 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 			(FrameRangeAnimator*)Link.get_animator("fr"), 
 			(FrameRangeAnimation*)Link.get_animation("link.run"), 
 			50, -8, 0);
+
+		//ActionLayer.Scroll(-8, 0);
+		//HorizonLayer.Scroll(-8, 0);
 		return;
 	}
 
@@ -94,6 +97,9 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 			(FrameRangeAnimator*)Link.get_animator("fr"),
 			(FrameRangeAnimation*)Link.get_animation("link.run"),
 			50, 8, 0);
+
+		//ActionLayer.Scroll(8, 0);
+		//HorizonLayer.Scroll(8, 0);
 		return;
 	}
 	

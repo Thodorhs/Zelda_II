@@ -10,7 +10,7 @@
 #include "SDL.h"
 #include <map>
 
-#define MAXDISTANCEJUMP  300*(-8)
+#define MAXDISTANCEJUMP  350*(-8)
 class InputKeys {
 private:
     static InputKeys singleton;
