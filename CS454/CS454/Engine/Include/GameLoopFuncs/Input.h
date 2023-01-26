@@ -16,7 +16,10 @@ private:
     static InputKeys singleton;
     std::map<SDL_Keycode, bool> keyState;
     int distanceJumped = 0;
+    int LinkSpeed = 8;
+    int LinkJump = 8;
     bool CanJump = false;
+    SDL_Rect ViewWin;
 public:
     void SetKeyState(SDL_Keycode eventkey, bool value) {
         keyState[eventkey] = value;
@@ -32,8 +35,9 @@ public:
 
     void InputRead(bool& is_running);
     void InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, SDL_Rect& movingrect, bool& mouse_down);
+    void MoveWindowWithLink(Link_Class& link, float Scrolldx, int& dx);
     bool CanJumpCheck(Link_Class& Link, GridLayer& GameGrid);
-    void SetAction(Link_Class& Link, std::string StateCheck, std::string film, auto animator, auto animation, unsigned delay, int dx, int dy);
+    bool SetAction(Link_Class& Link, std::string StateCheck, std::string film, auto animator, auto animation, unsigned delay, int dx, int dy, float Scrolldx);
     void LinkAction(auto animation, auto animator, unsigned delay, int dx, int dy);
     static auto GetSingleton(void) -> InputKeys& { return singleton; }
 };

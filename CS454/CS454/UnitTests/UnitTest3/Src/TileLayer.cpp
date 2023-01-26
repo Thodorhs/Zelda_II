@@ -66,6 +66,33 @@ const SDL_Point TileLayer::Pick(Dim x, Dim y) const {
 	DIV_TILE_HEIGHT(y + viewWin.y) };
 }
 
+void TileLayer::FilterScrollDistance(
+	int viewStartCoord, // x or y
+	int viewSize, // w or h
+	float* d, // dx or dy
+	int maxMapSize // w or h 
+) {
+	auto val = *d + viewStartCoord;
+	if (val < 0)
+		*d = viewStartCoord; // cross low bound
+	else
+		if (viewSize >= maxMapSize)// fits entirely
+			*d = 0;
+		else
+			if ((val + viewSize) >= maxMapSize) // cross upper bound
+				*d = maxMapSize - (viewStartCoord + viewSize);
+}
+
+void TileLayer::FilterScroll(float* dx, float* dy) {
+	FilterScrollDistance(viewWin.x, viewWin.w, dx, GetMapPixelWidth());
+	FilterScrollDistance(viewWin.y, viewWin.h, dy, GetMapPixelHeight());
+}
+
+void TileLayer::ScrollWithBoundsCheck(float& dx, float dy) {
+	FilterScroll(&dx, &dy);
+	Scroll(dx, dy);
+}
+
 
 void TileLayer::Scroll(float dx, float dy) {
 	dpyChanged = true;

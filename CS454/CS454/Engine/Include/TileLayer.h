@@ -10,7 +10,9 @@ private:
 	BitmapSurface tileSet;
 	SDL_Rect viewWin;
 	SDL_Texture* dpyBuffer;
-
+	
+	int MaxRoomWidth[NUMBEROFROOMS] = { 40 * 32 };
+	unsigned CurrentRoom = 0;
 	bool dpyChanged = true; //this has changed to cache VW
 	void Allocate(void) {
 		/*dpyBuffer = BitmapCreate(
@@ -30,15 +32,27 @@ public:
 	BitmapTexture* GetBitmap(void) const { return dpyBuffer; }
 	int GetPixelWidth(void) const { return viewWin.w; }
 	int GetPixelHeight(void) const { return viewWin.h; }
+	int GetMapPixelHeight() { return 16 * 32; }
+	int GetMapPixelWidth() { return MaxRoomWidth[CurrentRoom]; }
+	void NextRoom() { CurrentRoom++;}
 	unsigned GetTileWidth(void) const { return DIV_TILE_WIDTH(viewWin.w); }
 	unsigned GetTileHeight(void) const { return DIV_TILE_HEIGHT(viewWin.h); }
 
 	void Display(SDL_Surface* ImgSurface, SDL_Renderer* myrenderer, SDL_Texture* PrevLayerBuffer, bool FinalLayer);
 	const SDL_Point Pick(Dim x, Dim y) const;
 
+	void ScrollWithBoundsCheck(float& dx, float dy);
+	void FilterScrollDistance(
+		int viewStartCoord, // x or y
+		int viewSize, // w or h
+		float* d, // dx or dy
+		int maxMapSize // w or h 
+	);
+	void FilterScroll(float* dx, float* dy);
 	void Scroll(float dx, float dy);
 	bool CanScrollHoriz(float dx) const;
 	bool CanScrollVert(float dy) const;
+
 
 	auto ToString(void) const -> const std::string; // unparse
 	bool FromString(const std::string&); // parse
