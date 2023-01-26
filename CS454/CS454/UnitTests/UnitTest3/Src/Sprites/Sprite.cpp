@@ -1,7 +1,5 @@
 #include "../../../../Engine/Include/Sprites/Sprite.h"
 
-
-
 void Sprite::Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper& clipper, SDL_Renderer* GameRenderer) const {
 	SDL_Rect clippedBox;
 	SDL_Point dpyPos;
@@ -31,6 +29,8 @@ const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprit
 			   r.y == sprite->GetBox().y && 
 			   r.h == sprite->GetBox().h && 
 			   r.w == sprite->GetBox().w);
+		//gridLayer->FilterGridMotion({ sprite->GetGlobalPositionX(), sprite->GetGlobalPositionY(), sprite->GetBox().w, sprite->GetBox().h }, dx, dy);
+		//gridLayer->FilterGridMotion({ sprite->GetGlobalPositionX(), sprite->GetGlobalPositionY(), r.w, r.h }, dx, dy);
 		gridLayer->FilterGridMotion(r, dx, dy);
 		if (*dx || *dy) {
 			sprite->SetHasDirectMotion(true).Move(*dx, *dy);

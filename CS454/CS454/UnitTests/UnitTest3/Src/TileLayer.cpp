@@ -81,6 +81,7 @@ void TileLayer::FilterScrollDistance(
 		else
 			if ((val + viewSize) >= maxMapSize) // cross upper bound
 				*d = maxMapSize - (viewStartCoord + viewSize);
+
 }
 
 void TileLayer::FilterScroll(float* dx, float* dy) {

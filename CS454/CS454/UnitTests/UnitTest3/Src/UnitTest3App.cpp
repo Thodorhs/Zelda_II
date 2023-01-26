@@ -36,6 +36,7 @@ SDL_Rect viewVariable;
 void Input() { 
 	InputHandler.InputRead(is_running);
 	InputHandler.InputExecution(link_cl, ActionLayer, HorizonLayer, GameGrid, movingrect, mouse_down);
+	link_cl.get_current().SetGlobalPosition(ActionLayer.GetViewWindow().x, ActionLayer.GetViewWindow().y);
 }
 
 //sprite displaY FUAA
@@ -69,6 +70,7 @@ void animation_handler() {
 }
 
 void myRender() {	
+
 	SDL_RenderClear(GameRenderer);
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);

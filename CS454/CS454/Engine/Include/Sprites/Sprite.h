@@ -16,6 +16,7 @@ protected:
 	byte frameNo = 0;
 	SDL_Rect frameBox; // inside the film
 	float x = 0, y = 0;
+	float globalx = 0, globaly = 0;
 	int w, h;
 	bool isVisible = false;
 	AnimationFilm* currFilm = nullptr;
@@ -27,7 +28,9 @@ protected:
 	bool directMotion = false;
 	GravityHandler gravity;
 public:
-
+	int GetGlobalPositionX() { return globalx; }
+	int GetGlobalPositionY() { return globaly; }
+	void SetGlobalPosition(int _globalx, int _globaly) { globalx = x + _globalx, globaly = y + _globaly; }
 	void set_state(std::string id) { stateId = id; }
 	std::string get_state() { return stateId; }
 

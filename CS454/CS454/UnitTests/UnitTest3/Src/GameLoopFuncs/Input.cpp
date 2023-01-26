@@ -115,6 +115,7 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		if (/*CheckMoveWin && */LinkRect.x > ViewWin.w / 2 - 10 && LinkRect.x < ViewWin.w / 2 + 10) {
 			ActionLayer.Scroll(Scrolldx, 0);
 			HorizonLayer.Scroll(Scrolldx, 0);
+
 		}
 		return;
 	}
