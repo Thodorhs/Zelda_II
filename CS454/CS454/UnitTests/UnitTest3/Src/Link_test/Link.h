@@ -2,8 +2,7 @@
 
 #include "GameCharacters.h"
 
-
-class Link_Class final {
+class Link_Class : public GameCharacter{
 private:
 	std::map<std::string, Animator*> animators;
 	std::map<std::string, Animation*>animations;
@@ -11,6 +10,9 @@ private:
 	static  Link_Class singleton;
 	Sprite* current;
 public:
+
+	void print_character() { std::cout << "Link!" << "\n"; }
+
 	void set_current(Sprite* s) { current = s; }
 	Sprite& get_current(){return *current;}
 	void set_animator(std::string id, Animator* anim) {
