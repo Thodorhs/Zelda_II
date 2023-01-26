@@ -2,6 +2,7 @@
 
 #include "GameCharacters.h"
 
+
 class Link_Class final {
 private:
 	std::map<std::string, Animator*> animators;

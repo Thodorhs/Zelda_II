@@ -11,12 +11,10 @@ public:
 	bool gravityAddicted = false;
 	bool isFalling = false;
 protected:
-	
-	
-	OnSolidGroundPred onSolidGround;
 	OnStartFalling onStartFalling;
 	OnStopFalling onStopFalling;
 public:
+	OnSolidGroundPred onSolidGround;
 	template <typename T> void SetOnStartFalling(const T& f)
 	{
 		onStartFalling = f;

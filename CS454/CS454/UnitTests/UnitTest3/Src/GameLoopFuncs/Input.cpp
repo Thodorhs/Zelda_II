@@ -25,35 +25,44 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 	int* dx = new int; int* dy = new int;
 	*dx = 0; *dy = 0;
 	
+	if (isKeyReleased(SDLK_SPACE) == true) {
+		distanceJumped = MAXDISTANCEJUMP;
+		Link.get_current().GetGravityHandler().gravityAddicted = true;
+		Link.get_current().GetGravityHandler().isFalling = true;
+	}
+		
+
 	if (isKeyPressed(SDLK_d) && isKeyPressed(SDLK_SPACE)) {
+		if (CanJumpCheck(Link, GameGrid) == false) {
+			SetAction(Link, "moving_right", "Link.Run.right",
+				(FrameRangeAnimator*)Link.get_animator("fr"),
+				(FrameRangeAnimation*)Link.get_animation("link.run"),
+				30, 8, 0);
+			return;
+		}
+
 		SetAction(Link, "link_jump_right", "Link.jump.right" ,
 			(MovingAnimator*)Link.get_animator("jump"),
 			(MovingAnimation*)Link.get_animation("link.jump"),
-			8, -8);
+			30, 8, -8);
+		distanceJumped += -8;
 		return;
 	}
 
 	if (isKeyPressed(SDLK_a) && isKeyPressed(SDLK_SPACE)) {
+		if (CanJumpCheck(Link, GameGrid) == false) {
+			SetAction(Link, "moving_left", "Link.Run.left",
+				(FrameRangeAnimator*)Link.get_animator("fr"),
+				(FrameRangeAnimation*)Link.get_animation("link.run"),
+				30, -8, 0);
+			return;
+		}
+
 		SetAction(Link, "link_jump_left", "Link.jump.left", 
 			(MovingAnimator*)Link.get_animator("jump"),
 			(MovingAnimation*)Link.get_animation("link.jump"), 
-			-8, -8);
-		return;
-	}
-
-	if (isKeyPressed(SDLK_a)) {
-		SetAction(Link, "moving_left", "Link.Run.left", 
-			(FrameRangeAnimator*)Link.get_animator("fr"), 
-			(FrameRangeAnimation*)Link.get_animation("link.run"), 
-			-8, 0);
-		return;
-	}
-
-	if (isKeyPressed(SDLK_d) == true) {
-		SetAction(Link, "moving_right", "Link.Run.right",
-			(FrameRangeAnimator*)Link.get_animator("fr"),
-			(FrameRangeAnimation*)Link.get_animation("link.run"),
-			8, 0);
+			30, -8, -8);
+		distanceJumped += -8;
 		return;
 	}
 
@@ -61,14 +70,32 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		std::string State; std::string film;
 		if (Link.get_current().get_state() == "moving_right") { State = "moving_right"; film = "Link.jump.right"; }
 		else { State = "moving_left"; film = "Link.jump.left"; }
+		
+		if (CanJumpCheck(Link, GameGrid) == false) return;
 
 		SetAction(Link, State, film,
 			(MovingAnimator*)Link.get_animator("jump"),
 			(MovingAnimation*)Link.get_animation("link.jump"),
-			0, -8);
+			30, 0, -8);
+		distanceJumped += -8;
 		return;
 	}
 
+	if (isKeyPressed(SDLK_a)) {
+		SetAction(Link, "moving_left", "Link.Run.left", 
+			(FrameRangeAnimator*)Link.get_animator("fr"), 
+			(FrameRangeAnimation*)Link.get_animation("link.run"), 
+			50, -8, 0);
+		return;
+	}
+
+	if (isKeyPressed(SDLK_d) == true) {
+		SetAction(Link, "moving_right", "Link.Run.right",
+			(FrameRangeAnimator*)Link.get_animator("fr"),
+			(FrameRangeAnimation*)Link.get_animation("link.run"),
+			50, 8, 0);
+		return;
+	}
 	
 	if (isKeyPressed(SDLK_b) == true) {
 		std::string State; std::string film;
@@ -78,13 +105,27 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		SetAction(Link, State, film,
 			(FrameRangeAnimator*)Link.get_animator("attack"),
 			(FrameRangeAnimation*)Link.get_animation("link.attack"),
-			0, 0);
+			50, 0, 0);
 		return;
 	}
 }
 
+bool InputKeys::CanJumpCheck(Link_Class& Link, GridLayer& GameGrid) {
+	if (GameGrid.IsOnSolidGround(Link.get_current().GetBox())) {
+		distanceJumped = 0;
+		Link.get_current().GetGravityHandler().gravityAddicted = false;
+		Link.get_current().GetGravityHandler().isFalling = false;
+		return true;
+	}
 
-void InputKeys::SetAction(Link_Class& link, std::string StateCheck, std::string film, auto animator, auto animation, int dx, int dy) {
+	if (distanceJumped <= MAXDISTANCEJUMP) {
+		Link.get_current().GetGravityHandler().gravityAddicted = true;
+		Link.get_current().GetGravityHandler().isFalling = true;
+		return false;
+	}
+}
+
+void InputKeys::SetAction(Link_Class& link, std::string StateCheck, std::string film, auto animator, auto animation, unsigned delay, int dx, int dy) {
 	if (link.get_current().get_state() == StateCheck)
 		if (animator->HasFinished() == false)
 			return;
@@ -93,13 +134,13 @@ void InputKeys::SetAction(Link_Class& link, std::string StateCheck, std::string 
 	link.get_current().change_film(link.get_film(film));
 	link.stop_animators();
 
-	LinkAction(animation, animator, dx, dy);
+	LinkAction(animation, animator, delay, dx, dy);
 }
 
 
-void InputKeys::LinkAction(auto animation, auto animator, int dx, int dy) {
+void InputKeys::LinkAction(auto animation, auto animator, unsigned delay, int dx, int dy) {
 	animation->SetDx(dx);
 	if(dy != 0) animation->SetDy(dy);
-	animation->SetDelay(50);
+	animation->SetDelay(delay);
 	animator->Start(animation, GetSystemTime());
 }

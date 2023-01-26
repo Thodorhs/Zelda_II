@@ -152,19 +152,19 @@ void Initialise_sprites() {
 	link_cl.set_film("Link.Run.right", const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")));
 	
 	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid, Link));
-	PrepareSpriteGravityHandler(&GameGrid, Link);
+	
 	
 
 	Link->GetGravityHandler().gravityAddicted = true;
 	Link->GetGravityHandler().SetOnStartFalling(
-		[]() {link_cl.stop_animators();
-					return;});
+		[]() {
+			Link->GetGravityHandler().isFalling = true;
+		});
 	Link->GetGravityHandler().SetOnStopFalling(
 		[]() {
-			//Link->GetGravityHandler().isFalling = false;
-			//std::cout << "called";
-			//Link->SetHasDirectMotion(false);
+			Link->GetGravityHandler().isFalling = false;
 		});
+	PrepareSpriteGravityHandler(&GameGrid, Link);
 
 	sprite_manager.Add(Link);
 }
@@ -302,9 +302,6 @@ void ZeldaApp::Load() {
 	Initialise_sprites();
 	initialize_animators();
 	initialise_films_link();
-	initialise_films_enemy_link();
-	init_enemy_sprite();
-	
 	
 }
 
