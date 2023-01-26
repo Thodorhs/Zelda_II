@@ -37,7 +37,6 @@ class GameCharacter {
 		virtual void set_id(std::string id) { id = id; }
 		virtual Character_t get_type() { return type; }
 		virtual std::string get_id() { return id; }
-<<<<<<< HEAD
 	    virtual ~GameCharacter(){}
 		virtual void print_character() = 0;
 		static GameCharacter* create(Character_t type);
@@ -69,6 +68,5 @@ private:
 
 	
 
-=======
->>>>>>> 721f735f758edf7772e7bb5fbfbfdc438016d114
+
 };
