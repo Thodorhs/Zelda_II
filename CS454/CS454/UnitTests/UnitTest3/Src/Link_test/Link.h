@@ -2,7 +2,7 @@
 
 #include "GameCharacters.h"
 
-class Link_Class : public GameCharacter {
+class Link_Class final {
 private:
 	std::map<std::string, Animator*> animators;
 	std::map<std::string, Animation*>animations;

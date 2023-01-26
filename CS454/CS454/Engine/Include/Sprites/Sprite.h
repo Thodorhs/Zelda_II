@@ -58,7 +58,7 @@ public:
 	Sprite& Move(int dx, int dy) {
 		if (directMotion) { // apply unconditionally offsets!
 			if (gravity.gravityAddicted)
-				if (dy == 1) x += dx, y += 0.1;
+				if (dy == 1) x += dx, y += 0.3;
 				else x += dx, y += dy;
 			else x += dx, y += dy;
 		}

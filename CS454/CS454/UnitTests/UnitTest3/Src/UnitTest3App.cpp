@@ -152,19 +152,19 @@ void Initialise_sprites() {
 	link_cl.set_film("Link.Run.right", const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")));
 	
 	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid, Link));
-	PrepareSpriteGravityHandler(&GameGrid, Link);
+	
 	
 
 	Link->GetGravityHandler().gravityAddicted = true;
 	Link->GetGravityHandler().SetOnStartFalling(
-		[]() {link_cl.stop_animators();
-					return;});
+		[]() {
+			Link->GetGravityHandler().isFalling = true;
+		});
 	Link->GetGravityHandler().SetOnStopFalling(
 		[]() {
-			//Link->GetGravityHandler().isFalling = false;
-			//std::cout << "called";
-			//Link->SetHasDirectMotion(false);
+			Link->GetGravityHandler().isFalling = false;
 		});
+	PrepareSpriteGravityHandler(&GameGrid, Link);
 
 	sprite_manager.Add(Link);
 }
@@ -285,15 +285,15 @@ void ZeldaApp::Load() {
 	std::string half_path = find_first_part_path.substr(0, pos);
 	full_asset_path = half_path + "UnitTests\\UnitTest3\\UnitTest3Media";
 
-	TileSetSurface = IMG_Load((full_asset_path + "\\Zelda-II-Parapa-Palace-Tileset.png").c_str());
+	TileSetSurface = IMG_Load((full_asset_path + "\\Terrain\\Zelda-II-Parapa-Palace-Tileset.png").c_str());
 
 	// LAYERS
-	ReadTextMap(full_asset_path + "\\Entrance._BackroundEntrance.csv");
+	ReadTextMap(full_asset_path + "\\Terrain\\TileMap_Backround.csv");
 	HorizonLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()));
 
 	ClearMap(); // We write the data to a static global vector map so we need to clear it before  we read the data of the next layer
 
-	ReadTextMap(full_asset_path + "\\Entrance._ForegroundEntrance.csv");
+	ReadTextMap(full_asset_path + "\\Terrain\\TileMap_Foreground.csv");
 	GameGrid = GridLayer(MAPHEIGHT, MAPWIDTH);
 	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
 
@@ -302,9 +302,6 @@ void ZeldaApp::Load() {
 	Initialise_sprites();
 	initialize_animators();
 	initialise_films_link();
-	initialise_films_enemy_link();
-	init_enemy_sprite();
-	
 	
 }
 
