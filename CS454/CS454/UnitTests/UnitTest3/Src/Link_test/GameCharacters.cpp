@@ -1,8 +1,6 @@
 //#include "GameCharacters.h"
 #include "GreatPalaceBot.h"
-
-
-CharacterManager CharacterManager::singleton;
+#include "Guma.h"
 
 GameCharacter* GameCharacter::create(Character_t type) {
 	switch (type) {
@@ -14,10 +12,12 @@ GameCharacter* GameCharacter::create(Character_t type) {
 		//return new Wosu();
 		break;
 	case Guma_t:
-		//return new Guma();
+		return new Guma();
 		break;
 	case Stalfos_t:
 		//return new Stalfos();
+		break;
+	default:
 		break;
 	}
 }

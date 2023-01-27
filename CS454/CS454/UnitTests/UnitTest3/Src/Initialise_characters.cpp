@@ -1,6 +1,6 @@
 #include "Initialise_characters.h"
-static CharacterManager& character_manager = CharacterManager::GetSingleton();
 
+CharacterManager CharacterManager::singleton;
 Link_Class Link_Class::singleton;//this as well ffff u aa
 //create with factory
 //init films animations
@@ -8,42 +8,6 @@ Link_Class Link_Class::singleton;//this as well ffff u aa
 //add to sprite manager
 
 
-
-
-void initialise_enemy_films(GameCharacter* enemy) {
-	AnimationFilm* enemy_film = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack.left"));
-	enemy->set_film("id", enemy_film);
-
-}
-
-void initialise_enemy_sprites(GameCharacter *character,GridLayer GameGrid) {
-	Sprite* palace_bot = new Sprite(bot_x, bot_y, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Attack.left")), "Palace.bot");
-	palace_bot->SetMover(MakeSpriteGridLayerMover(&GameGrid, palace_bot));
-	PrepareSpriteGravityHandler(&GameGrid, palace_bot);
-
-
-	palace_bot->GetGravityHandler().gravityAddicted = true;
-	palace_bot->GetGravityHandler().SetOnStartFalling(
-		[character]() {character->stop_animators();
-	return; });
-	palace_bot->GetGravityHandler().SetOnStopFalling(
-		[]() {
-			//Link->GetGravityHandler().isFalling = false;
-			//std::cout << "called";
-			//Link->SetHasDirectMotion(false);
-		});
-
-	sprite_manager.Add(palace_bot);
-	character->set_current(palace_bot);
-}
-
-void initialise_enemy_animations(GameCharacter* character) {
-	Animator* move = new MovingAnimator();
-	Animation* move_anim = new MovingAnimation("bot.move", 1, 0, 0, 100);
-	character->set_animation("bot.move",move_anim);
-	character->set_animator("move", move);
-
-}
 
 void initialise_films_link(GridLayer GameGrid) {
 	AnimationFilm* run_left = const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.left"));
@@ -165,12 +129,8 @@ void initialise_link(GridLayer GameGrid) {
 
 
 void initialise_enemies(GridLayer GameGrid) {
-	GameCharacter * bot = character_manager.create(Character_t::GreatPalaceBot_t);
-	initialise_enemy_films(bot);
-	initialise_enemy_sprites(bot, GameGrid);
-	initialise_enemy_animations(bot);
-
-	character_manager.add_to_current(bot);
+	initialise_palace_bot(GameGrid);
+	initialise_guma(GameGrid);
 	for (auto it : character_manager.get_current_characters()) {
 		it->print_character();
 	}

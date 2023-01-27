@@ -7,7 +7,11 @@ private:
 	std::map<std::string, Animator*> animators;
 	std::map<std::string, Animation*>animations;
 	std::map<std::string, AnimationFilm*> link_films;
+
 	static  Link_Class singleton;
+
+	Character_t type;
+	std::string id;
 	Sprite* current;
 	bool isLinkPressingDown=false;
 public:
@@ -18,6 +22,11 @@ public:
 	bool GetisLinkPressingDown(void) {
 		return isLinkPressingDown;
 	}
+
+	void set_id(std::string id) { id = id; }
+	void set_type(Character_t type) { type = type; }
+	Character_t get_type() { return type; }
+	std::string get_id() { return id; }
 
 	void print_character() { std::cout << "Link!" << "\n"; }
 

@@ -6,9 +6,16 @@ private:
 	std::map<std::string, Animator*> animators;
 	std::map<std::string, Animation*>animations;
 	std::map<std::string, AnimationFilm*> bot_films;
-	
+	Character_t type;
+	std::string id;
 	Sprite* current;
 public:
+	GreatPalaceBot() { id = "GreatPalaceBot"; }
+	Character_t get_type() { return type; }
+	std::string get_id() { return id; }
+
+	void set_id(std::string id) { id = id; }
+	void set_type(Character_t type) { type = type; }
 
 	void print_character() { std::cout << "GreatPalaceBot!" << "\n"; }
 

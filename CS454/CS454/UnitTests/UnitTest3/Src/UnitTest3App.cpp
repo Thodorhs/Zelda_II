@@ -35,6 +35,44 @@ std::string full_asset_path;
 SDL_Rect movingrect = {0,0,10,10};
 SDL_Rect viewVariable;
 
+int sign_m = 1;
+
+
+void AI_manager() {
+	CharacterManager& c = CharacterManager::GetSingleton();
+	GameCharacter* g = NULL;
+
+	for (auto it : c.get_current_characters()) {
+		if (it->get_id() == "Guma") {
+			g = it;
+		}
+	}
+
+	FrameRangeAnimator* attack_move;
+	FrameRangeAnimation* attack_move_animation;
+	if (g) {
+
+		attack_move = (FrameRangeAnimator*)g->get_animator("guma.attack_move_animator");
+		attack_move_animation = (FrameRangeAnimation*)g->get_animation("guma.attack_move_animation");
+		if (attack_move->HasFinished() == false) {
+			sign_m = -1;
+
+			return;
+
+		}
+
+		//proj = &proj->Move(-1, 0);
+		//sprite_manager.Remove(proj);
+		sign_m = 1;
+		attack_move_animation->SetDx(sign_m * 1);
+
+
+		attack_move->Start(attack_move_animation, GetSystemTime());
+		g->fire_action();
+
+	}
+
+}
 
 void Input() { 
 	InputHandler.InputRead(is_running);
@@ -115,6 +153,7 @@ void ZeldaApp::Initialise(void) {
 	game.SetAnim(animation_handler);
 	game.Set_Physics(gravity);
 	game.SetCollisionChecking(CollisionChecking);
+	game.Set_AI(AI_manager);
 	is_running = true;
 
 }	
@@ -149,7 +188,7 @@ void ZeldaApp::Load() {
 		}	
 		});
 
-	//initialise_enemies(GameGrid);
+	initialise_enemies(GameGrid);
 	//initialise_films_enemy_link();
 	//init_enemy_sprite();
 	

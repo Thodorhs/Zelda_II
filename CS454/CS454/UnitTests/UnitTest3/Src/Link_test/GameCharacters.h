@@ -9,8 +9,7 @@
 #include "../../../../Engine/Include/Animators/FrameRangeAnimator.h"
 
 //abstract class gia kathe xaraktira ->ektos tou link
-typedef enum Character_type_t{
-	LINK, 
+typedef enum Character_type_t{ 
 	GreatPalaceBot_t,
 	Wosu_t,
 	Guma_t,
@@ -33,10 +32,12 @@ class GameCharacter {
 		virtual Sprite& get_current() = 0;
 		virtual void set_animator(std::string id, Animator* anim) = 0;
 		virtual void set_animation(std::string id, Animation* anim) = 0;
-		virtual void set_type(std::string type) { type = type; }
-		virtual void set_id(std::string id) { id = id; }
-		virtual Character_t get_type() { return type; }
-		virtual std::string get_id() { return id; }
+		virtual void set_type(Character_t type) = 0;
+		virtual void set_id(std::string id) = 0;
+		virtual Character_t get_type() = 0;
+		virtual std::string get_id() = 0;
+		virtual void set_fire(std::function<void(void)> f) { return; }
+		virtual void fire_action() { return; }
 	    virtual ~GameCharacter(){}
 		virtual void print_character() = 0;
 		static GameCharacter* create(Character_t type);

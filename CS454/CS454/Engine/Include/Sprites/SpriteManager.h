@@ -11,7 +11,14 @@ private:
 	static SpriteManager singleton;
 public:
 	void Add(Sprite* s) { dpyList.push_back(s); } // insert by ascending zorder
-	void Remove(Sprite* s);
+	void Remove(Sprite* s) {
+		for (auto it : dpyList) {
+			if (it->GetTypeId() == s->GetTypeId()) {
+				dpyList.remove(it);
+				return;
+			}
+		}
+	}
 	auto GetDisplayList(void) -> const SpriteList&
 	{
 		return dpyList;
