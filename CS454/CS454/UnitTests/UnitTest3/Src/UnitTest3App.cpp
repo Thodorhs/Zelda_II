@@ -36,20 +36,19 @@ SDL_Rect viewVariable;
 void Input() { 
 	InputHandler.InputRead(is_running);
 	InputHandler.InputExecution(link_cl, ActionLayer, HorizonLayer, GameGrid, movingrect, mouse_down);
-	link_cl.get_current().SetGlobalPosition(ActionLayer.GetViewWindow().x, ActionLayer.GetViewWindow().y);
 }
 
 //sprite displaY FUAA
 void Display_all_Sprites() {
-	BitmapSurface dest{}; const SDL_Rect dpyArea;  const Clipper clipper;
+	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
 	for (auto it : sprite_manager.GetDisplayList()) {
-		it->Display(dest, dpyArea, clipper, GameRenderer);
+		it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
 	}
 }
 void Display_Sprite_byType(std::string type) {
-	BitmapSurface dest{}; const SDL_Rect dpyArea;  const Clipper clipper;
+	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
 	for (auto it : sprite_manager.GetTypeList(type)) {
-		it->Display(dest, dpyArea, clipper, GameRenderer);
+		it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
 	}
 }
 

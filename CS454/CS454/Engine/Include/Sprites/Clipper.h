@@ -24,3 +24,5 @@ public:
 	Clipper(void) = default;
 	Clipper(const Clipper&) = default;
 };
+
+const Clipper MakeTileLayerClipper(TileLayer* layer);

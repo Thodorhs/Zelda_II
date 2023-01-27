@@ -47,11 +47,19 @@ public:
 	{
 		quantizer.SetMover(mover = f);
 	}
+	const SDL_Rect GetBoxScaledDown(void) const
+	{
+		return { (int)x, (int)y, w >> 1, h >> 1};
+	}
 	const SDL_Rect GetBox(void) const
 	{
-		return { (int)x, (int)y, w, h };
+		return { (int)x, (int)y, w , h };
 	}
 
+	const SDL_Rect GetGlobalBox(void) const
+	{
+		return { (int)globalx, (int)globaly, w, h };
+	}
 	GravityHandler& GetGravityHandler(void)
 	{
 		return gravity;

@@ -32,33 +32,63 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		
 
 	if (isKeyPressed(SDLK_d) && isKeyPressed(SDLK_SPACE)) {
+		float Scrolldx = 1.0;
+		float Scrolldy = 0;
+		SDL_Rect LinkRect = Link.get_current().GetBox();
+
 		if (CanJumpCheck(Link, GameGrid) == false) {
 			SetAction(Link, "moving_right", "Link.Run.right",
 				(FrameRangeAnimator*)Link.get_animator("fr"),
 				(FrameRangeAnimation*)Link.get_animation("link.run"),
 				30, 8, 0, 1.0);
+
+				if (LinkRect.x - ViewWin.x > ViewWin.w / 2 - 10 && LinkRect.x - ViewWin.x < ViewWin.w / 2 + 10) {
+					//std::cout << "im here !" << std::endl;
+					ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+					HorizonLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+				}
+				return;
 		}
 
 		SetAction(Link, "link_jump_right", "Link.jump.right" ,
 			(MovingAnimator*)Link.get_animator("jump"),
 			(MovingAnimation*)Link.get_animation("link.jump"),
 			30, 8, -8, 1.0);
+
+		if (LinkRect.x - ViewWin.x > ViewWin.w / 2 - 10 && LinkRect.x - ViewWin.x < ViewWin.w / 2 + 10) {
+			//std::cout << "im here !" << std::endl;
+			ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+			HorizonLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+		}
 		distanceJumped += -8;
 		return;
 	}
 
 	if (isKeyPressed(SDLK_a) && isKeyPressed(SDLK_SPACE)) {
+		float Scrolldx = -1.0;
+		float Scrolldy = 0;
+		SDL_Rect LinkRect = Link.get_current().GetBox();
+
 		if (CanJumpCheck(Link, GameGrid) == false) {
 			SetAction(Link, "moving_left", "Link.Run.left",
 				(FrameRangeAnimator*)Link.get_animator("fr"),
 				(FrameRangeAnimation*)Link.get_animation("link.run"),
 				30, -8, 0, -1.0);
+
+			if (LinkRect.x - ViewWin.x > ViewWin.w / 2 - 10 && LinkRect.x - ViewWin.x < ViewWin.w / 2 + 10) {
+				ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+				HorizonLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+			}
 			return;
 		}
 		SetAction(Link, "link_jump_left", "Link.jump.left", 
 			(MovingAnimator*)Link.get_animator("jump"),
 			(MovingAnimation*)Link.get_animation("link.jump"), 
 			30, -8, -8, -1.0);
+		if (LinkRect.x - ViewWin.x > ViewWin.w / 2 - 10 && LinkRect.x - ViewWin.x < ViewWin.w / 2 + 10) {
+			ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+			HorizonLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+		}
 		distanceJumped += -8;
 		return;
 	}
@@ -79,43 +109,35 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 	}
 
 	if (isKeyPressed(SDLK_a)) {
-		float Scrolldx = -1.0;
+		float Scrolldx = -4.0;
 		float Scrolldy = 0;
-		int dx = -8.0;
 		SDL_Rect LinkRect = Link.get_current().GetBox();
-		ActionLayer.FilterScroll(&Scrolldx, &Scrolldy);
-		if (Scrolldx == -1.0 && LinkRect.x > ViewWin.w / 2 - 10 && LinkRect.x < ViewWin.w / 2 + 10) dx = 0;
 
 		bool CheckMoveWin = SetAction(Link, "moving_left", "Link.Run.left",
 			(FrameRangeAnimator*)Link.get_animator("fr"),
 			(FrameRangeAnimation*)Link.get_animation("link.run"),
-			100, dx, 0, -1.0);
+			100, -4.0, 0, -1.0);
 
-		if (/*CheckMoveWin && */LinkRect.x > ViewWin.w / 2 - 10 && LinkRect.x < ViewWin.w / 2 + 10) {
-			ActionLayer.Scroll(Scrolldx, 0);
-			HorizonLayer.Scroll(Scrolldx, 0);
+		if (CheckMoveWin && LinkRect.x - ViewWin.x > ViewWin.w / 2 - 10 && LinkRect.x - ViewWin.x < ViewWin.w / 2 + 10) {
+			ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+			HorizonLayer.ScrollWithBoundsCheck(Scrolldx, 0);
 		}
 		return;
 	}
 
 	if (isKeyPressed(SDLK_d) == true) {
-		float Scrolldx = 1.0;
+		float Scrolldx = 4.0;
 		float Scrolldy = 0;
-		int dx = 8;
 		SDL_Rect LinkRect = Link.get_current().GetBox();
-		ActionLayer.FilterScroll(&Scrolldx, &Scrolldy);
-		if (Scrolldx == 1.0 && LinkRect.x > ViewWin.w / 2 - 10 && LinkRect.x < ViewWin.w / 2 + 10) dx = 0;
 
 		bool CheckMoveWin = SetAction(Link, "moving_right", "Link.Run.right",
 			(FrameRangeAnimator*)Link.get_animator("fr"),
 			(FrameRangeAnimation*)Link.get_animation("link.run"),
-			100, dx, 0, 1.0);
-
+			100, 4.0, 0, 1.0);
 		
-		if (/*CheckMoveWin && */LinkRect.x > ViewWin.w / 2 - 10 && LinkRect.x < ViewWin.w / 2 + 10) {
-			ActionLayer.Scroll(Scrolldx, 0);
-			HorizonLayer.Scroll(Scrolldx, 0);
-
+		if (CheckMoveWin && LinkRect.x - ViewWin.x > ViewWin.w / 2 - 10 && LinkRect.x - ViewWin.x < ViewWin.w / 2 + 10) {
+			ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
+			HorizonLayer.ScrollWithBoundsCheck(Scrolldx, 0);
 		}
 		return;
 	}
@@ -128,7 +150,7 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		SetAction(Link, State, film,
 			(FrameRangeAnimator*)Link.get_animator("attack"),
 			(FrameRangeAnimation*)Link.get_animation("link.attack"),
-			50, 0, 0, 0.0);
+			20, 0, 0, 0.0);
 		return;
 	}
 }

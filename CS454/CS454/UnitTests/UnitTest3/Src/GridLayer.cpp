@@ -78,8 +78,10 @@ void GridLayer::FilterGridMotionDown(const SDL_Rect& r, int* dy) const {
 
 void GridLayer::FilterGridMotionLeft(const SDL_Rect& r, int* dx) const {
 	auto x1_next = r.x + *dx;
-	if (x1_next < 0)
+	if (x1_next < 0) {
+		std::cout << "Cant Move Left due to map size" << std::endl;
 		*dx = -r.x;
+	}
 	else {
 		auto newCol = DIV_GRID_ELEMENT_WIDTH(x1_next);
 		auto currCol = DIV_GRID_ELEMENT_WIDTH(r.x);
@@ -89,7 +91,7 @@ void GridLayer::FilterGridMotionLeft(const SDL_Rect& r, int* dx) const {
 			auto endRow = DIV_GRID_ELEMENT_HEIGHT(r.y + r.h - 1);
 			for (auto row = startRow; row <= endRow; ++row)
 				if (!CanPassGridTile(GetGridMap(), newCol, row, GRID_RIGHT_SOLID_MASK)) {
-					//std::cout << "Cant Move Left" << std::endl;
+					std::cout << "Cant Move Left" << std::endl;
 					*dx = MUL_GRID_ELEMENT_WIDTH(currCol) - r.x;
 					break;
 				}
@@ -101,6 +103,7 @@ void GridLayer::FilterGridMotionRight(const SDL_Rect& r, int* dx) const {
 	auto x2 = r.x + r.w - 1;
 	auto x2_next = x2 + *dx;
 	if (x2_next >= MAX_PIXEL_WIDTH) {
+		std::cout << "Cant Move Left due to map size" << std::endl;
 		*dx = (MAX_PIXEL_WIDTH)-1 - x2;
 	}
 	else {
@@ -112,7 +115,7 @@ void GridLayer::FilterGridMotionRight(const SDL_Rect& r, int* dx) const {
 			auto endRow = DIV_GRID_ELEMENT_HEIGHT(r.y + r.h - 1);
 			for (auto row = startRow; row <= endRow; ++row)
 				if (!CanPassGridTile(GetGridMap(), newCol, row, GRID_LEFT_SOLID_MASK)) {
-					//std::cout << "Cant Move Right" << row << std::endl;
+					std::cout << "Cant Move Right" << row << std::endl;
 					*dx = (MUL_GRID_ELEMENT_WIDTH(newCol)) - 1 - x2;
 					break;
 				}
