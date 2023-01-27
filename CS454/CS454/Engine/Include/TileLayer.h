@@ -12,6 +12,8 @@ private:
 	SDL_Texture* dpyBuffer;
 	
 	int MaxRoomWidth[NUMBEROFROOMS] = { 40 * 32 };
+	cords ElevatorCordPairs[NUMBEROFELEVATORS][2];
+
 	unsigned CurrentRoom = 0;
 	bool dpyChanged = true; //this has changed to cache VW
 	void Allocate(void) {

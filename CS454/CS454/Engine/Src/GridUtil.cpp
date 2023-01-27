@@ -12,7 +12,7 @@ bool IsTileIndexAssumedEmpty(Index index) {
 		index == 12 || index == 13 || index == 14 ||
 		index == 24 || index == 35 || index == 36 ||
 		index == 37 || index == 38 || index == 23 ||
-		index == 33 || index == 43)  return false;
+		index == 33 || index == 43 || index == 22)  return false;
 	else return true;
 }
 

@@ -9,7 +9,15 @@ private:
 	std::map<std::string, AnimationFilm*> link_films;
 	static  Link_Class singleton;
 	Sprite* current;
+	bool isLinkPressingDown=false;
 public:
+	void SetisLinkPressingDown(bool b) {
+		isLinkPressingDown = b;
+	}
+
+	bool GetisLinkPressingDown(void) {
+		return isLinkPressingDown;
+	}
 
 	void print_character() { std::cout << "Link!" << "\n"; }
 

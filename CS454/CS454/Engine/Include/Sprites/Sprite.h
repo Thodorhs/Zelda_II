@@ -16,11 +16,10 @@ protected:
 	byte frameNo = 0;
 	SDL_Rect frameBox; // inside the film
 	float x = 0, y = 0;
-	float globalx = 0, globaly = 0;
 	int w, h;
 	bool isVisible = false;
 	AnimationFilm* currFilm = nullptr;
-	BoundingArea* boundingArea = nullptr;
+	//BoundingArea* boundingArea = nullptr;
 	unsigned zorder = 0;
 	std::string typeId, stateId;
 	Mover mover;
@@ -28,9 +27,7 @@ protected:
 	bool directMotion = false;
 	GravityHandler gravity;
 public:
-	int GetGlobalPositionX() { return globalx; }
-	int GetGlobalPositionY() { return globaly; }
-	void SetGlobalPosition(int _globalx, int _globaly) { globalx = x + _globalx, globaly = y + _globaly; }
+	
 	void set_state(std::string id) { stateId = id; }
 	std::string get_state() { return stateId; }
 
@@ -54,11 +51,6 @@ public:
 	const SDL_Rect GetBox(void) const
 	{
 		return { (int)x, (int)y, w , h };
-	}
-
-	const SDL_Rect GetGlobalBox(void) const
-	{
-		return { (int)globalx, (int)globaly, w, h };
 	}
 	GravityHandler& GetGravityHandler(void)
 	{

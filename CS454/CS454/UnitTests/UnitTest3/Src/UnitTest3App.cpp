@@ -2,12 +2,15 @@
 
 #include "../../../Engine/Include/Sprites/GravityHandler.h"
 #include "../../../Engine/Include/GameLoopFuncs/Input.h"
+#include "../../../Engine/Include/Sprites/CollisionChecker.h"
 #include "Initialise_characters.h"
-
 
 
 static InputKeys& InputHandler = InputKeys::GetSingleton();
 InputKeys InputKeys::singleton;//this as well ffff u aa
+
+static CollisionChecker& CollisionHandler = CollisionChecker::GetSingleton();
+CollisionChecker CollisionChecker::singleton;//this as well ffff u aa
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
@@ -38,17 +41,23 @@ void Input() {
 	InputHandler.InputExecution(link_cl, ActionLayer, HorizonLayer, GameGrid, movingrect, mouse_down);
 }
 
+void CollisionChecking() {
+	CollisionHandler.Check();
+}
+
 //sprite displaY FUAA
 void Display_all_Sprites() {
 	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
 	for (auto it : sprite_manager.GetDisplayList()) {
-		it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
+		it->Display(dest, { 0, 0, ActionLayer.GetViewWindow().w, ActionLayer.GetViewWindow().h }, clipper, GameRenderer);
+		//it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
 	}
 }
 void Display_Sprite_byType(std::string type) {
 	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
 	for (auto it : sprite_manager.GetTypeList(type)) {
-		it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
+		it->Display(dest, { 0, 0, ActionLayer.GetViewWindow().w, ActionLayer.GetViewWindow().h }, clipper, GameRenderer);
+		//it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
 	}
 }
 
@@ -105,6 +114,7 @@ void ZeldaApp::Initialise(void) {
 	game.SetDone(myDone);
 	game.SetAnim(animation_handler);
 	game.Set_Physics(gravity);
+	game.SetCollisionChecking(CollisionChecking);
 	is_running = true;
 
 }	
@@ -131,7 +141,15 @@ void ZeldaApp::Load() {
 	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer);
 	// ANIMATIONS
 	initialise_link(GameGrid);
-	initialise_enemies(GameGrid);
+	
+	CollisionHandler.Register(&link_cl.get_current(), initialise_elevator(), 
+	[](Sprite* s1, Sprite* s2) {
+		if(link_cl.GetisLinkPressingDown()){
+			std::cout << "ChangeROOM" << std::endl;
+		}	
+		});
+
+	//initialise_enemies(GameGrid);
 	//initialise_films_enemy_link();
 	//init_enemy_sprite();
 	

@@ -16,3 +16,4 @@ static SpriteManager& sprite_manager = SpriteManager::GetSingleton();
 
 void initialise_enemies(GridLayer GameGrid);
 void initialise_link(GridLayer GameGrid);
+Sprite* initialise_elevator();

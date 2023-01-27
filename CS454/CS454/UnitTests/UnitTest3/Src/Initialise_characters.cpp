@@ -149,12 +149,11 @@ void initialize_animators_link(Sprite* Link) {
 	link_cl.set_current(Link);
 
 }
-
-
-
-
-
-
+Sprite* initialise_elevator() {
+    Sprite* Elevator = new Sprite(36 * 32, 13 * 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Elevator")), "Elevator");
+	sprite_manager.Add(Elevator);
+	return Elevator;
+}
 
 
 void initialise_link(GridLayer GameGrid) {
@@ -163,11 +162,6 @@ void initialise_link(GridLayer GameGrid) {
 	initialize_animators_link(link);
 	
 }
-
-
-
-
-
 
 
 void initialise_enemies(GridLayer GameGrid) {

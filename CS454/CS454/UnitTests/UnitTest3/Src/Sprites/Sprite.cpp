@@ -23,9 +23,6 @@ const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprit
 			   r.y == sprite->GetBox().y &&
 			   r.h == sprite->GetBox().h &&
 			   r.w == sprite->GetBox().w);
-		//std::cout << "im on tile x,y: " << r.x << "," << r.y << std::endl;
-		//gridLayer->FilterGridMotion({ sprite->GetGlobalPositionX(), sprite->GetGlobalPositionY(), sprite->GetBox().w, sprite->GetBox().h }, dx, dy);
-		//gridLayer->FilterGridMotion({ sprite->GetGlobalPositionX(), sprite->GetGlobalPositionY(), r.w, r.h }, dx, dy);
 		gridLayer->FilterGridMotion(r, dx, dy);
 		if (*dx || *dy) {
 			sprite->SetHasDirectMotion(true).Move(*dx, *dy);
@@ -35,8 +32,10 @@ const Sprite::Mover MakeSpriteGridLayerMover(GridLayer* gridLayer, Sprite* sprit
 };
 
 bool Sprite::CollisionCheck(const Sprite* s) const {
-	//return this->boundingArea->Intersects(*(s->boundingArea));
-	return false; //neeed to fix this.
+	SDL_Rect box1, box2;
+	box1 = GetBox();
+	box2 = s->GetBox();
+	return SDL_HasIntersection(&box1, &box2);
 }
 
 
