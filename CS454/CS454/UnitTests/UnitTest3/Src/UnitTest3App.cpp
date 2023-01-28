@@ -9,8 +9,8 @@
 static InputKeys& InputHandler = InputKeys::GetSingleton();
 InputKeys InputKeys::singleton;//this as well ffff u aa
 
-static CollisionChecker& CollisionHandler = CollisionChecker::GetSingleton();
-CollisionChecker CollisionChecker::singleton;//this as well ffff u aa
+
+//this as well ffff u aa
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
@@ -25,18 +25,9 @@ TileLayer HorizonLayer;
 GridLayer GameGrid;
 AnimationFilmHolder AnimationFilmHolder::holder; // Set this so that the Linker can find it
 
-
- // Take the singleton
-
-
-
 std::string full_asset_path;
 
-SDL_Rect movingrect = {0,0,10,10};
-SDL_Rect viewVariable;
-
 int sign_m = 1;
-
 
 void AI_manager() {
 	CharacterManager& c = CharacterManager::GetSingleton();
@@ -75,8 +66,9 @@ void AI_manager() {
 }
 
 void Input() { 
+	link_cl.SetisLinkPressingDown(false);
 	InputHandler.InputRead(is_running);
-	InputHandler.InputExecution(link_cl, ActionLayer, HorizonLayer, GameGrid, movingrect, mouse_down);
+	InputHandler.InputExecution(link_cl, ActionLayer, HorizonLayer, GameGrid, mouse_down);
 }
 
 void CollisionChecking() {
@@ -123,7 +115,6 @@ void myRender() {
 
 	Display_all_Sprites();
 	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
-	SDL_RenderDrawRect(GameRenderer, &movingrect);
 	SDL_RenderPresent(GameRenderer);
 }
 
@@ -180,14 +171,9 @@ void ZeldaApp::Load() {
 	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer);
 	// ANIMATIONS
 	initialise_link(GameGrid);
-	
-	CollisionHandler.Register(&link_cl.get_current(), initialise_elevator(), 
-	[](Sprite* s1, Sprite* s2) {
-		if(link_cl.GetisLinkPressingDown()){
-			std::cout << "ChangeROOM" << std::endl;
-		}	
-		});
 
+	initialise_elevator(ActionLayer,HorizonLayer);
+	
 	initialise_enemies(GameGrid);
 	//initialise_films_enemy_link();
 	//init_enemy_sprite();

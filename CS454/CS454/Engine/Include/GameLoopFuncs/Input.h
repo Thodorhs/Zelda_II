@@ -34,7 +34,7 @@ public:
     }
 
     void InputRead(bool& is_running);
-    void InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, SDL_Rect& movingrect, bool& mouse_down);
+    void InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, bool& mouse_down);
     void MoveWindowWithLink(Link_Class& link, float Scrolldx, int& dx);
     bool CanJumpCheck(Link_Class& Link, GridLayer& GameGrid);
     bool SetAction(Link_Class& Link, std::string StateCheck, std::string film, auto animator, auto animation, unsigned delay, int dx, int dy, float Scrolldx);

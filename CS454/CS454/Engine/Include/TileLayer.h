@@ -4,15 +4,21 @@
 
 class TileLayer {
 private:
+	
 	TileMap map;
 	GridLayer* grid = nullptr;
 	Dim totalRows = 0, totalColumns = 0;
 	BitmapSurface tileSet;
 	SDL_Rect viewWin;
 	SDL_Texture* dpyBuffer;
+	struct cord {
+		int min, max;
+	}typedef cords;
+
+	cords MaxRoomWidth[NUMBEROFROOMS] = { {0, 40 * 32 }, {50 * 32, 200 * 32} };
+
+	//ElevatorCordPairs[0][0].x = 36;
 	
-	int MaxRoomWidth[NUMBEROFROOMS] = { 40 * 32 };
-	cords ElevatorCordPairs[NUMBEROFELEVATORS][2];
 
 	unsigned CurrentRoom = 0;
 	bool dpyChanged = true; //this has changed to cache VW
@@ -24,6 +30,7 @@ private:
 	}
 
 public:
+	
 	void SetTile(Dim col, Dim row, Index index) { map[row][col] = index;}
 	Index GetTile(Dim col, Dim row) const { return map[row][col]; };
 	void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);
@@ -35,8 +42,10 @@ public:
 	int GetPixelWidth(void) const { return viewWin.w; }
 	int GetPixelHeight(void) const { return viewWin.h; }
 	int GetMapPixelHeight() { return 16 * 32; }
-	int GetMapPixelWidth() { return MaxRoomWidth[CurrentRoom]; }
-	void NextRoom() { CurrentRoom++;}
+	int GetMapPixelWidth() { return MaxRoomWidth[CurrentRoom].max; }
+	int GetMapPixelMinWidth() { return MaxRoomWidth[CurrentRoom].min; }
+	void NextRoom() { CurrentRoom++; }
+	void PrevRoom() { CurrentRoom--; }
 	unsigned GetTileWidth(void) const { return DIV_TILE_WIDTH(viewWin.w); }
 	unsigned GetTileHeight(void) const { return DIV_TILE_HEIGHT(viewWin.h); }
 

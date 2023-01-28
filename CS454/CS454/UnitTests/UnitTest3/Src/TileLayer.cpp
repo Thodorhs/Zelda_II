@@ -82,6 +82,9 @@ void TileLayer::FilterScrollDistance(
 				//*d = maxMapSize - (viewStartCoord + viewSize);
 				*d = 0;
 				std::cout << "Left Corner d=" << *d << std::endl;
+			}else if (val<= GetMapPixelMinWidth()) {
+				*d = 0;
+				std::cout << "Right Corner d=" << *d << std::endl;
 			}
 
 }

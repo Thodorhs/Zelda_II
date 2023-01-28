@@ -11,9 +11,8 @@ typedef unsigned short Dim;
 typedef unsigned char byte;
 using GridIndex = byte;
 
-struct cord {
-	int x, y;
-}typedef cords;
+
+
 
 #define MAPHEIGHT 16
 #define MAPWIDTH  250
@@ -21,7 +20,7 @@ struct cord {
 #define TILESETHEIGHT 10
 
 #define NUMBEROFROOMS 10
-#define NUMBEROFELEVATORS 10
+#define NUMBEROFELEVATORS 4
 
 //WE WILL SCALE TILES TO 32X32 so its 2^5=32 not 2^4
 #define MUL_TILE_WIDTH(i) ((i)<<5)

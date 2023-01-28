@@ -3,6 +3,7 @@
 #include <list>
 #include <iterator>
 
+
 class CollisionChecker final {
 public:
 	using Action = std::function<void(Sprite* s1, Sprite* s2)>;

@@ -21,7 +21,7 @@ void InputKeys::InputRead(bool& is_running) {
 }
 
 
-void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, SDL_Rect& movingrect, bool& mouse_down) {
+void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, bool& mouse_down) {
 	ViewWin = ActionLayer.GetViewWindow();
 
 	if (isKeyReleased(SDLK_SPACE) == true) {
@@ -84,7 +84,7 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		SetAction(Link, "link_jump_left", "Link.jump.left", 
 			(MovingAnimator*)Link.get_animator("jump"),
 			(MovingAnimation*)Link.get_animation("link.jump"), 
-			30, -8, -8, -1.0);
+			50, -8, -8, -1.0);
 		if (LinkRect.x - ViewWin.x > ViewWin.w / 2 - 10 && LinkRect.x - ViewWin.x < ViewWin.w / 2 + 10) {
 			ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
 			HorizonLayer.ScrollWithBoundsCheck(Scrolldx, 0);
@@ -103,7 +103,7 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		SetAction(Link, State, film,
 			(MovingAnimator*)Link.get_animator("jump"),
 			(MovingAnimation*)Link.get_animation("link.jump"),
-			30, 0, -8, 0);
+			50, 0, -8, 0);
 		distanceJumped += -8;
 		return;
 	}
@@ -116,9 +116,10 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		bool CheckMoveWin = SetAction(Link, "moving_left", "Link.Run.left",
 			(FrameRangeAnimator*)Link.get_animator("fr"),
 			(FrameRangeAnimation*)Link.get_animation("link.run"),
-			50, -8.0, 0, -1.0);
+			40, -8.0, 0, -1.0);
 
 		if (LinkRect.x - ViewWin.x > ViewWin.w / 2 - 10 && LinkRect.x - ViewWin.x < ViewWin.w / 2 + 10) {
+			std::cout << "max,min" << ActionLayer.GetMapPixelWidth() << ", " << ActionLayer.GetMapPixelMinWidth() << std::endl;
 			ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
 			HorizonLayer.ScrollWithBoundsCheck(Scrolldx, 0);
 		}
@@ -133,9 +134,10 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		bool CheckMoveWin = SetAction(Link, "moving_right", "Link.Run.right",
 			(FrameRangeAnimator*)Link.get_animator("fr"),
 			(FrameRangeAnimation*)Link.get_animation("link.run"),
-			50, 8.0, 0, 1.0);
+			40, 8.0, 0, 1.0);
 		
 		if (LinkRect.x - ViewWin.x > ViewWin.w / 2 - 10 && LinkRect.x - ViewWin.x < ViewWin.w / 2 + 10) {
+			std::cout << "max, min: " << ActionLayer.GetMapPixelWidth() << ", " << ActionLayer.GetMapPixelMinWidth() << std::endl;
 			ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
 			HorizonLayer.ScrollWithBoundsCheck(Scrolldx, 0);
 		}
@@ -150,8 +152,19 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		SetAction(Link, State, film,
 			(FrameRangeAnimator*)Link.get_animator("attack"),
 			(FrameRangeAnimation*)Link.get_animation("link.attack"),
-			20, 0, 0, 0.0);
+			60, 0, 0, 0.0);
 		return;
+	}
+	if (isKeyPressed(SDLK_s) == true) {
+		std::string State; std::string film;
+		
+		Link.stop_animators();
+		if (Link.get_current().get_state() == "moving_right") { Link.get_current().set_state("moving_right"); film = "Link.Crouch.right"; }
+		else { Link.get_current().set_state("moving_left"); film = "Link.Crouch.left"; }
+		Link.get_current().change_film(Link.get_film(film));
+		Link.SetisLinkPressingDown(true);
+		return;
+
 	}
 }
 
