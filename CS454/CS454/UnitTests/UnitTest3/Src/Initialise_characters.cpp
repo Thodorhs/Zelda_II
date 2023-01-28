@@ -37,6 +37,15 @@ void initialise_films_link(GridLayer GameGrid) {
 	link_cl.set_film("Link.Crouch.right", crouch_right);
 }
 
+void initialise_doors_films() {
+	//Sprite* door = new Sprite(195 * 32, 10 * 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Door")), "Door");
+}
+
+void initialise_items_films() {
+	Sprite* Key = new Sprite(132, 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Key")), "Key1");
+	sprite_manager.Add(Key);
+}
+
 Sprite* Initialise_sprites_link(GridLayer GameGrid) {
 	Sprite *Link = new Sprite(200, 200, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")), "Link");
 	Link->SetCombatSystem(100, 6);
@@ -194,6 +203,7 @@ void initialise_enemies(GridLayer GameGrid) {
 	initialise_wosu(GameGrid, wosu_x_2, wosu_y_2);
 	initialise_wosu(GameGrid, wosu_x_3, wosu_y_3);
 	initialise_wosu(GameGrid, wosu_x_4, wosu_y_4);
+	initialise_items_films();
 	for (auto it : character_manager.get_current_characters()) {
 		it->print_character();
 	}

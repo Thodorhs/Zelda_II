@@ -80,7 +80,6 @@ void AI_manager() {
 		sign_m = 1;
 		attack_move_animation->SetDx(sign_m * 1);
 
-
 		attack_move->Start(attack_move_animation, GetSystemTime());
 		g->fire_action();
 

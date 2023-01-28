@@ -13,15 +13,26 @@ private:
 	Character_t type;
 	std::string id;
 	Sprite* current;
+	int Lifes;
+	int Health;
+	int Magic;
+	int Experience;
+	bool LinkHasKey = false;
 	bool isLinkPressingDown=false;
 public:
-	void SetisLinkPressingDown(bool b) {
-		isLinkPressingDown = b;
-	}
+	void SetLinklifes(int v) { Lifes = v; }
+	void SetLinkHealth(int v) { Health = v; }
+	void SetLinkMagic(int v) { Magic = v; }
+	void SetLinkExperience(int v) { Experience = v; }
+	void SetLinkLinkHasKey(int v) { LinkHasKey = v; }
+	void SetisLinkPressingDown(bool b) { isLinkPressingDown = b; }
 
-	bool GetisLinkPressingDown(void) {
-		return isLinkPressingDown;
-	}
+	int GetLinkLifes(void) { return Lifes; }
+	int GetLinkHealth(void) { return Health; }
+	int GetLinkMagic(void) { return Magic; }
+	int GetLinkExperience(void) { return Experience; }
+	bool GetLinkHasKey(void) { return LinkHasKey; }
+	bool GetisLinkPressingDown(void) { return isLinkPressingDown; }
 
 	void set_id(std::string id) { id = id; }
 	void set_type(Character_t type) { type = type; }

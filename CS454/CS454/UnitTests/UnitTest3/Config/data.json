@@ -7,6 +7,63 @@
       ]
     },
 
+    "Door": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 183, "y": 42, "w": 8,"h": 48},
+        {"x": 192, "y": 42, "w": 8,"h": 48},
+        {"x": 201, "y": 42, "w": 8,"h": 48},
+        {"x": 210, "y": 42, "w": 8,"h": 48},
+        {"x": 219, "y": 42, "w": 8,"h": 48},
+        {"x": 228, "y": 42, "w": 8,"h": 48},
+        {"x": 237, "y": 42, "w": 8,"h": 48},
+        {"x": 246, "y": 42, "w": 8,"h": 48},
+        {"x": 255, "y": 42, "w": 8,"h": 48},
+        {"x": 264, "y": 42, "w": 8,"h": 48},
+        {"x": 273, "y": 42, "w": 8,"h": 48},
+        {"x": 282, "y": 42, "w": 8,"h": 48},
+        {"x": 291, "y": 42, "w": 8,"h": 48},
+        {"x": 300, "y": 42, "w": 8,"h": 48},
+        {"x": 309, "y": 42, "w": 8,"h": 48},
+        {"x": 318, "y": 42, "w": 8,"h": 48},
+        {"x": 327, "y": 42, "w": 8,"h": 48}
+      ]
+    },
+    "PointBag": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 1, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
+    "Potion.Blue": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 30, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
+    "Potion.Red": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 50, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
+    "Key": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 101, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
+    "Up.Doll": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 70, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
     "Link.Crouch.left": {
       "bmp": "link-sprites.png",
       "frames": [
@@ -133,4 +190,5 @@
       ]
     }
   }
+
 }
