@@ -1,10 +1,16 @@
 #include "../../../../Engine/Include/GameLoopFuncs/Input.h"
+#include "../../../../Engine/Include/Animators/ScrollingAnimator.h"
+std::vector<ScrollEntry>se = { {1,0,100} };
+
+ScrollAnimation* s_a = new ScrollAnimation("id", se);
+ScrollAnimator* s_animator = new ScrollAnimator();
+
 
 void InputKeys::InputRead(bool& is_running) {
     SDL_Event event;
     int* dx = new int, * dy = new int;
     *dy = *dy = 0;
-
+	
 	SDL_FlushEvents(SDL_FIRSTEVENT, SDL_LASTEVENT);
     while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT) {
@@ -23,7 +29,8 @@ void InputKeys::InputRead(bool& is_running) {
 
 void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, bool& mouse_down) {
 	ViewWin = ActionLayer.GetViewWindow();
-
+	
+	
 	if (isKeyReleased(SDLK_SPACE) == true) {
 		distanceJumped = MAXDISTANCEJUMP;
 		Link.get_current().GetGravityHandler().gravityAddicted = true;

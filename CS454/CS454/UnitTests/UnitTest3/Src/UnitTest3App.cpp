@@ -29,6 +29,21 @@ std::string full_asset_path;
 
 int sign_m = 1;
 
+void progress_wosus(GameCharacter *c) {
+	FrameRangeAnimator* fr;
+	FrameRangeAnimation* fa;
+	fr = (FrameRangeAnimator*)c->get_animator("wosu.fr");
+	fa = (FrameRangeAnimation*)c->get_animation("wosu.fr.anim");
+
+	if (fr->HasFinished() == false) {
+		return;
+	}
+	fa->SetDx(1);
+	fr->Start(fa, GetSystemTime());
+}
+
+
+
 void AI_manager() {
 	CharacterManager& c = CharacterManager::GetSingleton();
 	GameCharacter* g = NULL;
@@ -37,6 +52,7 @@ void AI_manager() {
 		if (it->get_id() == "Guma") {
 			g = it;
 		}
+		else if (it->get_id() == "Wosu") { progress_wosus(it); }
 	}
 
 	FrameRangeAnimator* attack_move;

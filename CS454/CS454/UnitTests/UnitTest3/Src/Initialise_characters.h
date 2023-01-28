@@ -7,8 +7,14 @@
 
 #define guma_x 430
 #define guma_y 300
-
-
+#define wosu_x_1 128*32
+#define wosu_y_1 10*32
+#define wosu_x_2 150*32
+#define wosu_y_2 10*32
+#define wosu_x_3 165*32
+#define wosu_y_3 10*32
+#define wosu_x_4 173*32
+#define wosu_y_4 10*32
 
 static CharacterManager& character_manager = CharacterManager::GetSingleton();
 static CollisionChecker& CollisionHandler = CollisionChecker::GetSingleton();
@@ -23,3 +29,4 @@ void initialise_palace_bot(GridLayer GameGrid);
 void initialise_enemies(GridLayer GameGrid);
 void initialise_link(GridLayer GameGrid);
 void initialise_elevator(TileLayer &Actionlayer,TileLayer &HorizonLayer);
+void initialise_wosu(GridLayer GameGrid, int x, int y);
