@@ -35,6 +35,14 @@ void progress_wosus(GameCharacter *c) {
 	fr = (FrameRangeAnimator*)c->get_animator("wosu.fr");
 	fa = (FrameRangeAnimation*)c->get_animation("wosu.fr.anim");
 
+	if (c->get_animator("Wosu.death.animation") != NULL) {
+		fr = (FrameRangeAnimator*)c->get_animator("Wosu.death.animator");
+		fa = (FrameRangeAnimation*)c->get_animation("Wosu.death.animation");
+		c->stop_animators();
+		fr->Start(fa, GetSystemTime());
+		return;
+	}
+
 	if (fr->HasFinished() == false) {
 		return;
 	}
@@ -90,12 +98,17 @@ void CollisionChecking() {
 	CollisionHandler.Check();
 }
 
+bool CheckForDeath(auto it) {
+	if (it->GetCombatSystem().getHp() < 0 && it->get_state() == "dead" ) { sprite_manager.Remove(it); return true; }
+	return false;
+}
+
 //sprite displaY FUAA
 void Display_all_Sprites() {
 	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
 	auto sprite_list= sprite_manager.GetDisplayList();
 	for (auto it : sprite_list) {
-		if (it->GetCombatSystem().getHp() < 0) { sprite_manager.Remove(it); continue; }
+		//if (CheckForDeath(it)) continue;
 		it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
 	}
 }

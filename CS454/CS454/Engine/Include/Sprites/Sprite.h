@@ -18,7 +18,7 @@ protected:
 	SDL_Rect frameBox; // inside the film
 	float x = 0, y = 0;
 	int w, h;
-	bool isVisible = false;
+	bool isVisible = true;
 	AnimationFilm* currFilm = nullptr;
 	//BoundingArea* boundingArea = nullptr;
 	unsigned zorder = 0;

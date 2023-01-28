@@ -46,10 +46,23 @@ void initialise_wosu(GridLayer GameGrid,int x,int y) {
     Sprite *wosu_s = initialise_wosu_sprites(wosu, GameGrid,x,y);
     initialise_wosu_animations(wosu,wosu_s);
     sprite_manager.Add(wosu_s);
-    CollisionHandler.Register(&link_cl.get_current(), wosu_s, [](Sprite* s1, Sprite* s2) {
+
+    CollisionHandler.Register(&link_cl.get_current(), wosu_s, [wosu](Sprite* s1, Sprite* s2) {
        if (s1->GetCombatSystem().getAttackingMode()) {
            int damageDealt = s1->GetCombatSystem().getDamage();
            s2->GetCombatSystem().ReceivedDamage(damageDealt);
+           if (s2->GetCombatSystem().getHp() <= 0 && wosu->get_id() != "Wosu.dead") {
+               //s2->SetVisibility(false);
+               FrameRangeAnimator* wosu_animator = new FrameRangeAnimator();
+               FrameRangeAnimation* wosu_animation = new FrameRangeAnimation("wosu.fr", 0, 1, 1, 0, 0, 100);
+               wosu->set_film("Wosu.death", const_cast<AnimationFilm*>(FilmHolder.GetFilm("Wosu.death")));
+               wosu->set_animation("Wosu.death.animation", wosu_animation);
+               wosu->set_animator("Wosu.death.animator", wosu_animator);
+               wosu->set_id("Wosu.dead");
+               s2->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Wosu.death")));
+               s2->set_state("dead");
+           }
+
            std::cout << s2->GetCombatSystem().getHp() << std::endl;
        }
         });
