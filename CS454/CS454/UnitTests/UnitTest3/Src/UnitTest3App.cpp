@@ -181,7 +181,14 @@ void ZeldaApp::Initialise(void) {
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
-
+	
+	auto _game = GetGame();
+	game.SetOnPauseResume([_game]() {
+		if (!_game.IsPaused()) // just resumed
+		AnimatorManager::GetSingleton().TimeShift(
+			GetSystemTime() - _game.GetPauseTime()
+		);
+		});
 	game.SetInput(Input);
 	game.SetRender(myRender);
 	game.SetDone(myDone);

@@ -10,11 +10,24 @@ namespace app {
 			using Action = std::function<void(void)>;
 			using Pred = std::function<bool(void)>;
 		private:
-			Action render, anim, input, ai, physics, destruct, collisions, user;
+			Action render, anim, input, ai, physics, destruct, collisions, user, pauseResume;
 			Pred done;
+			bool isPaused = false;
+			uint64_t pauseTime = 0;
 			void Invoke(const Action& f) { if (f) f(); }
 			
 		public:
+			void SetOnPauseResume (const Action& f) 
+			{ pauseResume = f;}
+			void Pause (uint64_t t)
+			{ isPaused = true; pauseTime = t; Invoke(pauseResume); }
+			void Resume (void)
+			{ isPaused = false; Invoke(pauseResume); pauseTime = 0; }
+			bool IsPaused (void) const
+			{ return isPaused; }
+			uint64_t GetPauseTime (void) const
+			{ return pauseTime; }
+
 			void SetRender(const Action& f) { render = f; }
 			void SetInput(const Action& f) { input = f; }
 			void SetDone(const Pred& f) { done = f; }
