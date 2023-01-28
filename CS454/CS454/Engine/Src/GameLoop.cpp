@@ -12,5 +12,5 @@ void app::Game::MainLoopIteration(void) {
 	Physics();
 	CollisionChecking();
 	//UserCode(); // hook for custom code at end
-	//CommitDestructions();
+	CommitDestructions();
 }

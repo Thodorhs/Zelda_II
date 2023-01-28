@@ -40,8 +40,9 @@ void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_
 
 		SDL_Texture* Tileset = SDL_CreateTextureFromSurface(myrenderer, ImgSurface); //Loading the tileset
 		
-		if (PrevLayerBuffer == nullptr)
-			dpyBuffer = SDL_CreateTexture(myrenderer, 0, SDL_TEXTUREACCESS_TARGET, viewWin.w, viewWin.h); //Preparing to load the map to the texture
+		if (PrevLayerBuffer == nullptr){
+            dpyBuffer = SDL_CreateTexture(myrenderer, 0, SDL_TEXTUREACCESS_TARGET, viewWin.w, viewWin.h); //Preparing to load the map to the texture
+		}
 		else
 			dpyBuffer = PrevLayerBuffer;
 
@@ -53,6 +54,7 @@ void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_
 				PutTile(MUL_TILE_WIDTH(col - startCol), MUL_TILE_HEIGHT(row - startRow), map[row][col], myrenderer, Tileset);
 			}
 		dpyChanged = false;
+		SDL_DestroyTexture(Tileset);
 	}
 
 	if (FinalLayer) {

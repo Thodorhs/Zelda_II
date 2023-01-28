@@ -8,9 +8,9 @@
 #include "../Util/EngineDefines.h"
 #include "../Grid/GridLayer.h"
 #include "SDL.h"
-
+#include "DestructionManager.h"
 class Clipper;
-class Sprite {
+class Sprite :public LatelyDestroyable{
 public:
 	using Mover = std::function<void(const SDL_Rect&, int* dx, int* dy)>;
 protected:

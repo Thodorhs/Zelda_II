@@ -1,5 +1,5 @@
 #include "../../../../Engine/Include/Sprites/Sprite.h"
-
+DestructionManager DestructionManager::singleton;
 void Sprite::Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper& clipper, SDL_Renderer* GameRenderer) const {
 	SDL_Rect clippedBox;
 	SDL_Point dpyPos;
@@ -45,4 +45,18 @@ void PrepareSpriteGravityHandler(GridLayer* gridLayer, Sprite* sprite) {
 		[gridLayer](const SDL_Rect& r)
 		{ return gridLayer->IsOnSolidGround(r); }
 	);
+}
+
+void LatelyDestroyable::Delete(void)
+{
+	assert(!dying); dying = true; delete this;
+}
+void DestructionManager::Register(LatelyDestroyable* d) {
+	assert(!d->IsAlive());
+	dead.push_back(d);
+}
+void DestructionManager::Commit(void) {
+	for (auto* d : dead)
+		d->Delete();
+	dead.clear();
 }

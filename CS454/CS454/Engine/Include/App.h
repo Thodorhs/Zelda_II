@@ -22,6 +22,7 @@ namespace app {
 			void Set_Physics(const Action& f) { physics = f; }
             void SetCollisionChecking(const Action& f) { collisions = f; }
 			void Set_AI(const Action& f) { ai = f; }
+			void Set_destr(const Action& f) { destruct = f; }
 			// rest of setters are similary defined
 			void Render(void){ Invoke(render); }
 			void ProgressAnimations(void) { Invoke(anim); }
@@ -29,7 +30,7 @@ namespace app {
 			void AI(void) { Invoke(ai); }
 			void Physics(void) { Invoke(physics); }
 			void CollisionChecking(void) { Invoke(collisions); }
-			//void CommitDestructions(void) { Invoke(destruct); }
+			void CommitDestructions(void) { Invoke(destruct); }
 			//void UserCode(void) { Invoke(user); }
 			bool IsFinished(void) const { return !done(); }
 			void MainLoop(void);

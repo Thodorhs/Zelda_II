@@ -199,10 +199,10 @@ void initialise_link(GridLayer GameGrid) {
 void initialise_enemies(GridLayer GameGrid) {
 	initialise_palace_bot(GameGrid);
 	initialise_guma(GameGrid);
-	initialise_wosu(GameGrid, wosu_x_1, wosu_y_1);
-	initialise_wosu(GameGrid, wosu_x_2, wosu_y_2);
-	initialise_wosu(GameGrid, wosu_x_3, wosu_y_3);
-	initialise_wosu(GameGrid, wosu_x_4, wosu_y_4);
+	initialise_wosu(GameGrid, wosu_x_1, wosu_y_1,"1");
+	initialise_wosu(GameGrid, wosu_x_2, wosu_y_2,"2");
+	initialise_wosu(GameGrid, wosu_x_3, wosu_y_3,"3");
+	initialise_wosu(GameGrid, wosu_x_4, wosu_y_4,"4");
 	initialise_items_films();
 	for (auto it : character_manager.get_current_characters()) {
 		it->print_character();

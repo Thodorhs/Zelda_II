@@ -8,7 +8,7 @@ void initialise_guma_films(GameCharacter* enemy) {
 }
 
 Sprite* initialise_guma_sprites(GameCharacter* character, GridLayer GameGrid) {
-	Sprite* guma_sprite = new Sprite(400, 200, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Guma")), "Guma");
+	Sprite* guma_sprite = new Sprite(guma_x, guma_y, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Guma")), "Guma");
 	guma_sprite->SetMover(MakeSpriteGridLayerMover(&GameGrid, guma_sprite));
 	guma_sprite->SetCombatSystem(320, 8);
 	PrepareSpriteGravityHandler(&GameGrid, guma_sprite);
@@ -82,13 +82,13 @@ void init_projectile(Sprite* guma, GameCharacter* character) {
 	
 	proj_moving_animator->SetOnFinish([proj, character](Animator* animator) {CollisionHandler.Cancel(proj, &link_cl.get_current());	sprite_manager.Remove(proj); proj->SetPos(character->get_current().GetBox().x , character->get_current().GetBox().y ); });
 	proj_moving_animator->SetOnStart([proj, character](Animator* animator) {CollisionHandler.Register(&link_cl.get_current(), proj, [](Sprite* s1, Sprite* s2) {
-		});	proj->SetPos(character->get_current().GetBox().x , character->get_current().GetBox().y );  sprite_manager.Add(proj); });
+		std::cout << "hit by proj"; });	proj->SetPos(character->get_current().GetBox().x, character->get_current().GetBox().y);  sprite_manager.Add(proj); });
 	
 	
 	character->set_fire([proj_fr_animation, proj_fr_animator, proj_moving_animation, proj_moving_animator, proj]() {
 
 		proj_fr_animator->Start(proj_fr_animation, GetSystemTime());
-	proj_moving_animator->Start(proj_moving_animation, GetSystemTime());
+	    proj_moving_animator->Start(proj_moving_animation, GetSystemTime());
 
 		});
 }
@@ -101,12 +101,27 @@ void initialise_guma(GridLayer GameGrid) {
 	init_projectile(g_sprite, guma);
 	sprite_manager.Add(g_sprite);
 
-	CollisionHandler.Register(&link_cl.get_current(), g_sprite, [](Sprite* s1, Sprite* s2) {
+	CollisionHandler.Register(&link_cl.get_current(), g_sprite, [guma](Sprite* s1, Sprite* s2) {
 		if (s1->GetCombatSystem().getAttackingMode()) {
 			int damageDealt = s1->GetCombatSystem().getDamage();
 			s2->GetCombatSystem().ReceivedDamage(damageDealt);
+			if (s2->GetCombatSystem().getHp() <= 0 && guma->get_id() != "Guma.dead") {
+				FrameRangeAnimator* guma_animator = new FrameRangeAnimator();
+				FrameRangeAnimation* guma_animation = new FrameRangeAnimation("guma.fr", 0, 1, 1, 0, 0, 2000);
+				guma->set_film("Guma.death", const_cast<AnimationFilm*>(FilmHolder.GetFilm("Guma.death")));
+				guma->set_animation("Guma.death.animation", guma_animation);
+				guma->set_animator("Guma.death.animator", guma_animator);
+				guma->set_id("Guma.dead");
+				guma->stop_animators();
+				s2->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Guma.death")));
+				s2->set_state("dead");
+				guma_animator->Start(guma_animation, GetSystemTime());
+				s2->set_alive(false);
+			}
+
 			std::cout << s2->GetCombatSystem().getHp() << std::endl;
 		}
+		std::cout << s2->GetCombatSystem().getHp() << std::endl;
 		});
 
 	character_manager.add_to_current(guma);
