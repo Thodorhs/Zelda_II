@@ -53,12 +53,13 @@ void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_
 				if (map[row][col] == -1) continue;
 				PutTile(MUL_TILE_WIDTH(col - startCol), MUL_TILE_HEIGHT(row - startRow), map[row][col], myrenderer, Tileset);
 			}
-
-		SDL_SetRenderTarget(myrenderer, NULL); //Unsetting the target of SDL_RenderCopy (now the target is the screen render)
 		dpyChanged = false;
 	}
 
-	if(FinalLayer) SDL_RenderCopy(myrenderer, dpyBuffer, NULL, NULL); //Setting the texture we loaded earlier(dpyBuffer) to be displayed on our window
+	if (FinalLayer) {
+		SDL_SetRenderTarget(myrenderer, NULL); //Unsetting the target of SDL_RenderCopy (now the target is the screen render)
+		SDL_RenderCopy(myrenderer, dpyBuffer, NULL, NULL);
+	}//Setting the texture we loaded earlier(dpyBuffer) to be displayed on our window
 }
 
 const SDL_Point TileLayer::Pick(Dim x, Dim y) const {
