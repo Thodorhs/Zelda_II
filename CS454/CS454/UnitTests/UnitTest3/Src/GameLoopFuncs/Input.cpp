@@ -30,6 +30,10 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		Link.get_current().GetGravityHandler().isFalling = true;
 	}
 
+	if (isKeyReleased(SDLK_b) == true) {
+		Link.get_current().GetCombatSystem().setAttackingMode(false);
+	}
+
 
 	if (isKeyPressed(SDLK_d) && isKeyPressed(SDLK_SPACE)) {
 		float Scrolldx = 1.0;
@@ -146,11 +150,14 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		std::string State; std::string film;
 		if (Link.get_current().get_state() == "moving_right") { State = "moving_right"; film = "Link.Attack.right"; }
 		else { State = "moving_left"; film = "Link.Attack.left"; }
-
-		SetAction(Link, State, film,
+		
+		bool Check = SetAction(Link, State, film,
 			(FrameRangeAnimator*)Link.get_animator("attack"),
 			(FrameRangeAnimation*)Link.get_animation("link.attack"),
 			60, 0, 0, 0.0);
+
+		if(Check) Link.get_current().GetCombatSystem().setAttackingMode(true);
+
 		return;
 	}
 	if (isKeyPressed(SDLK_s) == true) {

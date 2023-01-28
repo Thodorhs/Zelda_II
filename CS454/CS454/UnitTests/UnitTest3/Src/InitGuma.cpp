@@ -10,6 +10,7 @@ void initialise_guma_films(GameCharacter* enemy) {
 Sprite* initialise_guma_sprites(GameCharacter* character, GridLayer GameGrid) {
 	Sprite* guma_sprite = new Sprite(400, 200, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Guma")), "Guma");
 	guma_sprite->SetMover(MakeSpriteGridLayerMover(&GameGrid, guma_sprite));
+	guma_sprite->SetCombatSystem(320, 8);
 	PrepareSpriteGravityHandler(&GameGrid, guma_sprite);
 
 
@@ -81,7 +82,6 @@ void init_projectile(Sprite* guma, GameCharacter* character) {
 	
 	proj_moving_animator->SetOnFinish([proj, character](Animator* animator) {CollisionHandler.Cancel(proj, &link_cl.get_current());	sprite_manager.Remove(proj); proj->SetPos(character->get_current().GetBox().x , character->get_current().GetBox().y ); });
 	proj_moving_animator->SetOnStart([proj, character](Animator* animator) {CollisionHandler.Register(&link_cl.get_current(), proj, [](Sprite* s1, Sprite* s2) {
-		std::cout << "boing";
 		});	proj->SetPos(character->get_current().GetBox().x , character->get_current().GetBox().y );  sprite_manager.Add(proj); });
 	
 	
@@ -94,12 +94,20 @@ void init_projectile(Sprite* guma, GameCharacter* character) {
 }
 
 void initialise_guma(GridLayer GameGrid) {
-	//guma
 	GameCharacter* guma = character_manager.create(Character_t::Guma_t);
 	initialise_guma_films(guma);
 	Sprite* g_sprite = initialise_guma_sprites(guma, GameGrid);
 	initialise_guma_animations(g_sprite, guma);
 	init_projectile(g_sprite, guma);
 	sprite_manager.Add(g_sprite);
+
+	CollisionHandler.Register(&link_cl.get_current(), g_sprite, [](Sprite* s1, Sprite* s2) {
+		if (s1->GetCombatSystem().getAttackingMode()) {
+			int damageDealt = s1->GetCombatSystem().getDamage();
+			s2->GetCombatSystem().ReceivedDamage(damageDealt);
+			std::cout << s2->GetCombatSystem().getHp() << std::endl;
+		}
+		});
+
 	character_manager.add_to_current(guma);
 }

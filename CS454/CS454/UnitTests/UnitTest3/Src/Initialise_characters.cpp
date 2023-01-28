@@ -39,6 +39,7 @@ void initialise_films_link(GridLayer GameGrid) {
 
 Sprite* Initialise_sprites_link(GridLayer GameGrid) {
 	Sprite *Link = new Sprite(200, 200, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")), "Link");
+	Link->SetCombatSystem(100, 6);
 	link_cl.set_film("Link.Run.right", const_cast<AnimationFilm*>(FilmHolder.GetFilm("Link.Run.right")));
 
 	Link->SetMover(MakeSpriteGridLayerMover(&GameGrid, Link));

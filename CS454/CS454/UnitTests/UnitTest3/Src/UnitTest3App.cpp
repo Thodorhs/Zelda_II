@@ -43,7 +43,6 @@ void progress_wosus(GameCharacter *c) {
 }
 
 
-
 void AI_manager() {
 	CharacterManager& c = CharacterManager::GetSingleton();
 	GameCharacter* g = NULL;
@@ -94,11 +93,13 @@ void CollisionChecking() {
 //sprite displaY FUAA
 void Display_all_Sprites() {
 	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
-	for (auto it : sprite_manager.GetDisplayList()) {
-		it->Display(dest, { 0, 0, ActionLayer.GetViewWindow().w, ActionLayer.GetViewWindow().h }, clipper, GameRenderer);
-		//it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
+	auto sprite_list= sprite_manager.GetDisplayList();
+	for (auto it : sprite_list) {
+		if (it->GetCombatSystem().getHp() < 0) { sprite_manager.Remove(it); continue; }
+		it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
 	}
 }
+
 void Display_Sprite_byType(std::string type) {
 	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
 	for (auto it : sprite_manager.GetTypeList(type)) {
@@ -191,9 +192,7 @@ void ZeldaApp::Load() {
 	
 	initialise_enemies(GameGrid);
 	//initialise_films_enemy_link();
-	//init_enemy_sprite();
-	
-	
+	//init_enemy_sprite();	ddd
 }
 
 void ZeldaApp::Run() {

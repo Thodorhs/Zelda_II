@@ -4,6 +4,7 @@
 Sprite* initialise_wosu_sprites(GameCharacter* character, GridLayer GameGrid,int x,int y) {
     Sprite* wosu = new Sprite(x, y, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Wosu")), "Wosu");
     wosu->SetMover(MakeSpriteGridLayerMover(&GameGrid, wosu));
+    wosu->SetCombatSystem(80, 1);
     PrepareSpriteGravityHandler(&GameGrid, wosu);
 
 
@@ -46,7 +47,11 @@ void initialise_wosu(GridLayer GameGrid,int x,int y) {
     initialise_wosu_animations(wosu,wosu_s);
     sprite_manager.Add(wosu_s);
     CollisionHandler.Register(&link_cl.get_current(), wosu_s, [](Sprite* s1, Sprite* s2) {
-        std::cout << "collision with wosu nibba";
+       if (s1->GetCombatSystem().getAttackingMode()) {
+           int damageDealt = s1->GetCombatSystem().getDamage();
+           s2->GetCombatSystem().ReceivedDamage(damageDealt);
+           std::cout << s2->GetCombatSystem().getHp() << std::endl;
+       }
         });
     character_manager.add_to_current(wosu);
 
