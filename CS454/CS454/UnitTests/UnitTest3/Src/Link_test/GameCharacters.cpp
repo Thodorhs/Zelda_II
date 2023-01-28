@@ -2,6 +2,9 @@
 #include "GreatPalaceBot.h"
 #include "Guma.h"
 #include "Wosu.h"
+#include "../Recycler/Recycler.h"
+
+
 GameCharacter* GameCharacter::create(Character_t type) {
 	switch (type) {
 	case GreatPalaceBot_t:

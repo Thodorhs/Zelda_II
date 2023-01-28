@@ -40,7 +40,7 @@ class GameCharacter {
 		virtual void fire_action() { return; }
 	    virtual ~GameCharacter(){}
 		virtual void print_character() = 0;
-		static GameCharacter* create(Character_t type);
+		static auto create(Character_t type)->GameCharacter*;
 };
 
 
@@ -61,6 +61,15 @@ public:
 	}
 	void add_to_current(GameCharacter* character) { curr_game_characters.push_back(character); }
 	std::vector<GameCharacter*> get_current_characters() { return  curr_game_characters; }
+	void remove(GameCharacter* toremove,Sprite *s) {
+		int index = 0;
+		for (auto it : curr_game_characters) {
+			if (it->get_current().GetTypeId() == toremove->get_current().GetTypeId()) {
+				curr_game_characters.erase(curr_game_characters.begin() + index);
+			}
+			index++;
+		}
+	}
 private:
 	GameCharacter* curr;
 	Character_t type;

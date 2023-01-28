@@ -1,8 +1,8 @@
 #include "Initialise_characters.h"
 
 
-Sprite* initialise_wosu_sprites(GameCharacter* character, GridLayer GameGrid,int x,int y) {
-    Sprite* wosu = new Sprite(x, y, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Wosu")), "Wosu");
+Sprite* initialise_wosu_sprites(GameCharacter* character, GridLayer GameGrid,int x,int y,std::string no) {
+    Sprite* wosu = new Sprite(x, y, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Wosu")), "Wosu"+no);
     wosu->SetMover(MakeSpriteGridLayerMover(&GameGrid, wosu));
     wosu->SetCombatSystem(80, 1);
     PrepareSpriteGravityHandler(&GameGrid, wosu);
@@ -41,9 +41,9 @@ void initialise_wosu_animations(GameCharacter* character,Sprite *wosu) {
     character->set_animator("wosu.fr", fr_wosu);
 }
 
-void initialise_wosu(GridLayer GameGrid,int x,int y) {
+void initialise_wosu(GridLayer GameGrid,int x,int y,std::string wosu_no) {
     GameCharacter* wosu = character_manager.create(Character_t::Wosu_t);
-    Sprite *wosu_s = initialise_wosu_sprites(wosu, GameGrid,x,y);
+    Sprite *wosu_s = initialise_wosu_sprites(wosu, GameGrid,x,y,wosu_no);
     initialise_wosu_animations(wosu,wosu_s);
     sprite_manager.Add(wosu_s);
 
@@ -52,15 +52,16 @@ void initialise_wosu(GridLayer GameGrid,int x,int y) {
            int damageDealt = s1->GetCombatSystem().getDamage();
            s2->GetCombatSystem().ReceivedDamage(damageDealt);
            if (s2->GetCombatSystem().getHp() <= 0 && wosu->get_id() != "Wosu.dead") {
-               //s2->SetVisibility(false);
                FrameRangeAnimator* wosu_animator = new FrameRangeAnimator();
-               FrameRangeAnimation* wosu_animation = new FrameRangeAnimation("wosu.fr", 0, 1, 1, 0, 0, 100);
+               FrameRangeAnimation* wosu_animation = new FrameRangeAnimation("wosu.fr", 0, 1, 1, 0, 0, 2000);
                wosu->set_film("Wosu.death", const_cast<AnimationFilm*>(FilmHolder.GetFilm("Wosu.death")));
                wosu->set_animation("Wosu.death.animation", wosu_animation);
                wosu->set_animator("Wosu.death.animator", wosu_animator);
                wosu->set_id("Wosu.dead");
                s2->change_film(const_cast<AnimationFilm*>(FilmHolder.GetFilm("Wosu.death")));
                s2->set_state("dead");
+			   wosu_animator->Start(wosu_animation, GetSystemTime());
+               s2->set_alive(false);
            }
 
            std::cout << s2->GetCombatSystem().getHp() << std::endl;

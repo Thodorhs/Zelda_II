@@ -15,7 +15,7 @@ private:
 		int min, max;
 	}typedef cords;
 
-	cords MaxRoomWidth[NUMBEROFROOMS] = { {0, 40 * 32 }, {50 * 32, 200 * 32} };
+	cords MaxRoomWidth[NUMBEROFROOMS] = { {0, 40 * 32 }, {50 * 32, 215 * 32} };
 
 	//ElevatorCordPairs[0][0].x = 36;
 	

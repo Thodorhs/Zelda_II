@@ -9,11 +9,13 @@
 
 #include "SDL.h"
 #include <map>
+#include <functional>
 
 #define MAXDISTANCEJUMP  350*(-8)
 class InputKeys {
 private:
     static InputKeys singleton;
+    bool DpyGrid = false;
     std::map<SDL_Keycode, bool> keyState;
     int distanceJumped = 0;
     int LinkSpeed = 8;
@@ -21,6 +23,10 @@ private:
     bool CanJump = false;
     SDL_Rect ViewWin;
 public:
+
+    bool CanDpyGrid() { return DpyGrid; }
+
+
     void SetKeyState(SDL_Keycode eventkey, bool value) {
         keyState[eventkey] = value;
     }

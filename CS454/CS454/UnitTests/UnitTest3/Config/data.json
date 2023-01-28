@@ -160,6 +160,14 @@
         {"x": 460, "y": 824, "w": 22, "h": 32}
       ]
     },
+
+   "Guma.death": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 104, "y": 60, "w": 16, "h": 32},
+        {"x": 120, "y": 60, "w": 16, "h": 32}
+      ]
+    },
     
 
     "Guma.projectile": {

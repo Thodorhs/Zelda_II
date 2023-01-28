@@ -15,6 +15,10 @@ public:
 	{
 		assert(a->HasFinished()); suspended.insert(a);
 	}
+    void TimeShift(unsigned dt) {
+        for (auto* a : running)
+            a->TimeShift(dt);
+    }
 	void Cancel(Animator* a)
 	{
 		assert(a->HasFinished()); suspended.erase(a);

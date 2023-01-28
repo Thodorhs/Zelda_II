@@ -7,15 +7,16 @@
 
 
 static InputKeys& InputHandler = InputKeys::GetSingleton();
-InputKeys InputKeys::singleton;//this as well ffff u aa
+InputKeys InputKeys::singleton;
 
 
-//this as well ffff u aa
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
 SDL_Window* GameWindow;
-
+SDL_Surface* surface;
+SDL_Texture* texture;
+SDL_Rect dest = { 0,0,405,120 };
 bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
@@ -35,12 +36,16 @@ void progress_wosus(GameCharacter *c) {
 	fr = (FrameRangeAnimator*)c->get_animator("wosu.fr");
 	fa = (FrameRangeAnimation*)c->get_animation("wosu.fr.anim");
 
-	if (c->get_animator("Wosu.death.animation") != NULL) {
+	if (c->get_animator("Wosu.death.animator") != NULL) {
 		fr = (FrameRangeAnimator*)c->get_animator("Wosu.death.animator");
 		fa = (FrameRangeAnimation*)c->get_animation("Wosu.death.animation");
-		c->stop_animators();
-		fr->Start(fa, GetSystemTime());
-		return;
+		
+		if (fr->HasFinished()) {
+			CollisionHandler.Cancel(&link_cl.get_current(), &c->get_current());
+			character_manager.remove(c, &link_cl.get_current());
+			destruction_man.Register(&c->get_current());
+			sprite_manager.Remove(&c->get_current());
+		}
 	}
 
 	if (fr->HasFinished() == false) {
@@ -50,41 +55,59 @@ void progress_wosus(GameCharacter *c) {
 	fr->Start(fa, GetSystemTime());
 }
 
+void progress_guma(GameCharacter *c) {
+	FrameRangeAnimator* fr;
+	FrameRangeAnimation* fa;
 
-void AI_manager() {
-	CharacterManager& c = CharacterManager::GetSingleton();
-	GameCharacter* g = NULL;
-
-	for (auto it : c.get_current_characters()) {
-		if (it->get_id() == "Guma") {
-			g = it;
+	if (c->get_animator("Guma.death.animator") != NULL) {
+		fr = (FrameRangeAnimator*)c->get_animator("Guma.death.animator");
+		fa = (FrameRangeAnimation*)c->get_animation("Guma.death.animation");
+		
+		if (fr->HasFinished()) {
+			CollisionHandler.Cancel(&link_cl.get_current(), &c->get_current());
+			character_manager.remove(c, &link_cl.get_current());
+			destruction_man.Register(&c->get_current());
+			sprite_manager.Remove(&c->get_current());
+			
 		}
-		else if (it->get_id() == "Wosu") { progress_wosus(it); }
+		return; 
 	}
 
 	FrameRangeAnimator* attack_move;
 	FrameRangeAnimation* attack_move_animation;
-	if (g) {
 
-		attack_move = (FrameRangeAnimator*)g->get_animator("guma.attack_move_animator");
-		attack_move_animation = (FrameRangeAnimation*)g->get_animation("guma.attack_move_animation");
-		if (attack_move->HasFinished() == false) {
-			sign_m = -1;
-
-			return;
-
-		}
-
-		//proj = &proj->Move(-1, 0);
-		//sprite_manager.Remove(proj);
+	attack_move = (FrameRangeAnimator*)c->get_animator("guma.attack_move_animator");
+	attack_move_animation = (FrameRangeAnimation*)c->get_animation("guma.attack_move_animation");
+	if (attack_move->HasFinished() == false) {
 		sign_m = 1;
-		attack_move_animation->SetDx(sign_m * 1);
 
-		attack_move->Start(attack_move_animation, GetSystemTime());
-		g->fire_action();
+		return;
 
 	}
 
+	//proj = &proj->Move(-1, 0);
+	//sprite_manager.Remove(proj);
+	sign_m = -1;
+	attack_move_animation->SetDx(sign_m * 1);
+	
+	attack_move->Start(attack_move_animation, GetSystemTime());
+	c->fire_action();
+}
+void AI_manager() {
+	CharacterManager& c = CharacterManager::GetSingleton();
+	GameCharacter* g = NULL;
+	int i = 0;
+	for (auto it : c.get_current_characters()) {
+	
+		if (it->get_id() == "Guma") {
+			progress_guma(it);
+		}
+		else if (it->get_id() == "Wosu") {
+			progress_wosus(it); }
+	}
+}
+void Destruct() {
+	destruction_man.Commit();
 }
 
 void Input() { 
@@ -97,17 +120,11 @@ void CollisionChecking() {
 	CollisionHandler.Check();
 }
 
-bool CheckForDeath(auto it) {
-	if (it->GetCombatSystem().getHp() < 0 && it->get_state() == "dead" ) { sprite_manager.Remove(it); return true; }
-	return false;
-}
-
 //sprite displaY FUAA
 void Display_all_Sprites() {
 	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
 	auto sprite_list= sprite_manager.GetDisplayList();
 	for (auto it : sprite_list) {
-		//if (CheckForDeath(it)) continue;
 		it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
 	}
 }
@@ -141,8 +158,13 @@ void myRender() {
 	SDL_RenderClear(GameRenderer);
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
+
 	Display_all_Sprites();
-	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
+	if (InputHandler.CanDpyGrid()) {
+		DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
+	}
+	SDL_RenderCopy(GameRenderer, texture, NULL, &dest);
+	
 	SDL_RenderPresent(GameRenderer);
 }
 
@@ -165,7 +187,14 @@ void ZeldaApp::Initialise(void) {
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
-
+	
+	auto _game = GetGame();
+	game.SetOnPauseResume([_game]() {
+		if (!_game.IsPaused()) // just resumed
+		AnimatorManager::GetSingleton().TimeShift(
+			GetSystemTime() - _game.GetPauseTime()
+		);
+		});
 	game.SetInput(Input);
 	game.SetRender(myRender);
 	game.SetDone(myDone);
@@ -173,6 +202,7 @@ void ZeldaApp::Initialise(void) {
 	game.Set_Physics(gravity);
 	game.SetCollisionChecking(CollisionChecking);
 	game.Set_AI(AI_manager);
+	game.Set_destr(Destruct);
 	is_running = true;
 
 }	
@@ -185,7 +215,7 @@ void ZeldaApp::Load() {
 	full_asset_path = half_path + "UnitTests\\UnitTest3\\UnitTest3Media";
 
 	TileSetSurface = IMG_Load((full_asset_path + "\\Terrain\\Zelda-II-Parapa-Palace-Tileset.png").c_str());
-
+	surface = IMG_Load((full_asset_path + "\\NAMES.png").c_str());
 	// LAYERS
 	ReadTextMap(full_asset_path + "\\Terrain\\TileMap_Backround.csv");
 	HorizonLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()));
@@ -197,6 +227,7 @@ void ZeldaApp::Load() {
 	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
 
 	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer);
+	texture = SDL_CreateTextureFromSurface(GameRenderer, surface);
 	// ANIMATIONS
 	initialise_link(GameGrid);
 

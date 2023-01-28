@@ -7,10 +7,12 @@ void app::Game::MainLoop(void) {
 void app::Game::MainLoopIteration(void) {
 	Render();
 	Input();
-	ProgressAnimations();
-	AI();
-	Physics();
-	CollisionChecking();
-	//UserCode(); // hook for custom code at end
-	//CommitDestructions();
+	if (!IsPaused()) {
+		ProgressAnimations();
+		AI();
+		Physics();
+		CollisionChecking();
+		CommitDestructions();
+		//UserCode();
+	}
 }

@@ -38,12 +38,80 @@ void initialise_films_link(GridLayer GameGrid) {
 }
 
 void initialise_doors_films() {
-	//Sprite* door = new Sprite(195 * 32, 10 * 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Door")), "Door");
+	Sprite* door = new Sprite(195 * 32, 10 * 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Door")), "Door1");
+	sprite_manager.Add(door);
+	CollisionHandler.Register(&link_cl.get_current(), door,
+		[](Sprite* s1, Sprite* s2) {
+			if (link_cl.GetLinkHasKey()) {
+				SetTile(195, 10, 32);
+				SetTile(195, 11, 32);
+				SetTile(195, 12, 32);
+				GridMap* g = GetGridMap();
+				for (auto rowElem = 0; rowElem < GRID_BLOCK_ROWS; ++rowElem)
+					for (auto colElem = 0; colElem < GRID_BLOCK_COLUMNS; ++colElem) {
+						SetEmptyGridTile(g, 195 * 4 + colElem, 10 * 4 + rowElem);
+						SetEmptyGridTile(g, 195 * 4 + colElem, 11 * 4 + rowElem);
+						SetEmptyGridTile(g, 195 * 4 + colElem, 12 * 4 + rowElem);
+					}
+
+
+				s2->SetVisibility(false);
+			}
+
+		});
 }
 
 void initialise_items_films() {
-	Sprite* Key = new Sprite(132, 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Key")), "Key1");
+	Sprite* Key = new Sprite(53 * 32 + 60, 11 * 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Key")), "Key1");
+	Sprite* doll = new Sprite(234 * 32, 12 * 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Up.Doll")), "doll1");
+	Sprite* redpotion = new Sprite(255 * 32, 12 * 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Potion.Red")), "redpotion1");
+	Sprite* bluepotion = new Sprite(74 * 32, 12 * 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Potion.Blue")), "bluepotion1");
+	Sprite* pointbag = new Sprite(198 * 32, 12 * 32, const_cast<AnimationFilm*>(FilmHolder.GetFilm("PointBag")), "pointbag1");
 	sprite_manager.Add(Key);
+	CollisionHandler.Register(&link_cl.get_current(), Key,
+		[](Sprite* s1, Sprite* s2) {
+			s2->SetVisibility(false);
+	link_cl.SetLinkLinkHasKey(true);
+		});
+	sprite_manager.Add(doll);
+	CollisionHandler.Register(&link_cl.get_current(), doll,
+		[](Sprite* s1, Sprite* s2) {
+			int x = link_cl.GetLinkLifes() + 1;
+	if (x <= 3) {
+		s2->SetVisibility(false);
+		link_cl.SetLinklifes(x);
+	}
+		});
+	sprite_manager.Add(redpotion);
+	CollisionHandler.Register(&link_cl.get_current(), redpotion,
+		[](Sprite* s1, Sprite* s2) {
+			int x = link_cl.GetLinkMagic() + 128;
+	if (x <= 500) {
+		s2->SetVisibility(false);
+		link_cl.SetLinkMagic(x);
+	}
+
+		});
+	sprite_manager.Add(bluepotion);
+	CollisionHandler.Register(&link_cl.get_current(), bluepotion,
+		[](Sprite* s1, Sprite* s2) {
+			int x = link_cl.GetLinkMagic() + 16;
+	if (x <= 500) {
+		s2->SetVisibility(false);
+		link_cl.SetLinkMagic(x);
+	}
+
+		});
+	sprite_manager.Add(pointbag);
+	CollisionHandler.Register(&link_cl.get_current(), pointbag,
+		[](Sprite* s1, Sprite* s2) {
+			int x = link_cl.GetLinkMagic() + 50;
+	if (x <= 200) {
+		s2->SetVisibility(false);
+		link_cl.SetLinkMagic(x);
+	}
+
+		});
 }
 
 Sprite* Initialise_sprites_link(GridLayer GameGrid) {
@@ -199,11 +267,13 @@ void initialise_link(GridLayer GameGrid) {
 void initialise_enemies(GridLayer GameGrid) {
 	initialise_palace_bot(GameGrid);
 	initialise_guma(GameGrid);
-	initialise_wosu(GameGrid, wosu_x_1, wosu_y_1);
-	initialise_wosu(GameGrid, wosu_x_2, wosu_y_2);
-	initialise_wosu(GameGrid, wosu_x_3, wosu_y_3);
-	initialise_wosu(GameGrid, wosu_x_4, wosu_y_4);
+	initialise_wosu(GameGrid, wosu_x_1, wosu_y_1,"1");
+	initialise_wosu(GameGrid, wosu_x_2, wosu_y_2,"2");
+	initialise_wosu(GameGrid, wosu_x_3, wosu_y_3,"3");
+	initialise_wosu(GameGrid, wosu_x_4, wosu_y_4,"4");
 	initialise_items_films();
+	initialise_doors_films();
+
 	for (auto it : character_manager.get_current_characters()) {
 		it->print_character();
 	}

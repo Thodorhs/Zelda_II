@@ -1,5 +1,6 @@
 #include "../../../../Engine/Include/GameLoopFuncs/Input.h"
 
+
 void InputKeys::InputRead(bool& is_running) {
 	SDL_Event event;
 	int* dx = new int, * dy = new int;
@@ -12,6 +13,9 @@ void InputKeys::InputRead(bool& is_running) {
 		}
 		if (event.type == SDL_KEYDOWN) {
 			SetKeyState(event.key.keysym.sym, true);
+			if (isKeyPressed(SDLK_F1) == true)
+				DpyGrid = !DpyGrid;
+
 		}
 		if (event.type == SDL_KEYUP) {
 			SetKeyState(event.key.keysym.sym, false);
@@ -34,6 +38,9 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 		Link.get_current().GetCombatSystem().setAttackingMode(false);
 	}
 
+	//if(isKeyPressed(SDLK_p) == true) {
+		//s();
+	//}
 
 	if (isKeyPressed(SDLK_d) && isKeyPressed(SDLK_SPACE)) {
 		float Scrolldx = 1.0;
