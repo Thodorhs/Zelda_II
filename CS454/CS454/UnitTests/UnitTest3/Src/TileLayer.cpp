@@ -15,7 +15,6 @@ TileLayer::TileLayer(Dim _rows, Dim _cols, BitmapSurface _tileSet, TileMap _map,
 	viewWin = { 0, 0, 640, 480 };
 }
 
-
 void TileLayer::PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
 	SDL_Rect PTsrcrect{};
 	SDL_Rect PTdstrect{};

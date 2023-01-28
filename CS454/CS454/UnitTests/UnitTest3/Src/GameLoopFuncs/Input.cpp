@@ -107,14 +107,14 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 	}
 
 	if (isKeyPressed(SDLK_a)) {
-		float Scrolldx = -32.0;
+		float Scrolldx = -8.0;
 		float Scrolldy = 0;
 		SDL_Rect LinkRect = Link.get_current().GetBox();
 
 		bool CheckMoveWin = SetAction(Link, "moving_left", "Link.Run.left",
 			(FrameRangeAnimator*)Link.get_animator("fr"),
 			(FrameRangeAnimation*)Link.get_animation("link.run"),
-			40, -8.0, 0, -1.0);
+			60, -8.0, 0, -1.0);
 
 		if (LinkRect.x - ViewWin.x < ViewWin.w / 2 - 20) {
 			ActionLayer.ScrollWithBoundsCheck(Scrolldx, 0);
@@ -124,14 +124,14 @@ void InputKeys::InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLay
 	}
 
 	if (isKeyPressed(SDLK_d) == true) {
-		float Scrolldx = 32.0;
+		float Scrolldx = 8.0;
 		float Scrolldy = 0;
 		SDL_Rect LinkRect = Link.get_current().GetBox();
 
 		bool CheckMoveWin = SetAction(Link, "moving_right", "Link.Run.right",
 			(FrameRangeAnimator*)Link.get_animator("fr"),
 			(FrameRangeAnimation*)Link.get_animation("link.run"),
-			40, 8.0, 0, 1.0);
+			60, 8.0, 0, 1.0);
 
 
 		if (LinkRect.x - ViewWin.x > ViewWin.w / 2 + 20) {
