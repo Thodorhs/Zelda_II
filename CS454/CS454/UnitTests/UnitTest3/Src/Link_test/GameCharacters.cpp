@@ -1,7 +1,7 @@
 //#include "GameCharacters.h"
 #include "GreatPalaceBot.h"
 #include "Guma.h"
-
+#include "Wosu.h"
 GameCharacter* GameCharacter::create(Character_t type) {
 	switch (type) {
 	case GreatPalaceBot_t:
@@ -9,7 +9,7 @@ GameCharacter* GameCharacter::create(Character_t type) {
 		break;
 
 	case Wosu_t:
-		//return new Wosu();
+		return new Wosu();
 		break;
 	case Guma_t:
 		return new Guma();

@@ -3,6 +3,7 @@
 void Sprite::Display(BitmapSurface dest, const SDL_Rect& dpyArea, const Clipper& clipper, SDL_Renderer* GameRenderer) const {
 	SDL_Rect clippedBox;
 	SDL_Point dpyPos;
+	if (isVisible == false) return;
 	if (clipper.Clip(GetBoxScaledDown(), dpyArea, &dpyPos, &clippedBox)) {
 		SDL_Rect clippedFrame{
 		frameBox.x + clippedBox.x,

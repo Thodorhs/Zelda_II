@@ -45,7 +45,6 @@ void GridLayer::FilterGridMotionUp(const SDL_Rect& r, int* dy)const {
 			auto endCol = DIV_GRID_ELEMENT_WIDTH(r.x + r.w - 1);
 			for (auto col = startCol; col <= endCol; ++col)
 				if (!CanPassGridTile(GetGridMap(), col, newRow, GRID_BOTTOM_SOLID_MASK)) {
-					//std::cout << "Cant Move Up" << std::endl;
 					*dy = MUL_GRID_ELEMENT_HEIGHT(currRow) - r.y;
 					break;
 				}
@@ -68,7 +67,6 @@ void GridLayer::FilterGridMotionDown(const SDL_Rect& r, int* dy) const {
 			auto endCol = DIV_GRID_ELEMENT_WIDTH(r.x + r.w - 1);
 			for (auto col = startCol; col <= endCol; ++col)
 				if (!CanPassGridTile(GetGridMap(), col, newRow, GRID_TOP_SOLID_MASK)) {
-					//std::cout << "Cant Move Down" << col << std::endl;
 					*dy = (MUL_GRID_ELEMENT_HEIGHT(newRow)) - 1 - y2;
 					break;
 				}
@@ -79,7 +77,6 @@ void GridLayer::FilterGridMotionDown(const SDL_Rect& r, int* dy) const {
 void GridLayer::FilterGridMotionLeft(const SDL_Rect& r, int* dx) const {
 	auto x1_next = r.x + *dx;
 	if (x1_next < 0) {
-		std::cout << "Cant Move Left due to map size" << std::endl;
 		*dx = -r.x;
 	}
 	else {
@@ -91,7 +88,6 @@ void GridLayer::FilterGridMotionLeft(const SDL_Rect& r, int* dx) const {
 			auto endRow = DIV_GRID_ELEMENT_HEIGHT(r.y + r.h - 1);
 			for (auto row = startRow; row <= endRow; ++row)
 				if (!CanPassGridTile(GetGridMap(), newCol, row, GRID_RIGHT_SOLID_MASK)) {
-					std::cout << "Cant Move Left" << std::endl;
 					*dx = MUL_GRID_ELEMENT_WIDTH(currCol) - r.x;
 					break;
 				}
@@ -103,7 +99,6 @@ void GridLayer::FilterGridMotionRight(const SDL_Rect& r, int* dx) const {
 	auto x2 = r.x + r.w - 1;
 	auto x2_next = x2 + *dx;
 	if (x2_next >= MAX_PIXEL_WIDTH) {
-		std::cout << "Cant Move Left due to map size" << std::endl;
 		*dx = (MAX_PIXEL_WIDTH)-1 - x2;
 	}
 	else {
@@ -115,7 +110,6 @@ void GridLayer::FilterGridMotionRight(const SDL_Rect& r, int* dx) const {
 			auto endRow = DIV_GRID_ELEMENT_HEIGHT(r.y + r.h - 1);
 			for (auto row = startRow; row <= endRow; ++row)
 				if (!CanPassGridTile(GetGridMap(), newCol, row, GRID_LEFT_SOLID_MASK)) {
-					std::cout << "Cant Move Right" << row << std::endl;
 					*dx = (MUL_GRID_ELEMENT_WIDTH(newCol)) - 1 - x2;
 					break;
 				}

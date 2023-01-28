@@ -21,3 +21,4 @@ public:
 	ScrollAnimation(const std::string& _id, const Scroll& _scroll) :
 		Animation(_id), scroll(_scroll) {}
 };
+void ScrollAction(TileLayer& ActionLayer, TileLayer& HorizonLayer);

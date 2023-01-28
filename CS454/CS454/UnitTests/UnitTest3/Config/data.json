@@ -7,6 +7,63 @@
       ]
     },
 
+    "Door": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 183, "y": 42, "w": 8,"h": 48},
+        {"x": 192, "y": 42, "w": 8,"h": 48},
+        {"x": 201, "y": 42, "w": 8,"h": 48},
+        {"x": 210, "y": 42, "w": 8,"h": 48},
+        {"x": 219, "y": 42, "w": 8,"h": 48},
+        {"x": 228, "y": 42, "w": 8,"h": 48},
+        {"x": 237, "y": 42, "w": 8,"h": 48},
+        {"x": 246, "y": 42, "w": 8,"h": 48},
+        {"x": 255, "y": 42, "w": 8,"h": 48},
+        {"x": 264, "y": 42, "w": 8,"h": 48},
+        {"x": 273, "y": 42, "w": 8,"h": 48},
+        {"x": 282, "y": 42, "w": 8,"h": 48},
+        {"x": 291, "y": 42, "w": 8,"h": 48},
+        {"x": 300, "y": 42, "w": 8,"h": 48},
+        {"x": 309, "y": 42, "w": 8,"h": 48},
+        {"x": 318, "y": 42, "w": 8,"h": 48},
+        {"x": 327, "y": 42, "w": 8,"h": 48}
+      ]
+    },
+    "PointBag": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 1, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
+    "Potion.Blue": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 30, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
+    "Potion.Red": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 50, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
+    "Key": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 101, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
+    "Up.Doll": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 70, "y": 11, "w": 8,"h": 16}
+      ]
+    },
+
     "Link.Crouch.left": {
       "bmp": "link-sprites.png",
       "frames": [
@@ -113,6 +170,25 @@
         {"x": 528, "y": 829, "w": 11, "h": 18},
         {"x": 547, "y": 831, "w": 12, "h": 19}
       ]
+    },
+    
+
+    "Wosu": {
+      "bmp": "enemies-sprites-1.gif",
+      "frames": [
+        {"x": 23, "y": 770, "w": 15, "h": 34},
+        {"x": 47, "y": 771, "w": 17, "h": 34}
+        
+      ]
+    },
+
+    "Wosu.death": {
+      "bmp": "items-objects-sprites.png",
+      "frames": [
+        {"x": 104, "y": 60, "w": 16, "h": 32},
+        {"x": 120, "y": 60, "w": 16, "h": 32}
+      ]
     }
   }
+
 }

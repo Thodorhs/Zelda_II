@@ -15,7 +15,6 @@ TileLayer::TileLayer(Dim _rows, Dim _cols, BitmapSurface _tileSet, TileMap _map,
 	viewWin = { 0, 0, 640, 480 };
 }
 
-
 void TileLayer::PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
 	SDL_Rect PTsrcrect{};
 	SDL_Rect PTdstrect{};
@@ -53,12 +52,13 @@ void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_
 				if (map[row][col] == -1) continue;
 				PutTile(MUL_TILE_WIDTH(col - startCol), MUL_TILE_HEIGHT(row - startRow), map[row][col], myrenderer, Tileset);
 			}
-
-		SDL_SetRenderTarget(myrenderer, NULL); //Unsetting the target of SDL_RenderCopy (now the target is the screen render)
 		dpyChanged = false;
 	}
 
-	if(FinalLayer) SDL_RenderCopy(myrenderer, dpyBuffer, NULL, NULL); //Setting the texture we loaded earlier(dpyBuffer) to be displayed on our window
+	if (FinalLayer) {
+		SDL_SetRenderTarget(myrenderer, NULL); //Unsetting the target of SDL_RenderCopy (now the target is the screen render)
+		SDL_RenderCopy(myrenderer, dpyBuffer, NULL, NULL);
+	}//Setting the texture we loaded earlier(dpyBuffer) to be displayed on our window
 }
 
 const SDL_Point TileLayer::Pick(Dim x, Dim y) const {
@@ -79,12 +79,9 @@ void TileLayer::FilterScrollDistance(
 		if (viewSize >= maxMapSize) { *d = 0;}// fits entirely
 		else
 			if ((val + viewSize) >= maxMapSize){ // cross upper bound
-				//*d = maxMapSize - (viewStartCoord + viewSize);
 				*d = 0;
-				std::cout << "Left Corner d=" << *d << std::endl;
 			}else if (val<= GetMapPixelMinWidth()) {
 				*d = 0;
-				std::cout << "Right Corner d=" << *d << std::endl;
 			}
 
 }

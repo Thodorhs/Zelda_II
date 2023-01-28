@@ -29,6 +29,28 @@ std::string full_asset_path;
 
 int sign_m = 1;
 
+void progress_wosus(GameCharacter *c) {
+	FrameRangeAnimator* fr;
+	FrameRangeAnimation* fa;
+	fr = (FrameRangeAnimator*)c->get_animator("wosu.fr");
+	fa = (FrameRangeAnimation*)c->get_animation("wosu.fr.anim");
+
+	if (c->get_animator("Wosu.death.animation") != NULL) {
+		fr = (FrameRangeAnimator*)c->get_animator("Wosu.death.animator");
+		fa = (FrameRangeAnimation*)c->get_animation("Wosu.death.animation");
+		c->stop_animators();
+		fr->Start(fa, GetSystemTime());
+		return;
+	}
+
+	if (fr->HasFinished() == false) {
+		return;
+	}
+	fa->SetDx(1);
+	fr->Start(fa, GetSystemTime());
+}
+
+
 void AI_manager() {
 	CharacterManager& c = CharacterManager::GetSingleton();
 	GameCharacter* g = NULL;
@@ -37,6 +59,7 @@ void AI_manager() {
 		if (it->get_id() == "Guma") {
 			g = it;
 		}
+		else if (it->get_id() == "Wosu") { progress_wosus(it); }
 	}
 
 	FrameRangeAnimator* attack_move;
@@ -57,7 +80,6 @@ void AI_manager() {
 		sign_m = 1;
 		attack_move_animation->SetDx(sign_m * 1);
 
-
 		attack_move->Start(attack_move_animation, GetSystemTime());
 		g->fire_action();
 
@@ -75,14 +97,21 @@ void CollisionChecking() {
 	CollisionHandler.Check();
 }
 
+bool CheckForDeath(auto it) {
+	if (it->GetCombatSystem().getHp() < 0 && it->get_state() == "dead" ) { sprite_manager.Remove(it); return true; }
+	return false;
+}
+
 //sprite displaY FUAA
 void Display_all_Sprites() {
 	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
-	for (auto it : sprite_manager.GetDisplayList()) {
-		it->Display(dest, { 0, 0, ActionLayer.GetViewWindow().w, ActionLayer.GetViewWindow().h }, clipper, GameRenderer);
-		//it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
+	auto sprite_list= sprite_manager.GetDisplayList();
+	for (auto it : sprite_list) {
+		//if (CheckForDeath(it)) continue;
+		it->Display(dest, { 0, 0, 0, 0 }, clipper, GameRenderer);
 	}
 }
+
 void Display_Sprite_byType(std::string type) {
 	BitmapSurface dest{}; const Clipper clipper = MakeTileLayerClipper(&ActionLayer);
 	for (auto it : sprite_manager.GetTypeList(type)) {
@@ -112,7 +141,6 @@ void myRender() {
 	SDL_RenderClear(GameRenderer);
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
-
 	Display_all_Sprites();
 	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
 	SDL_RenderPresent(GameRenderer);
@@ -176,9 +204,7 @@ void ZeldaApp::Load() {
 	
 	initialise_enemies(GameGrid);
 	//initialise_films_enemy_link();
-	//init_enemy_sprite();
-	
-	
+	//init_enemy_sprite();	ddd
 }
 
 void ZeldaApp::Run() {

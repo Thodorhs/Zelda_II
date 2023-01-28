@@ -31,6 +31,7 @@ private:
 
 public:
 	
+	bool GetDpyChanged() { return dpyChanged; }
 	void SetTile(Dim col, Dim row, Index index) { map[row][col] = index;}
 	Index GetTile(Dim col, Dim row) const { return map[row][col]; };
 	void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);

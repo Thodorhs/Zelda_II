@@ -15,7 +15,7 @@ using GridIndex = byte;
 
 
 #define MAPHEIGHT 16
-#define MAPWIDTH  250
+#define MAPWIDTH  300
 #define TILESETWIDTH 10
 #define TILESETHEIGHT 10
 

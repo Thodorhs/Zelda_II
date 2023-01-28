@@ -6,9 +6,10 @@ void initialise_palacebot_films(GameCharacter* enemy) {
 
 }
 
-void initialise_palacebot_sprites(GameCharacter* character, GridLayer GameGrid) {
+Sprite* initialise_palacebot_sprites(GameCharacter* character, GridLayer GameGrid) {
     Sprite* palace_bot = new Sprite(bot_x, bot_y, const_cast<AnimationFilm*>(FilmHolder.GetFilm("Palace.bot")), "Palace.bot");
     palace_bot->SetMover(MakeSpriteGridLayerMover(&GameGrid, palace_bot));
+    palace_bot->SetCombatSystem(160, 4);
     PrepareSpriteGravityHandler(&GameGrid, palace_bot);
 
 
@@ -25,6 +26,7 @@ void initialise_palacebot_sprites(GameCharacter* character, GridLayer GameGrid) 
     palace_bot->Move(1, 0);
     sprite_manager.Add(palace_bot);
     character->set_current(palace_bot);
+    return palace_bot;
 }
 
 void initialise_palacebot_animations(GameCharacter* character) {
@@ -37,10 +39,18 @@ void initialise_palacebot_animations(GameCharacter* character) {
 
 void initialise_palace_bot(GridLayer GameGrid) {
     GameCharacter* bot = character_manager.create(Character_t::GreatPalaceBot_t);
+    Sprite* bot_s = initialise_palacebot_sprites(bot, GameGrid);
     initialise_palacebot_films(bot);
-    initialise_palacebot_sprites(bot, GameGrid);
+
     initialise_palacebot_animations(bot);
 
+    CollisionHandler.Register(&link_cl.get_current(), bot_s, [](Sprite* s1, Sprite* s2) {
+        if (s1->GetCombatSystem().getAttackingMode()) {
+            int damageDealt = s1->GetCombatSystem().getDamage();
+            s2->GetCombatSystem().ReceivedDamage(damageDealt);
+            std::cout << s2->GetCombatSystem().getHp() << std::endl;
+        }
+        });
     character_manager.add_to_current(bot);
 
 }

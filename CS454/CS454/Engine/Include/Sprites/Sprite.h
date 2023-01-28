@@ -3,6 +3,7 @@
 #include "BoundingArea.h"
 #include "MotionQuantizer.h"
 #include "GravityHandler.h"
+#include "CombatSystem.h"
 #include "../KeyFrameAnimation/AnimationFilm.h"
 #include "../Util/EngineDefines.h"
 #include "../Grid/GridLayer.h"
@@ -17,7 +18,7 @@ protected:
 	SDL_Rect frameBox; // inside the film
 	float x = 0, y = 0;
 	int w, h;
-	bool isVisible = false;
+	bool isVisible = true;
 	AnimationFilm* currFilm = nullptr;
 	//BoundingArea* boundingArea = nullptr;
 	unsigned zorder = 0;
@@ -26,8 +27,8 @@ protected:
 	MotionQuantizer quantizer;
 	bool directMotion = false;
 	GravityHandler gravity;
+	CombatSystem combat;
 public:
-	
 	void set_state(std::string id) { stateId = id; }
 	std::string get_state() { return stateId; }
 	AnimationFilm* get_curr_film() { return currFilm; }
@@ -55,6 +56,13 @@ public:
 	GravityHandler& GetGravityHandler(void)
 	{
 		return gravity;
+	}
+	CombatSystem& GetCombatSystem(void)
+	{
+		return combat;
+	}
+	void SetCombatSystem(int hp, int damage) {
+		combat = CombatSystem(hp, damage);
 	}
 	Sprite& SetHasDirectMotion(bool v) { directMotion = v; return *this; }
 	bool GetHasDirectMotion(void) const { return directMotion; }
