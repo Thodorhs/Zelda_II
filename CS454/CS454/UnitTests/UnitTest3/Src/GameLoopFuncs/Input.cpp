@@ -13,6 +13,9 @@ void InputKeys::InputRead(bool& is_running) {
 		}
 		if (event.type == SDL_KEYDOWN) {
 			SetKeyState(event.key.keysym.sym, true);
+			if (isKeyPressed(SDLK_F1) == true)
+				DpyGrid = !DpyGrid;
+
 		}
 		if (event.type == SDL_KEYUP) {
 			SetKeyState(event.key.keysym.sym, false);

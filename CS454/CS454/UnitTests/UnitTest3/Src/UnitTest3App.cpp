@@ -7,15 +7,16 @@
 
 
 static InputKeys& InputHandler = InputKeys::GetSingleton();
-InputKeys InputKeys::singleton;//this as well ffff u aa
+InputKeys InputKeys::singleton;
 
 
-//this as well ffff u aa
 
 SDL_Surface* TileSetSurface;
 SDL_Renderer* GameRenderer;
 SDL_Window* GameWindow;
-
+SDL_Surface* surface;
+SDL_Texture* texture;
+SDL_Rect dest = { 0,0,405,120 };
 bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
@@ -157,8 +158,13 @@ void myRender() {
 	SDL_RenderClear(GameRenderer);
 	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
 	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
+
 	Display_all_Sprites();
-	DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
+	if (InputHandler.CanDpyGrid()) {
+		DisplayGrid(ActionLayer.GetViewWindow(), GameGrid.GetBuffer(), MAPWIDTH, GameRenderer);
+	}
+	SDL_RenderCopy(GameRenderer, texture, NULL, &dest);
+	
 	SDL_RenderPresent(GameRenderer);
 }
 
@@ -209,7 +215,7 @@ void ZeldaApp::Load() {
 	full_asset_path = half_path + "UnitTests\\UnitTest3\\UnitTest3Media";
 
 	TileSetSurface = IMG_Load((full_asset_path + "\\Terrain\\Zelda-II-Parapa-Palace-Tileset.png").c_str());
-
+	surface = IMG_Load((full_asset_path + "\\NAMES.png").c_str());
 	// LAYERS
 	ReadTextMap(full_asset_path + "\\Terrain\\TileMap_Backround.csv");
 	HorizonLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()));
@@ -221,6 +227,7 @@ void ZeldaApp::Load() {
 	ActionLayer = TileLayer(MAPHEIGHT, MAPWIDTH, *(TileSetSurface), *(GetMapData()), &GameGrid);
 
 	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer);
+	texture = SDL_CreateTextureFromSurface(GameRenderer, surface);
 	// ANIMATIONS
 	initialise_link(GameGrid);
 
