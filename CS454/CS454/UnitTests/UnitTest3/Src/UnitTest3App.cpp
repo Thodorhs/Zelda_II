@@ -20,7 +20,9 @@ SDL_Rect dest = { 0,0,405,120 };
 bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
 
-
+SDL_Texture* Tileset;
+SDL_Texture* dpy_horizon;
+SDL_Texture* dpy_action;
 TileLayer ActionLayer;
 TileLayer HorizonLayer;
 GridLayer GameGrid;
@@ -156,8 +158,8 @@ void animation_handler() {
 void myRender() {	
 
 	SDL_RenderClear(GameRenderer);
-	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false);
-	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true);
+	HorizonLayer.Display(TileSetSurface, GameRenderer, nullptr, false,Tileset,dpy_horizon);
+	ActionLayer.Display(TileSetSurface, GameRenderer, HorizonLayer.GetBitmap(), true,Tileset,dpy_action);
 
 	Display_all_Sprites();
 	if (InputHandler.CanDpyGrid()) {
@@ -187,7 +189,8 @@ void ZeldaApp::Initialise(void) {
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
-	
+
+
 	auto _game = GetGame();
 	game.SetOnPauseResume([_game]() {
 		if (!_game.IsPaused()) // just resumed
@@ -229,6 +232,10 @@ void ZeldaApp::Load() {
 	FilmHolder.Load(full_asset_path, FilmParser, GameRenderer);
 	texture = SDL_CreateTextureFromSurface(GameRenderer, surface);
 	// ANIMATIONS
+	dpy_horizon = SDL_CreateTexture(GameRenderer, 0, SDL_TEXTUREACCESS_TARGET, HorizonLayer.GetViewWindow().w, HorizonLayer.GetViewWindow().h);
+	dpy_action = SDL_CreateTexture(GameRenderer, 0, SDL_TEXTUREACCESS_TARGET, ActionLayer.GetViewWindow().w, ActionLayer.GetViewWindow().h);
+	Tileset = SDL_CreateTextureFromSurface(GameRenderer, TileSetSurface);
+
 	initialise_link(GameGrid);
 
 	initialise_elevator(ActionLayer,HorizonLayer);

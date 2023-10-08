@@ -30,7 +30,7 @@ void TileLayer::PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_
 }
 
 //If you have a previous layer you need to pass the texture of the previous layer to this function.
-void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_Texture* PrevLayerBuffer, bool FinalLayer) {
+void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_Texture* PrevLayerBuffer, bool FinalLayer, SDL_Texture* Tileset,SDL_Texture* dpy_text) {
 	SDL_Rect PTdstrect{};
 	if (dpyChanged) {
 		auto startCol = DIV_TILE_WIDTH(viewWin.x);
@@ -38,10 +38,10 @@ void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_
 		auto endCol = DIV_TILE_WIDTH(viewWin.x + viewWin.w - 1);
 		auto endRow = DIV_TILE_HEIGHT(viewWin.y + viewWin.h - 1);
 
-		SDL_Texture* Tileset = SDL_CreateTextureFromSurface(myrenderer, ImgSurface); //Loading the tileset
+		//SDL_Texture* Tileset = SDL_CreateTextureFromSurface(myrenderer, ImgSurface); //Loading the tileset memory goes boom
 		
 		if (PrevLayerBuffer == nullptr){
-            dpyBuffer = SDL_CreateTexture(myrenderer, 0, SDL_TEXTUREACCESS_TARGET, viewWin.w, viewWin.h); //Preparing to load the map to the texture
+			dpyBuffer = dpy_text; //Preparing to load the map to the texture memory killed ni
 		}
 		else
 			dpyBuffer = PrevLayerBuffer;
@@ -54,7 +54,7 @@ void TileLayer::Display(SDL_Surface * ImgSurface, SDL_Renderer* myrenderer, SDL_
 				PutTile(MUL_TILE_WIDTH(col - startCol), MUL_TILE_HEIGHT(row - startRow), map[row][col], myrenderer, Tileset);
 			}
 		dpyChanged = false;
-		SDL_DestroyTexture(Tileset);
+		//SDL_DestroyTexture(Tileset);
 	}
 
 	if (FinalLayer) {

@@ -42,6 +42,8 @@ void ReadTextMap(const std::string path) {
 		}
 	}
 	else std::cout << "Could not open the file\n";
+
+
 }
 
 void print() {

@@ -1,11 +1,13 @@
 #include "../../../Engine/Include/ViewWindow.h"
 
-SDL_Texture* RenderTextureTarget;
+
 Point viewPosCached{ -1, -1 };
 SDL_Rect PTsrcrect;
 SDL_Rect PTdstrect;
 
+
 void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
+	
 	PTsrcrect.x = MUL_TILE_WIDTH(tile % 12);
 	PTsrcrect.y = MUL_TILE_HEIGHT(tile / 12);
 	PTsrcrect.h = PTsrcrect.w = 16;
@@ -17,7 +19,7 @@ void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* te
 }
 
 
-void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer) {
+void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer,SDL_Texture *Tileset, SDL_Texture* RenderTextureTarget) {
 	if (viewPosCached.x != viewWin.x || viewPosCached.y != viewWin.y) {
 		auto startCol = DIV_TILE_WIDTH(viewWin.x);
 		auto startRow = DIV_TILE_HEIGHT(viewWin.y);
@@ -26,8 +28,8 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 
 		viewPosCached.x = viewWin.x, viewPosCached.y = viewWin.y;
 
-		SDL_Texture* Tileset = SDL_CreateTextureFromSurface(myrenderer, ImgSurface); //Loading the tileset
-		RenderTextureTarget = SDL_CreateTexture(myrenderer, 0, SDL_TEXTUREACCESS_TARGET, viewWin.w, viewWin.h); //Preparing to load the map to the texture
+		//SDL_Texture* Tileset = SDL_CreateTextureFromSurface(myrenderer, ImgSurface); //Loading the tileset
+		//RenderTextureTarget = SDL_CreateTexture(myrenderer, 0, SDL_TEXTUREACCESS_TARGET, viewWin.w, viewWin.h); //Preparing to load the map to the texture
 		SDL_SetRenderTarget(myrenderer, RenderTextureTarget); //Setting the target of SDL_RenderCopy to be the texture
 
 		for (unsigned short row = startRow; row <= endRow; ++row)
@@ -39,10 +41,9 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 
 	PTdstrect.x = 0;
 	PTdstrect.y = 0;
-	PTdstrect.h = 240;
-	PTdstrect.w = 320;
+	PTdstrect.h = 420;
+	PTdstrect.w = 680;
 	SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, &PTdstrect); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
-
 	//SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, NULL); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
 }
 

@@ -77,7 +77,7 @@ void myInput() {
 
 void myRender() {
 	SDL_RenderClear(myrenderer);
-	TileTerrainDisplay(GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, ImgSurface, myrenderer);
+	TileTerrainDisplay(GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, ImgSurface, myrenderer,NULL,NULL);
 	SDL_RenderPresent(myrenderer);
 
 }
