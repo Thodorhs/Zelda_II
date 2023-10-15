@@ -5,9 +5,14 @@
 #include"Util/EngineDefines.h"
 #include "MapEditor.h"
 
-
+//#include "Util/ConfigFuncs.h"
 
 struct Point { int x, y; };
+static Index mod_index[255];
+static Index div_index[255];
+
+
+
 typedef struct Render {
 	SDL_Surface* ImgSurface;
 	SDL_Renderer* myrenderer;
@@ -15,15 +20,16 @@ typedef struct Render {
 	SDL_Rect ViewWindowR;
 	SDL_Texture* Tileset;
 	SDL_Texture* RenderTextureTarget;
-	Render(int x, int y, int h, int w) :
-		ViewWindowR({ x,y,h,w }),
+
+	Render(int x, int y, int w, int h) :
+		ViewWindowR({ x,y,w,h }),
 		ImgSurface((SDL_Surface*)0),
 		myrenderer((SDL_Renderer*)0),
 		Gwindow((SDL_Window*)0), Tileset((SDL_Texture*)0),
 		RenderTextureTarget((SDL_Texture*)0) {};
 };
 
-void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer, SDL_Texture* Tileset, SDL_Texture* RenderTextureTarget);
+void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& displayArea, SDL_Renderer* myrenderer, SDL_Texture* Tileset, SDL_Texture* RenderTextureTarget);
 void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);
 
 //Scrolling
@@ -41,3 +47,5 @@ static void FilterScrollDistance(
 );
 void FilterScroll(const SDL_Rect& viewWin, int* dx, int* dy);
 void ScrollWithBoundsCheck(SDL_Rect* viewWin, int dx, int dy);
+
+void pre_cache(void);

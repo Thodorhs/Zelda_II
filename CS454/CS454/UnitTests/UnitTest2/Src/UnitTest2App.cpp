@@ -1,30 +1,23 @@
 #include "../../../Engine/Include/ZeldaApp.h"
 #include "../../../Engine/Include/ViewWindow.h"
-#include "../../../Engine/Include/Grid/GridCompute.h"
-//#include "../../../Engine/Include/GridCompute2.h"
-#include "../../../Engine/Include/Grid/GridMotion.h"
 #include <filesystem>
 
-SDL_Surface* TileSetSurface;
-SDL_Renderer* GameRenderer;
-SDL_Window* GameWindow;
-SDL_Rect ViewWIndowR = { 0,0,320,240 };
 
-int CameraPosX, CameraPosY;
-int PrevCameraPosX = 0, PrevCameraPosY = 0;
+Render* render_vars;
 bool is_running; //used by done()
-bool mouse_down=false; //bool to check if i hold down the the left click
+bool mouse_down = false; //bool to check if i hold down the the left click
 
-GridIndex mygrid[21 * 42 * GRID_ELEMENTS_PER_TILE];
-SDL_Rect movingrect = {0,0,10,10};
+
 void myInput() {
+	int CameraPosX, CameraPosY;
+	int PrevCameraPosX = 0, PrevCameraPosY = 0;
+
 	SDL_Event event;
-	int* dx = new int;
-	int* dy = new int;
-	*dx = 0;
-	*dy = 0;
+	const Uint8* keys = SDL_GetKeyboardState((int*)0);
 	while (SDL_PollEvent(&event)) {
+
 		switch (event.type) {
+
 		case SDL_MOUSEMOTION:
 			if (mouse_down) { // if i am holding down the left click button and i am moving it then scroll..
 				int offsetX = 0, offsetY = 0;
@@ -35,7 +28,7 @@ void myInput() {
 				if (CameraPosY - PrevCameraPosY > 0) offsetY = 1;
 				else if (CameraPosY - PrevCameraPosY < 0) offsetY = -1;
 
-				ScrollWithBoundsCheck(&ViewWIndowR, offsetX, offsetY);
+				ScrollWithBoundsCheck(&render_vars->ViewWindowR, offsetX, offsetY);
 				PrevCameraPosX, PrevCameraPosY = CameraPosX, CameraPosY;
 			}
 			break;
@@ -45,126 +38,97 @@ void myInput() {
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
-			if (event.button.button == SDL_BUTTON_LEFT){
+			if (event.button.button == SDL_BUTTON_LEFT) {
 				mouse_down = false; // i realesed it
 			}
 			break;
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym) {
 			case SDLK_DOWN:
-				ScrollWithBoundsCheck(&ViewWIndowR, 0, 8);
+				ScrollWithBoundsCheck(&(render_vars->ViewWindowR), 0, 8);
 				break;
 			case SDLK_UP:
-				ScrollWithBoundsCheck(&ViewWIndowR, 0, -8);
+				ScrollWithBoundsCheck(&(render_vars->ViewWindowR), 0, -8);
 				break;
 			case SDLK_LEFT:
-				ScrollWithBoundsCheck(&ViewWIndowR, -8, 0);
+				ScrollWithBoundsCheck(&(render_vars->ViewWindowR), -8, 0);
 				break;
 			case SDLK_RIGHT:
-				ScrollWithBoundsCheck(&ViewWIndowR, 8, 0);
+				ScrollWithBoundsCheck(&(render_vars->ViewWindowR), 8, 0);
 				break;
 			case SDLK_HOME:
-				ViewWIndowR.x = 0;
-				ViewWIndowR.y = 0;
+				render_vars->ViewWindowR.x = 0;
+				render_vars->ViewWindowR.y = 0;
 				break;
 			case SDLK_END:
-				ViewWIndowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - ViewWIndowR.w;
-				ViewWIndowR.y = MUL_TILE_HEIGHT(GetMapData()->size()) - ViewWIndowR.h;
-				break;
-			case SDLK_w:
-				*dx = 0;
-				*dy = -1;
-				break;
-			case SDLK_a:
-				*dx = -1;
-				*dy = 0;
-				break;
-			case SDLK_s:
-				*dx = 0;
-				*dy = 1;
-				break;
-			case SDLK_d:
-				*dx = 1;
-				*dy = 0;
+				render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - render_vars->ViewWindowR.w;
+				render_vars->ViewWindowR.y = MUL_TILE_HEIGHT(GetMapData()->size()) - render_vars->ViewWindowR.h;
 				break;
 			default:
-				*dx = 0;
-				*dy = 0;
 				break;
 			}
 			break;
+
 		case SDL_QUIT:
 			is_running = false;
 			break;
 		default:
 			break;
 		}
-		//IF WE WANT TO GET THE TRUE POSITION OF THE RECTANGLE IF THE CAMERA MOVES SO THAT THE GRID WORKS
-		FilterGridMotion(GetGridMap(), movingrect, dx, dy);
-		movingrect.x += *dx;
-		movingrect.y += *dy;
 	}
+
 }
 
+void myRender() {
+	SDL_RenderClear(render_vars->myrenderer);
+	TileTerrainDisplay(GetMapData(), render_vars->ViewWindowR, { 0, 0,-1,0 },  render_vars->myrenderer, render_vars->Tileset, render_vars->RenderTextureTarget);
+	SDL_RenderPresent(render_vars->myrenderer);
 
-
-void myRender() {	
-	SDL_RenderClear(GameRenderer);
-	TileTerrainDisplay(GetMapData(), ViewWIndowR, { 0, 0,-1,0 }, TileSetSurface, GameRenderer);
-	DisplayGrid(ViewWIndowR, mygrid, 21, GameRenderer);
-	SDL_RenderDrawRect(GameRenderer, &movingrect);
-	SDL_RenderPresent(GameRenderer);
 }
 
 bool myDone() {
 	return is_running;
 }
 
+
+
+
 void ZeldaApp::Initialise(void) {
+	
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
+		render_vars = new Render(0, 0, 300, 300);
 		std::cout << "Subsystems Initialised!..." << std::endl;
 
-		GameWindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
-		if (GameWindow) std::cout << "Window created!" << std::endl;
+		render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+		if (render_vars->Gwindow) std::cout << "Window created!" << std::endl;
 
-		GameRenderer = SDL_CreateRenderer(GameWindow, -1, 0);
-		if (GameRenderer)
+		render_vars->myrenderer = SDL_CreateRenderer(render_vars->Gwindow, -1, 0);
+		if (render_vars->myrenderer)
 		{
-			SDL_SetRenderDrawColor(GameRenderer, 255, 0, 0, 0);
+			SDL_SetRenderDrawColor(render_vars->myrenderer, 0, 0, 0, 0);
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
-
-	game.SetInput(myInput);
-	game.SetRender(myRender);
-	game.SetDone(myDone);
-	is_running = true;
-
-}	
-
-void ZeldaApp::Load() {
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::string find_first_part_path = cwd.string();
 	size_t pos = find_first_part_path.find("out");
 	std::string half_path = find_first_part_path.substr(0, pos);
-	std::string full_asset_path = half_path + "UnitTests\\UnitTest2\\UnitTest2Media";
+	std::string full_asset_path = half_path + "UnitTests\\UnitTest1\\UnitTest1Media";
 
-	ReadTextMap(full_asset_path + "\\map1_Kachelebene 1.csv");
-	TileSetSurface = IMG_Load((full_asset_path + "\\overworld_tileset_grass.png").c_str());
+	ReadTextMap(full_asset_path + "\\map1_Kachelebene_1.csv");
+	render_vars->ImgSurface = IMG_Load((full_asset_path + "\\overworld_tileset_grass.png").c_str());
+	render_vars->Tileset = SDL_CreateTextureFromSurface(render_vars->myrenderer, render_vars->ImgSurface);
+	render_vars->RenderTextureTarget = SDL_CreateTexture(render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, render_vars->ViewWindowR.w, render_vars->ViewWindowR.h);
+	//print();
+	game.SetInput(myInput);
+	game.SetRender(myRender);
+	game.SetDone(myDone);
+	is_running = true;
+}
 
-	SDL_Color testcolor{};
-	testcolor.r, testcolor.g, testcolor.b, testcolor.a = 232, 123, 132, 100;
+void ZeldaApp::Load() {
 
-	ComputeTileGridBlocks1(GetTile, mygrid, MAPHEIGHT, MAPWIDTH);
-	for (auto c = 0; c < 42 * 21 * GRID_ELEMENTS_PER_TILE; ++c) {
-		if (mygrid[c] == GRID_SOLID_TILE)
-			std::cout << "O";
-		else
-			std::cout << "-";
-	}
-	std::cout << "STOP" << std::endl;
-	SetGridMap(mygrid, MAPHEIGHT, MAPWIDTH);
 }
 
 void ZeldaApp::Run() {
@@ -176,5 +140,5 @@ void ZeldaApp::RunIteration() {
 }
 
 void ZeldaApp::Clear() {
-		
+
 }

@@ -7,7 +7,7 @@ find_package(SDL2_image REQUIRED)
 #Add source to this project's executable.
 
 
-add_executable(UnitTest1 "Src/MapEditor.cpp" "Src/main.cpp" "Src/GameLoop.cpp"  "Src/UnitTest1App.cpp"  "Src/ViewWindow.cpp" )
+add_executable(UnitTest1     "Src/UnitTest1App.cpp"   "../../Engine/Src/main.cpp" "../../Engine/Src/GameLoop.cpp"   "../../Engine/Src/MapEditor.cpp" "../../Engine/Src/ViewWindow.cpp"  "../../Engine/Src/Parsefuncs.cpp" "../../Engine/Src/ConfigFuncs.cpp" )
 
 target_link_libraries(UnitTest1  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image)
 

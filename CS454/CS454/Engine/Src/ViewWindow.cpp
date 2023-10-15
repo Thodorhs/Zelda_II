@@ -1,13 +1,25 @@
-#include "../Include/ViewWindow.h"
+#include "../../Engine/Include/ViewWindow.h"
+#include "../../Engine/Include/Util/ConfigFuncs.h";
 
-SDL_Texture* RenderTextureTarget;
 Point viewPosCached{ -1, -1 };
 SDL_Rect PTsrcrect;
 SDL_Rect PTdstrect;
 
+
+
+void pre_cache(void) {
+	for (unsigned short i = 0; i < 255; ++i)
+		div_index[i] = i / 12,mod_index[i] = i % 12;
+}
+
+
+
 void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
-	PTsrcrect.x = MUL_TILE_WIDTH(tile % 12);
-	PTsrcrect.y = MUL_TILE_WIDTH(tile / 12);
+
+	PTsrcrect.y = MUL_TILE_HEIGHT(div_index[tile]);
+	PTsrcrect.x = MUL_TILE_WIDTH(mod_index[tile]);
+	//std::cout << "y : " << div_index[tile]/16<<" tile:"<<tile<<"\n";
+
 	PTsrcrect.h = PTsrcrect.w = 16;
 
 	PTdstrect.x = x;
@@ -17,7 +29,7 @@ void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* te
 }
 
 
-void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& displayArea, SDL_Surface* ImgSurface, SDL_Renderer* myrenderer, SDL_Texture* Tileset, SDL_Texture* RenderTextureTarget) {
+void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& displayArea, SDL_Renderer* myrenderer, SDL_Texture* Tileset, SDL_Texture* RenderTextureTarget) {
 	if (viewPosCached.x != viewWin.x || viewPosCached.y != viewWin.y) {
 		auto startCol = DIV_TILE_WIDTH(viewWin.x);
 		auto startRow = DIV_TILE_HEIGHT(viewWin.y);
@@ -26,6 +38,8 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 
 		viewPosCached.x = viewWin.x, viewPosCached.y = viewWin.y;
 
+		//SDL_Texture* Tileset = SDL_CreateTextureFromSurface(myrenderer, ImgSurface); //Loading the tileset
+		//RenderTextureTarget = SDL_CreateTexture(myrenderer, 0, SDL_TEXTUREACCESS_TARGET, viewWin.w, viewWin.h); //Preparing to load the map to the texture
 		SDL_SetRenderTarget(myrenderer, RenderTextureTarget); //Setting the target of SDL_RenderCopy to be the texture
 
 		for (unsigned short row = startRow; row <= endRow; ++row)
@@ -37,22 +51,22 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 
 	PTdstrect.x = 0;
 	PTdstrect.y = 0;
-	PTdstrect.h = 240;
-	PTdstrect.w = 320;
+	PTdstrect.h = viewWin.h*2;
+	PTdstrect.w = viewWin.w*2;//scaled //GWINDOW
 	SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, &PTdstrect); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
-
 	//SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, NULL); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
 }
 
 
+
 int GetMapPixelWidth()
 {
-	return 36*16;
+	return get_config_value<int>(configurators_t::MAP_CONFIG, "pixel_width");
 }
 
 int GetMapPixelHeight()
 {
-	return 60*16;
+	return get_config_value<int>(configurators_t::MAP_CONFIG, "pixel_height");
 }
 
 void Scroll(SDL_Rect* viewWin, int dx, int dy)

@@ -5,6 +5,7 @@
 #include <iostream>
 #include "../Include/MapEditor.h"
 
+
 void SetTile(Dim col, Dim row, Index index)
 { MapData[row][col] = index; }
 
@@ -22,6 +23,8 @@ bool ReadBinMap(TileMap* m, FILE* fp) {
 void WriteTextMap(const TileMap*, FILE* fp) {
 	/* custom write in text format */
 }
+
+
 
 void ReadTextMap(const std::string path) {
 	std::vector<Index> row;

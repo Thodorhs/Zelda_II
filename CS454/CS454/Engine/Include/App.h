@@ -3,7 +3,6 @@
 #include <functional>
 #include <vector>
 
-
 namespace app {
 	class Game { // app::Game namespace, the mother application
 		public:
@@ -54,7 +53,9 @@ namespace app {
 	class App {
 		protected:
 			Game game;
+		
 		public:
+			
 			virtual void Initialise(void) = 0;
 			virtual void Load(void) = 0;
 			virtual void Run(void) { game.MainLoop(); }
@@ -62,7 +63,6 @@ namespace app {
 
 			Game& GetGame(void) { return game; }
 			const Game& GetGame(void) const { return game; }
-
 			virtual void Clear(void) = 0;
 			void Main(void) {
 				Initialise();

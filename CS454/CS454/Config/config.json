@@ -1,0 +1,27 @@
+{
+  "engine": {
+    "Render": {
+      "RenderWindow": {
+        "render_w_w": 640,
+        "render_w_h": 380
+      },
+      "ViewWindow": {
+        "view_win_w": 640,
+        "view_win_h": 380,
+        "view_scale": 2
+      }
+    },
+    "map": {
+      "properties": {
+        "pixel_width": 336,
+        "pixel_height": 672,
+        "map_columns" : 12,
+        "map_rows" : 21
+      },
+      "tiles": {
+        "tileset" : "overworld_tileset_grass.png",
+        "text_map":"map1_Kachelebene_1.csv"
+      }
+    }
+  }
+}
