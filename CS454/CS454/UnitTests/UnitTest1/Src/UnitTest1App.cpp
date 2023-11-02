@@ -10,6 +10,105 @@ Render* render_vars;
 
 bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
+std::map<int, bool>pressed_keys;
+std::map<int, bool>released_keys;
+
+
+void disable_pr() {
+	std::map<int, bool>::iterator pr_it;
+	for (pr_it = pressed_keys.begin(); pr_it != pressed_keys.end(); pr_it++) {
+		pr_it->second = false;
+	}
+}
+
+void update_keys() {
+	std::map<int, bool>::iterator pr_it;
+
+	for (auto it : released_keys) {
+		if (it.second) {
+			pr_it = pressed_keys.find(it.first);
+			pr_it->second = false;
+			auto val = released_keys.find(it.first);
+			val->second = false;
+		}
+	}
+
+}
+
+
+void update_released(Sint32 code, bool state) {
+	std::map<int, bool>::iterator it = released_keys.find(code);
+	if (it != released_keys.end())
+		it->second = state;
+}
+
+void update_press(Sint32 code,bool state) {
+			
+	
+	std::map<int, bool>::iterator it = pressed_keys.find(code);
+	
+	if (it != pressed_keys.end()) {
+		it->second = state;
+	}
+
+}
+
+void move_tiles_x(int tiles){
+	int scroll_dist = MUL_TILE_WIDTH(tiles);
+	if (CanScrollHoriz((render_vars->ViewWindowR), scroll_dist))
+		Scroll(&(render_vars->ViewWindowR), scroll_dist, 0);
+}
+
+void move_tiles_y(int tiles) {
+	int scroll_dist = MUL_TILE_WIDTH(tiles);
+	if (CanScrollVert((render_vars->ViewWindowR), scroll_dist))
+		Scroll(&(render_vars->ViewWindowR), 0, scroll_dist);
+}
+
+void move_pixels_x(int pixels) {
+	if (CanScrollVert((render_vars->ViewWindowR), pixels))
+		Scroll(&(render_vars->ViewWindowR), pixels, 0);
+}
+
+
+void move_pixels_y(int pixels) {
+	if (CanScrollVert((render_vars->ViewWindowR), pixels))
+		Scroll(&(render_vars->ViewWindowR), 0, pixels);
+}
+
+void move() {
+	for (auto it : pressed_keys) {
+		if (it.second) {
+			switch (it.first)
+			{
+
+			case SDL_KeyCode::SDLK_UP:
+				move_tiles_y(-1);
+				break;
+			case SDL_KeyCode::SDLK_DOWN:
+				move_pixels_y(1);
+				break;
+			case SDL_KeyCode::SDLK_LEFT:
+				move_tiles_x(-1);
+				break;
+			case SDL_KeyCode::SDLK_RIGHT:
+				move_tiles_x(1);
+				break;
+			case SDLK_HOME:
+				render_vars->ViewWindowR.x = 0;
+				render_vars->ViewWindowR.y = 0;
+				break;
+			case SDLK_END:
+				render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - render_vars->ViewWindowR.w;
+				render_vars->ViewWindowR.y = MUL_TILE_HEIGHT(GetMapData()->size()) - render_vars->ViewWindowR.h;
+				break;
+			default:
+				break;
+			}
+		}
+			
+	}
+}
 
 void myInput() {
 	int CameraPosX, CameraPosY;
@@ -17,8 +116,8 @@ void myInput() {
 	
 	SDL_Event event;
 	const Uint8* keys = SDL_GetKeyboardState((int*)0);
-	while (SDL_PollEvent(&event)) {
-		
+	while (SDL_PollEvent(&event)) {  
+		 
 		switch (event.type) {
 			
 		case SDL_MOUSEMOTION:
@@ -45,41 +144,27 @@ void myInput() {
 				mouse_down = false; // i realesed it
 			}
 			break;
+
 		case SDL_KEYDOWN:
-			switch (event.key.keysym.sym) {
-			case SDLK_DOWN:
-				ScrollWithBoundsCheck(&(render_vars->ViewWindowR), 0, 8);
-				break;
-			case SDLK_UP:
-				ScrollWithBoundsCheck(&(render_vars->ViewWindowR), 0, -8);
-				break;
-			case SDLK_LEFT:
-				ScrollWithBoundsCheck(&(render_vars->ViewWindowR), -8, 0);
-				break;
-			case SDLK_RIGHT:
-				ScrollWithBoundsCheck(&(render_vars->ViewWindowR), 8, 0);
-				break;
-			case SDLK_HOME:
-				render_vars->ViewWindowR.x = 0;
-				render_vars->ViewWindowR.y = 0;
-				break;
-			case SDLK_END:
-				render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - render_vars->ViewWindowR.w;
-				render_vars->ViewWindowR.y = MUL_TILE_HEIGHT(GetMapData()->size()) - render_vars->ViewWindowR.h;
-				break;
-			default:
-				break;
-			}
+			update_press(event.key.keysym.sym, true);
 			break;
-			
 		case SDL_QUIT:
 			is_running = false;
+			break;
+		
+		case SDL_KEYUP:
+			update_released(event.key.keysym.sym, true);
 			break;
 		default:
 			break;
 		}
+
 	}
-	
+
+	move();
+	disable_pr();
+	//update_keys();
+
 }
 
 void myRender() {
@@ -96,7 +181,21 @@ bool myDone() {
 
 
 
+void init_key_map() {
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_LEFT, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_RIGHT, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_HOME, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_END, false));
+	
 
+
+
+
+	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
+	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
+}
 
 
 
@@ -111,7 +210,7 @@ void ZeldaApp::Initialise(void) {
 		view_w = get_config_value<int>(render, "view_win_w");
 		view_h = get_config_value<int>(render, "view_win_h");
 		std::cout << "Subsystems Initialised!..." << std::endl;
-		render_vars = new Render(0,0,view_w/scale, view_h /scale);
+		render_vars = new Render(0,0,view_w, view_h,scale);
 		int win_w, win_h;
 		win_w = get_config_value<int>(render, "render_w_w");
 		win_h = get_config_value<int>(render, "render_w_h");
@@ -126,8 +225,7 @@ void ZeldaApp::Initialise(void) {
 		}
 	}
 
-
-	
+	init_key_map();
 	pre_cache();
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::string find_first_part_path = cwd.string();
