@@ -20,6 +20,7 @@ typedef struct Render {
 	SDL_Rect ViewWindowR;
 	SDL_Texture* Tileset;
 	SDL_Texture* RenderTextureTarget;
+	
 	int view_scale;
 
 	Render(int x, int y, int w, int h,int scale) :

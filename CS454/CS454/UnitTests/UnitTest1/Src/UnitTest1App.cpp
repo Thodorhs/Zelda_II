@@ -83,16 +83,16 @@ void move() {
 			{
 
 			case SDL_KeyCode::SDLK_UP:
-				move_tiles_y(-1);
+				move_pixels_y(-1);
 				break;
 			case SDL_KeyCode::SDLK_DOWN:
 				move_pixels_y(1);
 				break;
 			case SDL_KeyCode::SDLK_LEFT:
-				move_tiles_x(-1);
+				move_pixels_x(-1);
 				break;
 			case SDL_KeyCode::SDLK_RIGHT:
-				move_tiles_x(1);
+				move_pixels_x(1);
 				break;
 			case SDLK_HOME:
 				render_vars->ViewWindowR.x = 0;

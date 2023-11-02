@@ -17,14 +17,14 @@ void pre_cache(void) {
 int GetScale() { return get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale"); }
 void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
 
-	PTsrcrect.y = MUL_TILE_HEIGHT(div_index[tile]);
 	PTsrcrect.x = MUL_TILE_WIDTH(mod_index[tile]);
+	PTsrcrect.y = MUL_TILE_HEIGHT(div_index[tile]);
 	//std::cout << "y : " << div_index[tile]/16<<" tile:"<<tile<<"\n";
 
 	PTsrcrect.h = PTsrcrect.w = 16;
 
 	PTdstrect.x = x+dpyX;
-	PTdstrect.y = y+dpyY;
+	PTdstrect.y = y-dpyY;
 	PTdstrect.h = PTdstrect.w = 16;
 	SDL_RenderCopy(myrenderer, texture, &PTsrcrect, &PTdstrect); //Same as SDL_BlitSurface but uses the gpu so its faster
 }
