@@ -50,7 +50,7 @@ public:
 	unsigned GetTileWidth(void) const { return DIV_TILE_WIDTH(viewWin.w); }
 	unsigned GetTileHeight(void) const { return DIV_TILE_HEIGHT(viewWin.h); }
 
-	void Display(SDL_Surface* ImgSurface, SDL_Renderer* myrenderer, SDL_Texture* PrevLayerBuffer, bool FinalLayer);
+	void Display(SDL_Surface* ImgSurface, SDL_Renderer* myrenderer, SDL_Texture* PrevLayerBuffer, bool FinalLayer, SDL_Texture* Tileset, SDL_Texture* dpy_text);
 	const SDL_Point Pick(Dim x, Dim y) const;
 
 	void ScrollWithBoundsCheck(float& dx, float dy);
