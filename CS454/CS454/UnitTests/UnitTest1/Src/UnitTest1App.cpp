@@ -7,22 +7,23 @@
 
 
 Render* render_vars;
+Engine_Consts_t Engine_Consts;
 
 bool is_running; //used by done()
 bool mouse_down=false; //bool to check if i hold down the the left click
-std::map<int, bool>pressed_keys;
-std::map<int, bool>released_keys;
+KEY_MAP_t pressed_keys;
+KEY_MAP_t released_keys;
 
 
 void disable_pr() {
-	std::map<int, bool>::iterator pr_it;
+	KEY_MAP_t::iterator pr_it;
 	for (pr_it = pressed_keys.begin(); pr_it != pressed_keys.end(); pr_it++) {
 		pr_it->second = false;
 	}
 }
 
 void update_keys() {
-	std::map<int, bool>::iterator pr_it;
+	KEY_MAP_t::iterator pr_it;
 
 	for (auto it : released_keys) {
 		if (it.second) {
@@ -37,7 +38,7 @@ void update_keys() {
 
 
 void update_released(Sint32 code, bool state) {
-	std::map<int, bool>::iterator it = released_keys.find(code);
+	KEY_MAP_t::iterator it = released_keys.find(code);
 	if (it != released_keys.end())
 		it->second = state;
 }
@@ -45,7 +46,7 @@ void update_released(Sint32 code, bool state) {
 void update_press(Sint32 code,bool state) {
 			
 	
-	std::map<int, bool>::iterator it = pressed_keys.find(code);
+	KEY_MAP_t::iterator it = pressed_keys.find(code);
 	
 	if (it != pressed_keys.end()) {
 		it->second = state;
@@ -54,13 +55,13 @@ void update_press(Sint32 code,bool state) {
 }
 
 void move_tiles_x(int tiles){
-	int scroll_dist = MUL_TILE_WIDTH(tiles);
+	int scroll_dist = MUL_TILE_WIDTH(tiles,Engine_Consts.power);
 	if (CanScrollHoriz((render_vars->ViewWindowR), scroll_dist))
 		Scroll(&(render_vars->ViewWindowR), scroll_dist, 0);
 }
 
 void move_tiles_y(int tiles) {
-	int scroll_dist = MUL_TILE_WIDTH(tiles);
+	int scroll_dist = MUL_TILE_WIDTH(tiles,Engine_Consts.power);
 	if (CanScrollVert((render_vars->ViewWindowR), scroll_dist))
 		Scroll(&(render_vars->ViewWindowR), 0, scroll_dist);
 }
@@ -99,8 +100,8 @@ void move() {
 				render_vars->ViewWindowR.y = 0;
 				break;
 			case SDLK_END:
-				render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size()) - render_vars->ViewWindowR.w;
-				render_vars->ViewWindowR.y = MUL_TILE_HEIGHT(GetMapData()->size()) - render_vars->ViewWindowR.h;
+				render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size(),Engine_Consts.power) - render_vars->ViewWindowR.w;
+				render_vars->ViewWindowR.y = MUL_TILE_HEIGHT(GetMapData()->size(),Engine_Consts.power) - render_vars->ViewWindowR.h;
 				break;
 			default:
 				break;
@@ -197,6 +198,36 @@ void init_key_map() {
 	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
 }
 
+#include <cmath>
+Dim get_2_power(Dim w,Dim h){
+	assert(w == h && (~(w & (w-1)))); // assert that dims are powers of two
+	return (Dim)log2(w);
+}
+
+void init_engine_constants() {
+	int px_h, px_w;
+	Dim tile_h, tile_w, grid_el_w, grid_el_h;
+	configurators_t map = configurators_t::MAP_CONFIG;
+
+	px_h = get_config_value<int>(map, "pixel_height");
+	px_w = get_config_value<int>(map, "pixel_width");
+
+	tile_h = get_config_value<int>(map, "tile_height");
+	tile_w = get_config_value<int>(map, "tile_width");
+
+	grid_el_h = get_config_value<int>(map, "Grid_el_w");
+	grid_el_w = get_config_value<int>(map, "Grid_el_h");
+
+	Dim power_tiles = get_2_power(tile_h, tile_w);
+	Dim power_grid = get_2_power(grid_el_h, grid_el_w);
+
+	Engine_Consts.Map_height = px_h;
+	Engine_Consts.Map_width = px_w;
+	Engine_Consts.Tile_height = tile_h;
+	Engine_Consts.Tile_width = tile_w;
+	Engine_Consts.power = power_tiles;
+	Engine_Consts.grid_power = power_grid;
+}
 
 
 void ZeldaApp::Initialise(void) {
@@ -211,9 +242,11 @@ void ZeldaApp::Initialise(void) {
 		view_h = get_config_value<int>(render, "view_win_h");
 		std::cout << "Subsystems Initialised!..." << std::endl;
 		render_vars = new Render(0,0,view_w, view_h,scale);
-		int win_w, win_h;
+		int win_w, win_h; 
 		win_w = get_config_value<int>(render, "render_w_w");
 		win_h = get_config_value<int>(render, "render_w_h");
+		init_engine_constants();
+
 		render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, 0);
 		if (render_vars->Gwindow) std::cout << "Window created!" << std::endl;
 
@@ -224,6 +257,7 @@ void ZeldaApp::Initialise(void) {
 			std::cout << "Renderer created!" << std::endl;
 		}
 	}
+
 
 	init_key_map();
 	pre_cache();

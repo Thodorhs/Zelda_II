@@ -46,12 +46,22 @@ void parse_test(std::map<std::string, std::any>& data) {
    
 	json js = json::parse(f);
 
-
+    /*
     auto prop = js["engine"]["map"]["properties"].items();
 
     update_map(data, prop);
     prop = js["engine"]["map"]["tiles"].items();
     update_map(data, prop);
+
+    prop = js["engine"]["map"]["Grid"].items();
+    update_map(data, prop);
+    */
+    for (auto prop : js["engine"]["map"].items()) {
+        auto ins = js["engine"]["map"][prop.key()].items();
+        update_map(data, ins);
+    }
+
+
     f.close();
 
     

@@ -15,12 +15,18 @@
       "properties": {
         "pixel_width": 336,
         "pixel_height": 672,
-        "map_columns" : 12,
-        "map_rows" : 21
+        "map_columns" : 21,
+        "map_rows" : 42
       },
       "tiles": {
         "tileset" : "overworld_tileset_grass.png",
-        "text_map":"map1_Kachelebene_1.csv"
+        "text_map":"map1_Kachelebene_1.csv",
+        "tile_height" : 16,
+        "tile_width"  : 16
+      },
+      "Grid" : {
+        "Grid_el_w" : 16, //1:1 me 16
+        "Grid_el_h" : 16
       }
     }
   }

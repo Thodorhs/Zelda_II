@@ -4,7 +4,7 @@
 #include <fstream>
 #include <iostream>
 #include "../Include/MapEditor.h"
-
+#include "../Include/Util/EngineDefines.h"
 
 void SetTile(Dim col, Dim row, Index index)
 { MapData[row][col] = index; }
@@ -27,21 +27,27 @@ void WriteTextMap(const TileMap*, FILE* fp) {
 
 
 void ReadTextMap(const std::string path) {
-	std::vector<Index> row;
+	
 	std::string line, word;
 	std::fstream file(path, std::ios::in);
+	uint64_t line_idx = 0;
+	uint64_t word_idx = 0;
 
 	if (file.is_open())
 	{
 		while (getline(file, line))
 		{
-			row.clear();
+			std::vector<Index> row(MAX_WIDTH, 0);
 
 			std::stringstream str(line);
 
-			while (getline(str, word, ','))
-				row.push_back(stoi(word));
-			MapData.push_back(row);
+			while (getline(str, word, ',')) {
+				row.insert(row.begin()+word_idx,stoi(word));
+				word_idx++;
+			}
+			word_idx = 0;
+			MapData.insert(MapData.begin() + line_idx, row);
+			line_idx++;
 		}
 	}
 	else std::cout << "Could not open the file\n";
@@ -55,9 +61,9 @@ void ClearMap() {
 }
 
 void print() {
-	for (auto it : MapData) {
-		for (int i = 0; i < it.size(); i++) {
-			std::cout << it[i];
+	for (auto i = 0; i < Engine_Consts.map_rows; i++) {
+		for (auto j = 0; j < Engine_Consts.map_cols; j++) {
+			std::cout << MapData[i][j];
 		}
 		std::cout << std::endl;
 	}
