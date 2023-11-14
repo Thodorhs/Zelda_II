@@ -28,17 +28,24 @@
 (GRID_ELEMENTS_PER_TILE * sizeof(GridIndex))
 
 typedef std::vector<std::vector<GridIndex>> GridMap;
+typedef struct grid_block {
+	Dim row,col;
+	std::vector<Index> els;
+};
+typedef std::vector<std::vector<grid_block>> S_Grid_Map;
 
 class _Grid_ {
 	
 private:
 	
 		GridMap grid;
+		S_Grid_Map grid_test;
 		Index empty = 61;
 		Index empty_tiles[20] = { 61,48,49,50,60,62,72,73,74,84,85,96,97,16,28,40 };
 public:
 
 		GridMap& get_grid() { return grid; }
+		S_Grid_Map& get_s_grid() { return grid_test; }
 		Index get_empty() { return empty; }
 
 		inline int grid_block_columns();
@@ -51,6 +58,7 @@ public:
 		 _Grid_();
 
 		GridIndex GetGridTileBlock(Dim colTile, Dim rowTile);
+		grid_block GetGridTileBlock_2(Dim rowTile, Dim colTile);
 		
 		void print_grid();
 };
@@ -72,3 +80,5 @@ bool CanPassGridTile(GridMap* m, Dim col, Dim row, GridIndex flags);
 void ComputeTileGridBlocks1(const TileMap* map,std::unique_ptr<_Grid_>&grid_cl);
 
 void DisplayGrid(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl);
+void DisplayGrid_2(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl, int scale);
+void ComputeTileGridBlocks1_5(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl);

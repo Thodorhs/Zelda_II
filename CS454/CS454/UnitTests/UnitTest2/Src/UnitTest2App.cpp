@@ -12,6 +12,7 @@ Engine_Consts_t Engine_Consts;
 
 bool is_running; //used by done()
 bool mouse_down = false; //bool to check if i hold down the the left click
+bool display_grid = false;
 KEY_MAP_t pressed_keys;
 KEY_MAP_t released_keys;
 std::unique_ptr<_Grid_> grid_class;
@@ -152,6 +153,8 @@ void myInput() {
 			break;
 
 		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_g)
+				display_grid = !display_grid;
 			update_press(event.key.keysym.sym, true);
 			break;
 		case SDL_QUIT:
@@ -173,11 +176,23 @@ void myInput() {
 
 }
 
+#define _GRID_2
+
+void show_grid() {
+	#ifdef _GRID_2
+		DisplayGrid_2(render_vars->ViewWindowR, render_vars->myrenderer, grid_class,render_vars->view_scale);
+	#else
+		DisplayGrid(render_vars->ViewWindowR, render_vars->myrenderer, grid_class);
+	#endif
+}
+
+
 void myRender() {
 	SDL_RenderClear(render_vars->myrenderer);
 	
 	TileTerrainDisplay(GetMapData(), render_vars->ViewWindowR, { 0, 0,-1,0 }, render_vars->myrenderer, render_vars->Tileset, render_vars->RenderTextureTarget);
-	DisplayGrid(render_vars->ViewWindowR, render_vars->myrenderer, grid_class);
+	if(display_grid)
+		show_grid();
 	SDL_RenderPresent(render_vars->myrenderer);
 
 }
@@ -196,10 +211,7 @@ void init_key_map() {
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_RIGHT, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_HOME, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_END, false));
-
-
-
-
+	
 
 	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
 	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
@@ -244,7 +256,11 @@ void init_engine_constants() {
 	
 }
 void fill_grid() {
-	ComputeTileGridBlocks1(GetMapData(), grid_class);
+	#ifdef _GRID_2
+		ComputeTileGridBlocks1_5(GetMapData(), grid_class);
+	#else
+		ComputeTileGridBlocks1(GetMapData(), grid_class);
+	#endif	
 }
 
 
