@@ -127,23 +127,26 @@ void myInput() {
 			if (mouse_down) { // if i am holding down the left click button and i am moving it then scroll..
 				int offsetX = 0, offsetY = 0;
 				SDL_GetMouseState(&CameraPosX, &CameraPosY);
-				if (CameraPosX - PrevCameraPosX > 0) offsetX = 1;
+				if (CameraPosX - PrevCameraPosX > 0) offsetX = 1;  
 				else if (CameraPosX - PrevCameraPosX < 0) offsetX = -1;
-
+				move_pixels_x(offsetX);
 				if (CameraPosY - PrevCameraPosY > 0) offsetY = 1;
 				else if (CameraPosY - PrevCameraPosY < 0) offsetY = -1;
-
-				ScrollWithBoundsCheck(&render_vars->ViewWindowR, offsetX, offsetY);
-				PrevCameraPosX, PrevCameraPosY = CameraPosX, CameraPosY;
+				move_pixels_y(offsetY);
+				//ScrollWithBoundsCheck(&render_vars->ViewWindowR, offsetX, offsetY);
+				
 			}
 			break;
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				mouse_down = true; // i'am holding it down so set it true
+				SDL_GetMouseState(&PrevCameraPosX, &PrevCameraPosY);
 			}
 			break;
 		case SDL_MOUSEBUTTONUP:
 			if (event.button.button == SDL_BUTTON_LEFT) {
+				//PrevCameraPosY = 0;
+				//PrevCameraPosX = 0;
 				mouse_down = false; // i realesed it
 			}
 			break;
@@ -172,7 +175,9 @@ void myInput() {
 
 void myRender() {
 	SDL_RenderClear(render_vars->myrenderer);
+	
 	TileTerrainDisplay(GetMapData(), render_vars->ViewWindowR, { 0, 0,-1,0 }, render_vars->myrenderer, render_vars->Tileset, render_vars->RenderTextureTarget);
+	DisplayGrid(render_vars->ViewWindowR, render_vars->myrenderer, grid_class);
 	SDL_RenderPresent(render_vars->myrenderer);
 
 }
@@ -236,12 +241,10 @@ void init_engine_constants() {
 	
 	grid_class = std::make_unique<_Grid_>();
 	
-	//grid_class->print_grid();
+	
 }
-void init_grid() {
+void fill_grid() {
 	ComputeTileGridBlocks1(GetMapData(), grid_class);
-	grid_class->print_grid();
-
 }
 
 
@@ -286,7 +289,7 @@ void ZeldaApp::Initialise(void) {
 
 	ReadTextMap(full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map"));
 	render_vars->ImgSurface = IMG_Load((full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
-	init_grid();
+	fill_grid();
 	std::cout << " w=" << render_vars->ImgSurface->w << " h=" << render_vars->ImgSurface->h << std::endl;
 	render_vars->Tileset = SDL_CreateTextureFromSurface(render_vars->myrenderer, render_vars->ImgSurface);
 	//SDL_FreeSurface(render_vars->ImgSurface);

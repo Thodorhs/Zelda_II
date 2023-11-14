@@ -14,7 +14,6 @@ void pre_cache(void) {
 }
 
 
-int GetScale() { return get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale"); }
 void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
 	
 	PTsrcrect.x = MUL_TILE_WIDTH(mod_index[tile],Engine_Consts.power);
@@ -50,7 +49,7 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 
 		SDL_SetRenderTarget(myrenderer, NULL); //Unsetting the target of SDL_RenderCopy (now the target is the screen render)
 	}
-	int scale = GetScale();
+	int scale = get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale");
 	PTdstrect.x = 0;
 	PTdstrect.y = 0;
 	PTdstrect.h = viewWin.h*scale;
@@ -63,14 +62,12 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 
 int GetMapPixelWidth()
 {
-	//return get_config_value<int>(configurators_t::MAP_CONFIG, "pixel_width");
-	return Engine_Consts.Map_width;
+	return Engine_Consts.Map_width ;
 }
 
 int GetMapPixelHeight()
 {
-	//return get_config_value<int>(configurators_t::MAP_CONFIG, "pixel_height");
-	return Engine_Consts.Map_width;
+	return Engine_Consts.Map_height;
 }
 
 void Scroll(SDL_Rect* viewWin, int dx, int dy)
