@@ -166,7 +166,7 @@ void DisplayGrid_2(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<
 			for (int i = 0; i < grid_rows; i++){
 				for (int j = 0; j < grid_cols; j++) {
 					if (elements[i * grid_rows + j] & GRID_SOLID_TILE) {
-						SDL_Rect gridRect;
+						SDL_Rect gridRect = { 0,0,0,0 };
 						
 						gridRect.x = ((sx + MUL_GRID_ELEMENT_WIDTH(j, Engine_Consts.grid_power) - dpyX)) * scale;
 						gridRect.y = ((sy + MUL_GRID_ELEMENT_HEIGHT(i, Engine_Consts.grid_power) - dpyY)) * scale;
