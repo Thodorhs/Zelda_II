@@ -82,17 +82,7 @@ GridIndex _Grid_::GetGridTileBlock(Dim rowTile, Dim colTile) {
 }								    								
 
 
-grid_block _Grid_::GetGridTileBlock_2(Dim rowTile, Dim colTile) {
-	S_Grid_Map::iterator row;
-	std::vector<grid_block>::iterator column;
-	for (row = grid_test.begin(); row != grid_test.end(); row++) {
-		for (column = row->begin(); column != row->end(); column++) {
-			if (column->col == colTile && column->row == rowTile)
-				return { column->row,column->col,column->els };
-		}
-	}
-	return (grid_block)NULL;
-}
+grid_block _Grid_::GetGridTileBlock_2(Dim rowTile, Dim colTile) {return grid_test[rowTile][colTile];}
 
 
 _Grid_::_Grid_()
