@@ -2,12 +2,17 @@
 #include <iostream>
 #include <functional>
 #include <vector>
+#include <ctime>
 
 namespace app {
 	class Game { // app::Game namespace, the mother application
 		public:
 			using Action = std::function<void(void)>;
 			using Pred = std::function<bool(void)>;
+			clock_t deltaTime = 0;
+			unsigned int frames = 0;
+			double  frameRate = 30;
+			double  averageFrameTimeMilliseconds = 33.333;
 		private:
 			Action render, anim, input, ai, physics, destruct, collisions, user, pauseResume;
 			Pred done;
@@ -43,10 +48,11 @@ namespace app {
 			void Physics(void) { Invoke(physics); }
 			void CollisionChecking(void) { Invoke(collisions); }
 			void CommitDestructions(void) { Invoke(destruct); }
-			//void UserCode(void) { Invoke(user); }
+			void UserCode(void) { Invoke(user); }
 			bool IsFinished(void) const { return !done(); }
 			void MainLoop(void);
 			void MainLoopIteration(void);
+			double clockToMilliseconds(clock_t ticks){ return (ticks / (double)CLOCKS_PER_SEC) * 1000.0; }
 	};
 
 
