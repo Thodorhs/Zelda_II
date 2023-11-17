@@ -18,7 +18,7 @@ using json_serialized = nlohmann::json_abi_v3_11_2::detail::iteration_proxy
 
 void update_map(std::map<std::string, std::any>& data, json_serialized prop) {
     for (auto it : prop) {
-
+        
         std::any val;
         if (it.value().is_number_integer()) {
             val = it.value().get<int>();
@@ -35,7 +35,7 @@ void update_map(std::map<std::string, std::any>& data, json_serialized prop) {
         std::pair<std::string, std::any> pair = std::make_pair(it.key(), val);
         data.insert(pair);
     }
-        
+         
 }
     
 
@@ -46,24 +46,11 @@ void parse_test(std::map<std::string, std::any>& data) {
    
 	json js = json::parse(f);
 
-    /*
-    auto prop = js["engine"]["map"]["properties"].items();
-
-    update_map(data, prop);
-    prop = js["engine"]["map"]["tiles"].items();
-    update_map(data, prop);
-
-    prop = js["engine"]["map"]["Grid"].items();
-    update_map(data, prop);
-    */
     for (auto prop : js["engine"]["map"].items()) {
         auto ins = js["engine"]["map"][prop.key()].items();
         update_map(data, ins);
     }
-
-
     f.close();
-
     
 }
 
@@ -73,14 +60,10 @@ void parse_render(std::map<std::string, std::any>& data) {
     auto f = get_json_file();
     json js = json::parse(f);
 
-
-    auto prop = js["engine"]["Render"]["RenderWindow"].items();
-
-    update_map(data, prop);
-
-    prop = js["engine"]["Render"]["ViewWindow"].items();
-
-    update_map(data, prop);
+    for (auto prop : js["engine"]["Render"].items()) {
+        auto ins = js["engine"]["Render"][prop.key()].items();
+        update_map(data, ins);
+    }
     f.close();
    
 }

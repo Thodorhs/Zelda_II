@@ -25,8 +25,8 @@
         "tile_width"  : 16
       },
       "Grid" : {
-        "Grid_el_w" : 16,
-        "Grid_el_h" : 16
+        "Grid_el_w" : 8,
+        "Grid_el_h" : 8
       }
     }
   }

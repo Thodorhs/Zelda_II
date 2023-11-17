@@ -81,13 +81,42 @@ GridIndex _Grid_::GetGridTileBlock(Dim rowTile, Dim colTile) {
 	return grid[rowTile][colTile];  
 }								    								
 
+
+grid_block _Grid_::GetGridTileBlock_2(Dim rowTile, Dim colTile) {return grid_test[rowTile][colTile];}
+
+
 _Grid_::_Grid_()
 {
 	grid = GridMap(grid_max_height(), std::vector<GridIndex>(grid_max_width(), 0));
+	grid_test = S_Grid_Map(grid_max_height(), std::vector<grid_block>(grid_max_width()));
 }
 
 
-
+void ComputeTileGridBlocks1_5(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl) {
+	Index grid_idx = 0;
+	Index grid_col = 0;
+	Dim col;
+	Dim row;
+	S_Grid_Map& grid = grid_cl->get_s_grid();
+	for (row = 0; row < Engine_Consts.map_rows; row++) {
+		std::vector<grid_block>& gr_row = grid[grid_idx];
+		grid_col = 0;
+		for (col = 0; col < Engine_Consts.map_cols; col++) {
+			Index tile = GetTile(col, row);
+			int count = 0;
+			std::vector<Index>elements;
+			for (auto el =0; el < grid_cl->grid_elements_per_tile(); el++) {
+				elements.push_back(IsTileIndexAssumedEmpty(grid_cl, tile) ?
+					GRID_EMPTY_TILE : GRID_SOLID_TILE);
+				
+			}
+			grid_block gb{ row,col,elements};
+			gr_row.insert(gr_row.begin() + col, gb);
+			
+		}
+		grid_idx++;
+	}
+}
 //END OF CLASS FUNCS
 //!!WHEN VECTOR IS ALLOCATED USE INSERT!!!!!!//// FUAAA GIATIII
 void ComputeTileGridBlocks1(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl) {
@@ -114,8 +143,46 @@ void ComputeTileGridBlocks1(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl
 }
 #include "../Include/Util/ConfigFuncs.h"
 
+void DisplayGrid_2(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl,int scale) {
+	
+	auto startCol = DIV_TILE_WIDTH(viewWin.x, Engine_Consts.power);
+	auto startRow = DIV_TILE_HEIGHT(viewWin.y, Engine_Consts.power);
+	auto endCol = DIV_TILE_WIDTH(viewWin.x + viewWin.w - 1, Engine_Consts.power);
+	auto endRow = DIV_TILE_HEIGHT(viewWin.y + viewWin.h - 1, Engine_Consts.power);
+	auto dpyX = MOD_TILE_WIDTH(viewWin.x, Engine_Consts.Tile_width);
+	auto dpyY = MOD_TILE_WIDTH(viewWin.y, Engine_Consts.Tile_height);
+	int grid_rows =  grid_cl->grid_block_rows();
+	int grid_cols = grid_cl->grid_block_columns();
+	
+	Dim space = 1; //space between grid elements 
+
+	for (Dim rowTile = startRow; rowTile <= endRow; ++rowTile) {
+		for (Dim colTile = startCol; colTile <= endCol; ++colTile) {
+			auto block = grid_cl->GetGridTileBlock_2(rowTile, colTile);
+			std::vector<Index> elements = block.els;
+			auto sx = MUL_TILE_WIDTH(colTile - startCol,Engine_Consts.power);
+			auto sy = MUL_TILE_HEIGHT(rowTile - startRow,Engine_Consts.power);
+			
+			for (int i = 0; i < grid_rows; i++){
+				for (int j = 0; j < grid_cols; j++) {
+					if (elements[i * grid_rows + j] & GRID_SOLID_TILE) {
+						SDL_Rect gridRect = { 0,0,0,0 };
+						
+						gridRect.x = ((sx + MUL_GRID_ELEMENT_WIDTH(j, Engine_Consts.grid_power) - dpyX)) * scale;
+						gridRect.y = ((sy + MUL_GRID_ELEMENT_HEIGHT(i, Engine_Consts.grid_power) - dpyY)) * scale;
+						gridRect.w = (Engine_Consts.Grid_el_sz - space) * scale;
+						gridRect.h = (Engine_Consts.Grid_el_sz - space) * scale;
+
+						SDL_RenderDrawRect(myrenderer, &gridRect);
+					}
+				}
+			}
+		}
+	}
+}
 
 void DisplayGrid(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl) {
+	
 	auto startCol = DIV_TILE_WIDTH(viewWin.x, Engine_Consts.power);
 	auto startRow = DIV_TILE_HEIGHT(viewWin.y, Engine_Consts.power);
 	auto endCol = DIV_TILE_WIDTH(viewWin.x + viewWin.w - 1, Engine_Consts.power);
