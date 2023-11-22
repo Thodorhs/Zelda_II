@@ -1,13 +1,13 @@
 #include "../Include/Grid/Grid.h"
 
 bool IsTileIndexAssumedEmpty(std::unique_ptr<_Grid_>& grid_cl, Index index) {
-	//return index == grid_cl->get_empty();
-	auto tiles = grid_cl->get_emp_tiles();
-	for (int i=0; i <16; i++) {
-		if (tiles[i] == index)
-			return true;
-	}
-	return false;
+	return index != grid_cl->get_empty();
+	//auto tiles = grid_cl->get_emp_tiles();
+	//for (int i=0; i <16; i++) {
+		//if (tiles[i] == index)
+			//return true;
+	//}
+	//return false;
 
 }
 
@@ -143,7 +143,7 @@ void ComputeTileGridBlocks1(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl
 }
 #include "../Include/Util/ConfigFuncs.h"
 
-void DisplayGrid_2(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl,int scale) {
+void DisplayGrid_2(const SDL_Rect& viewWin, SDL_Renderer* myrenderer,const std::unique_ptr<_Grid_>& grid_cl,const int scale) {
 	
 	auto startCol = DIV_TILE_WIDTH(viewWin.x, Engine_Consts.power);
 	auto startRow = DIV_TILE_HEIGHT(viewWin.y, Engine_Consts.power);

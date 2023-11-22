@@ -3,7 +3,7 @@
 #include "GridMotion.h"
 #include "GridCompute.h"
 //#include "../../../Engine/Include/GridCompute2.h"
-
+/*
 class GridLayer {
 private:
 	GridIndex* grid = nullptr;
@@ -31,4 +31,4 @@ public:
 	//const GridIndex*& GetBuffer(void) const { return grid; }
 	GridLayer();
 	GridLayer(unsigned rows, unsigned cols);
-};
+};*/

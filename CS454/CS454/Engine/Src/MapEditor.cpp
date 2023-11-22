@@ -42,11 +42,13 @@ void ReadTextMap(const std::string path) {
 			std::stringstream str(line);
 
 			while (getline(str, word, ',')) {
-				row.insert(row.begin()+word_idx,stoi(word));
+				row[word_idx] = stoi(word);
+				//row.insert(row.begin()+word_idx,stoi(word));
 				word_idx++;
 			}
 			word_idx = 0;
-			MapData.insert(MapData.begin() + line_idx, row);
+			//MapData.insert(MapData.begin() + line_idx, row);
+			MapData[line_idx] = row;
 			line_idx++;
 		}
 	}

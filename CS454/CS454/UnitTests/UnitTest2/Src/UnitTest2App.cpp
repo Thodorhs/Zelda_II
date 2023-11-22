@@ -1,13 +1,27 @@
 #include "../../../Engine/Include/ZeldaApp.h"
-#include "../../../Engine/Include/ViewWindow.h"
+//#include "../../../Engine/Include/ViewWindow.h"
 #include <filesystem>
 //#include "../../../Engine/Include/Util/ConfiguratorManager.h"
 
-#include "../../../Engine/Include/Util/ConfigFuncs.h"
+//#include "../../../Engine/Include/Util/ConfigFuncs.h"
 #include "../../../Engine/Include/Grid/Grid.h"
+#include "../../../Engine/Include/TileLayer.h"
+int TIMER_INTERVAL = 100;
+Uint64 last = 0;
+Uint64 curr;
+
+std::unique_ptr<TileLayer> Action_Layer;
+std::unique_ptr<TileLayer> Horizon_Layer;
+std::unique_ptr<TileLayer> Backround_Layer;
 
 
-Render* render_vars;
+
+
+Render* global_render_vars;
+Render* render_vars_horizon;
+Render* render_vars_backround;
+
+
 Engine_Consts_t Engine_Consts;
 
 bool is_running; //used by done()
@@ -57,27 +71,43 @@ void update_press(Sint32 code, bool state) {
 
 }
 
+void move_horizon() {
+	
+	Horizon_Layer->scroll_horizon(1);
+		//Horizon_Layer->set_dpy_changed();
+	Action_Layer->ScrollWithBoundsCheck(0, 0);
+	Backround_Layer->ScrollWithBoundsCheck(0, 0);
+	
+}
+
 void move_tiles_x(int tiles) {
 	int scroll_dist = MUL_TILE_WIDTH(tiles, Engine_Consts.power);
-	if (CanScrollHoriz((render_vars->ViewWindowR), scroll_dist))
-		Scroll(&(render_vars->ViewWindowR), scroll_dist, 0);
+	if (CanScrollHoriz((global_render_vars->ViewWindowR), scroll_dist)) 
+		Scroll(&(global_render_vars->ViewWindowR), scroll_dist, 0);
 }
 
 void move_tiles_y(int tiles) {
 	int scroll_dist = MUL_TILE_WIDTH(tiles, Engine_Consts.power);
-	if (CanScrollVert((render_vars->ViewWindowR), scroll_dist))
-		Scroll(&(render_vars->ViewWindowR), 0, scroll_dist);
+	if (CanScrollVert((global_render_vars->ViewWindowR), scroll_dist))
+		Scroll(&(global_render_vars->ViewWindowR), 0, scroll_dist);
 }
 
 void move_pixels_x(int pixels) {
-	if (CanScrollHoriz((render_vars->ViewWindowR), pixels))
-		Scroll(&(render_vars->ViewWindowR), pixels, 0);
+	
+	Action_Layer->ScrollWithBoundsCheck(pixels, 0);
+	Backround_Layer->ScrollWithBoundsCheck(pixels, 0);
+	if(Action_Layer->GetViewWindow().x == 0)
+		return;
+	Horizon_Layer->scroll_horizon(pixels);
+	
+	
 }
 
 
 void move_pixels_y(int pixels) {
-	if (CanScrollVert((render_vars->ViewWindowR), pixels))
-		Scroll(&(render_vars->ViewWindowR), 0, pixels);
+	if (CanScrollVert((global_render_vars->ViewWindowR), pixels))
+		Scroll(&(global_render_vars->ViewWindowR), 0, pixels);
+	
 }
 
 void move() {
@@ -99,12 +129,12 @@ void move() {
 				move_pixels_x(1);
 				break;
 			case SDLK_HOME:
-				render_vars->ViewWindowR.x = 0;
-				render_vars->ViewWindowR.y = 0;
+				global_render_vars->ViewWindowR.x = 0;
+				global_render_vars->ViewWindowR.y = 0;
 				break;
 			case SDLK_END:
-				render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size(), Engine_Consts.power) - render_vars->ViewWindowR.w;
-				render_vars->ViewWindowR.y = MUL_TILE_HEIGHT(GetMapData()->size(), Engine_Consts.power) - render_vars->ViewWindowR.h;
+				global_render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size(), Engine_Consts.power) - global_render_vars->ViewWindowR.w;
+				global_render_vars->ViewWindowR.y = MUL_TILE_HEIGHT(GetMapData()->size(), Engine_Consts.power) - global_render_vars->ViewWindowR.h;
 				break;
 			default:
 				break;
@@ -114,12 +144,21 @@ void move() {
 	}
 }
 
+
+
+
+
 void myInput() {
+	TIMER_INTERVAL = 100;
 	int CameraPosX, CameraPosY;
 	int PrevCameraPosX = 0, PrevCameraPosY = 0;
-
+	curr = SDL_GetTicks64();
+	if (curr > last + TIMER_INTERVAL) {
+		last = curr;
+	    move_horizon();
+	}
 	SDL_Event event;
-	const Uint8* keys = SDL_GetKeyboardState((int*)0);
+	const Uint8* keys = SDL_GetKeyboardState((int*)nullptr);
 	while (SDL_PollEvent(&event)) {
 
 		switch (event.type) {
@@ -167,33 +206,39 @@ void myInput() {
 		default:
 			break;
 		}
+		
 
 	}
-
+	
 	move();
 	disable_pr();
 	//update_keys();
-
+	
 }
 
 #define _GRID_2
 
 void show_grid() {
 	#ifdef _GRID_2
-		DisplayGrid_2(render_vars->ViewWindowR, render_vars->myrenderer, grid_class,render_vars->view_scale);
+		DisplayGrid_2(Action_Layer->GetViewWindow(), global_render_vars->myrenderer, grid_class,global_render_vars->view_scale);
 	#else
 		DisplayGrid(render_vars->ViewWindowR, render_vars->myrenderer, grid_class);
 	#endif
 }
-
+SDL_Texture* test_image;
 
 void myRender() {
-	SDL_RenderClear(render_vars->myrenderer);
+	SDL_RenderClear(global_render_vars->myrenderer);
+
 	
-	TileTerrainDisplay(GetMapData(), render_vars->ViewWindowR, { 0, 0,-1,0 }, render_vars->myrenderer, render_vars->Tileset, render_vars->RenderTextureTarget);
+	Horizon_Layer->Display(nullptr, false,global_render_vars->Tileset, global_render_vars->myrenderer);
+	Backround_Layer->Display(Horizon_Layer->get_bitmap(), false, global_render_vars->Tileset,global_render_vars->myrenderer);
+	Action_Layer->Display(Backround_Layer->get_bitmap(), true, global_render_vars->Tileset,global_render_vars->myrenderer);
+	
+	//TileTerrainDisplay(GetMapData(), render_vars->ViewWindowR, { 0, 0,-1,0 }, render_vars->myrenderer, render_vars->Tileset, render_vars->RenderTextureTarget);
 	if(display_grid)
 		show_grid();
-	SDL_RenderPresent(render_vars->myrenderer);
+	SDL_RenderPresent(global_render_vars->myrenderer);
 
 }
 
@@ -224,18 +269,16 @@ Dim get_2_power(Dim w, Dim h) {
 }
 
 void init_engine_constants() {
-	int px_h, px_w;
-	Dim tile_h, tile_w, grid_el_w, grid_el_h;
 	configurators_t map = configurators_t::MAP_CONFIG;
 
-	px_h = get_config_value<int>(map, "pixel_height");
-	px_w = get_config_value<int>(map, "pixel_width");
+	int px_h = get_config_value<int>(map, "pixel_height");
+	int px_w = get_config_value<int>(map, "pixel_width");
 
-	tile_h = get_config_value<int>(map, "tile_height");
-	tile_w = get_config_value<int>(map, "tile_width");
+	Dim tile_h =(Dim) get_config_value<int>(map, "tile_height");
+	Dim tile_w =(Dim) get_config_value<int>(map, "tile_width");
 
-	grid_el_h = get_config_value<int>(map, "Grid_el_w");
-	grid_el_w = get_config_value<int>(map, "Grid_el_h");
+	Dim grid_el_h = (Dim)get_config_value<int>(map, "Grid_el_w");
+	Dim grid_el_w = (Dim)get_config_value<int>(map, "Grid_el_h");
 
 	Dim power_tiles = get_2_power(tile_h, tile_w);
 	Dim power_grid = get_2_power(grid_el_h, grid_el_w);
@@ -264,65 +307,104 @@ void fill_grid() {
 }
 
 
+
+
+
+void init_layers(std::string asset_path) {
+	Dim ac_scale  =(Dim)get_config_value<int>(RENDER_CONFIG, "view_scale_action");
+	Dim back_scale=(Dim) get_config_value<int>(RENDER_CONFIG, "view_scale_back");
+	Dim hor_scale =(Dim)get_config_value<int>(RENDER_CONFIG, "view_scale_hor");
+
+	//for now keep them with the same viewwindow ,it can be changed 
+	SDL_Texture* action_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
+	Action_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,action_target,GetMapData(),"action",ac_scale);
+
+	SDL_Texture* horizon_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
+	ReadTextMap(asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map_hor"));
+	Horizon_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,horizon_target,GetMapData(),"horizon",hor_scale);
+
+
+	SDL_Texture* backround_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
+	ReadTextMap(asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map_back"));
+	Backround_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,backround_target, GetMapData(),"backround",back_scale);
+}
+
+
+
+
 void ZeldaApp::Initialise(void) {
+	init_configurators();
+	
+
+	configurators_t map = configurators_t::MAP_CONFIG;
+	configurators_t render = configurators_t::RENDER_CONFIG;
+	const int view_w = get_config_value<int>(render, "view_win_w");
+	const int view_h = get_config_value<int>(render, "view_win_h");
+	int start_x =get_config_value<int>(render, "start_x");
+	int start_y = get_config_value<int>(render, "start_y");
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
-		configurators_t map = configurators_t::MAP_CONFIG;
-		configurators_t render = configurators_t::RENDER_CONFIG;
-		init_configurators();
-		int view_w, view_h;
-		int scale = get_config_value<int>(render, "view_scale");
-		view_w = get_config_value<int>(render, "view_win_w");
-		view_h = get_config_value<int>(render, "view_win_h");
-		std::cout << "Subsystems Initialised!..." << std::endl;
-		render_vars = new Render(0, 0, view_w, view_h, scale);
-		int win_w, win_h;
-		win_w = get_config_value<int>(render, "render_w_w");
-		win_h = get_config_value<int>(render, "render_w_h");
-		init_engine_constants();
 		
+		
+		
+		int scale = get_config_value<int>(render, "view_scale_global");
+	
+		std::cout << "Subsystems Initialised!..." << std::endl;
+		global_render_vars = new Render(start_x, start_y, view_w, view_h, scale);
 
-		render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, 0);
-		if (render_vars->Gwindow) std::cout << "Window created!" << std::endl;
+		int win_w = get_config_value<int>(render, "render_w_w");
+		int win_h = get_config_value<int>(render, "render_w_h");
+		init_engine_constants();
 
-		render_vars->myrenderer = SDL_CreateRenderer(render_vars->Gwindow, -1, 0);
-		if (render_vars->myrenderer)
+		global_render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, 0);
+		if (global_render_vars->Gwindow) std::cout << "Window created!" << std::endl;
+		
+		global_render_vars->myrenderer = SDL_CreateRenderer(global_render_vars->Gwindow, -1, 0);
+		if (global_render_vars->myrenderer)
 		{
-			SDL_SetRenderDrawColor(render_vars->myrenderer, 0, 0, 0, 0);
+			SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 0, 0, 0);
 			std::cout << "Renderer created!" << std::endl;
 		}
+
 	}
 
 
 	init_key_map();
 	pre_cache();
+
+	
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::string find_first_part_path = cwd.string();
 	size_t pos = find_first_part_path.find("out");
 	std::string half_path = find_first_part_path.substr(0, pos);
-	std::string full_asset_path = half_path + "UnitTests\\UnitTest1\\UnitTest1Media";
+	std::string const full_asset_path = half_path + "UnitTests\\UnitTest2\\UnitTest2Media\\Zelda";
 
+	test_image = IMG_LoadTexture(global_render_vars->myrenderer,(full_asset_path + "\\Layer_3_b.png").c_str());
 
 	ReadTextMap(full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map"));
-	render_vars->ImgSurface = IMG_Load((full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
+	global_render_vars->ImgSurface = IMG_Load((full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
 	fill_grid();
-	std::cout << " w=" << render_vars->ImgSurface->w << " h=" << render_vars->ImgSurface->h << std::endl;
-	render_vars->Tileset = SDL_CreateTextureFromSurface(render_vars->myrenderer, render_vars->ImgSurface);
+	std::cout << " w=" << global_render_vars->ImgSurface->w << " h=" << global_render_vars->ImgSurface->h << std::endl;
+	global_render_vars->Tileset = SDL_CreateTextureFromSurface(global_render_vars->myrenderer, global_render_vars->ImgSurface);
 	//SDL_FreeSurface(render_vars->ImgSurface);
 
 	int w;
 	int h;
-	SDL_QueryTexture(render_vars->Tileset,
+	SDL_QueryTexture(global_render_vars->Tileset,
 		NULL, NULL,
 		&w, &h);
 	std::cout << " w=" << w << " h=" << h << std::endl;
+	
+	
 
-	render_vars->RenderTextureTarget = SDL_CreateTexture(render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, render_vars->ViewWindowR.w, render_vars->ViewWindowR.h);
+
 	print();
 	game.SetInput(myInput);
 	game.SetRender(myRender);
 	game.SetDone(myDone);
+	init_layers(full_asset_path);
 	is_running = true;
+	
 }
 
 void ZeldaApp::Load() {

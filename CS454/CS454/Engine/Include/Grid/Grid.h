@@ -40,8 +40,8 @@ private:
 	
 		GridMap grid;
 		S_Grid_Map grid_test;
-		Index empty = 61;
-		Index empty_tiles[20] = { 61,48,49,50,60,62,72,73,74,84,85,96,97,16,28,40 };
+		Index empty = 31;
+		Index empty_tiles[20] = {2 };
 public:
 
 		GridMap& get_grid() { return grid; }
@@ -80,5 +80,5 @@ bool CanPassGridTile(GridMap* m, Dim col, Dim row, GridIndex flags);
 void ComputeTileGridBlocks1(const TileMap* map,std::unique_ptr<_Grid_>&grid_cl);
 
 void DisplayGrid(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl);
-void DisplayGrid_2(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl, int scale);
+void DisplayGrid_2(const SDL_Rect& viewWin, SDL_Renderer* myrenderer,const std::unique_ptr<_Grid_>& grid_cl,const int scale);
 void ComputeTileGridBlocks1_5(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl);

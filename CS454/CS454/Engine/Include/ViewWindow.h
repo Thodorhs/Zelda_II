@@ -11,7 +11,7 @@ struct Point { int x, y; };
 static Index mod_index[255];
 static Index div_index[255];
 
-
+typedef SDL_Rect ViewWindow_t;
 
 typedef struct Render {
 	SDL_Surface* ImgSurface;
@@ -30,6 +30,7 @@ typedef struct Render {
 		Gwindow((SDL_Window*)0), Tileset((SDL_Texture*)0),
 		view_scale( scale),
 		RenderTextureTarget((SDL_Texture*)0) {};
+	Render() = default;
 };
 
 
