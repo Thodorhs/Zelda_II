@@ -32,6 +32,18 @@ void update_map(std::map<std::string, std::any>& data, json_serialized prop) {
         else if (it.value().is_string()) {
             val = it.value().get<std::string>();
         }
+        else if (it.value().is_array())
+        {
+        }
+        else if (it.value().is_object()) {
+
+            std::cout << "inserting object" << it.key() << "\n";
+            std::map<std::string, std::any> obj_map;
+            update_map(obj_map,it.value().items());
+            val = obj_map;
+
+        }
+        //std::cout << "key:" << it.key() << "value" << it.value()<<"\n";
         std::pair<std::string, std::any> pair = std::make_pair(it.key(), val);
         data.insert(pair);
     }
@@ -51,9 +63,29 @@ void parse_test(std::map<std::string, std::any>& data) {
         update_map(data, ins);
     }
     f.close();
+   
     
 }
 
+void parse_layers(std::map<std::string, std::any>& data)
+{
+    auto f = get_json_file();
+    json js = json::parse(f);
+
+    size_t idx = 0;
+	for(auto ins :js["engine"]["Layers"].items())
+	{
+		if(ins.value().is_array())
+		{
+           
+            update_map(data, ins.value().items());
+		}
+
+	}
+    
+    f.close();
+    auto it = data.begin();
+}
 
 
 void parse_render(std::map<std::string, std::any>& data) {

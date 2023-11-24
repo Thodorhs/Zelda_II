@@ -6,7 +6,8 @@
 
 typedef  enum {
 	MAP_CONFIG = 0,
-	RENDER_CONFIG =1
+	RENDER_CONFIG =1,
+	LAYER_CONFIG =2 
 } configurators_t;
 
 class Configurator {
@@ -33,16 +34,16 @@ private:
 	
 	Configurator::ParseFunc parser;
 public:
-	map_config() {};
+	map_config() =default;
 	void parse_data() override{
 		assert(parser);
 		parser(this->data);
 	}
 
-	std::map<std::string, std::any>& get_data() {
+	std::map<std::string, std::any>& get_data()override {
 		return this->data;
 	}
-	std::map<std::string, std::any> get_data_sw() {
+	std::map<std::string, std::any> get_data_sw()override {
 		return this->data;
 	}
 
@@ -65,16 +66,16 @@ private:
 	
 	Configurator::ParseFunc parser;
 public:
-	Render_config() {};
+	Render_config() = default;
 	void parse_data() override{
 		assert(parser);
 		parser(this->data);
 	}
 
-	std::map<std::string, std::any>& get_data() {
+	std::map<std::string, std::any>& get_data() override{
 		return this->data;
 	}
-	std::map<std::string, std::any> get_data_sw() {
+	std::map<std::string, std::any> get_data_sw()override {
 		return this->data;
 	}
 
@@ -92,3 +93,34 @@ public:
 	};
 
 
+class Layer_config : public Configurator {
+private:
+
+	Configurator::ParseFunc parser;
+public:
+	Layer_config() = default;
+	void parse_data() override {
+		assert(parser);
+		parser(this->data);
+	}
+
+	std::map<std::string, std::any>& get_data() override{
+		return this->data;
+	}
+	
+	std::map<std::string, std::any> get_data_sw()override {
+		return this->data;
+	}
+
+	void set_parser(const Configurator::ParseFunc& f) override { parser = f; }
+
+	void serialize() override {}
+	void init() override {}
+
+	void print_data() override {
+		for (auto it : data) {
+			std::cout << "value:" << std::any_cast<int>(it.second);
+		}
+	}
+
+};

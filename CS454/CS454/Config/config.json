@@ -8,34 +8,51 @@
       "ViewWindow": {
         "view_win_w": 640,
         "view_win_h": 400,
-        "view_scale_global" : 2,
+        "view_scale_global": 2,
         "view_scale_back": 2,
-        "view_scale_hor" : 1,
+        "view_scale_hor": 1,
         "view_scale_action": 2,
-        "start_x" : 0,
-        "start_y" : 25
+        "start_x": 0,
+        "start_y": 25
       }
     },
     "map": {
       "properties": {
         "pixel_width": 4800,
         "pixel_height": 256,
-        "map_columns" : 300,
-        "map_rows" : 16
+        "map_columns": 300,
+        "map_rows": 16
       },
       "tiles": {
-        "tileset" : "Palace-Tileset.png",
-        "text_map":"TileMap_Foreground.csv",
-        "text_map_hor" : "TileMap_Horizon.csv",
-        "text_map_back" : "TileMap_Backround.csv",
-        "tile_height" : 16,
-        "tile_width"  : 16,
+        "tileset": "Palace-Tileset.png",
+        "text_map": "TileMap_Foreground.csv",
+        "text_map_hor": "TileMap_Horizon.csv",
+        "text_map_back": "TileMap_Backround.csv",
+        "tile_height": 16,
+        "tile_width": 16,
         "tileset_columns": 10
       },
-      "Grid" : {
-        "Grid_el_w" : 16,
-        "Grid_el_h" : 16
+      "Grid": {
+        "Grid_el_w": 16,
+        "Grid_el_h": 16
       }
-    }
-  }
+
+    },
+    "Layers" : { "LayerArray": [{
+          "Horizon": 
+            {
+            "text_map": "TileMap_Horizon.csv",
+            "view_scale": 1
+            }
+          },
+          {
+           "Action" : 
+            {
+            "text_map" : "Test",
+            "view_scale": 1
+            }
+          }
+        ]
+     }
+   }
 }

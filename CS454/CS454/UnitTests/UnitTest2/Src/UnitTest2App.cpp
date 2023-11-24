@@ -235,7 +235,6 @@ void myRender() {
 	Backround_Layer->Display(Horizon_Layer->get_bitmap(), false, global_render_vars->Tileset,global_render_vars->myrenderer);
 	Action_Layer->Display(Backround_Layer->get_bitmap(), true, global_render_vars->Tileset,global_render_vars->myrenderer);
 	
-	//TileTerrainDisplay(GetMapData(), render_vars->ViewWindowR, { 0, 0,-1,0 }, render_vars->myrenderer, render_vars->Tileset, render_vars->RenderTextureTarget);
 	if(display_grid)
 		show_grid();
 	SDL_RenderPresent(global_render_vars->myrenderer);
@@ -395,10 +394,10 @@ void ZeldaApp::Initialise(void) {
 		&w, &h);
 	std::cout << " w=" << w << " h=" << h << std::endl;
 	
-	
+	auto mm = get_config_value<std::map<std::string, std::any>>(configurators_t::LAYER_CONFIG,"0");
+	auto it = std::any_cast<std::map<std::string, std::any>>(mm.at("Horizon"));
+	std::cout << it.begin()->first<<"\n";
 
-
-	print();
 	game.SetInput(myInput);
 	game.SetRender(myRender);
 	game.SetDone(myDone);

@@ -6,3 +6,4 @@
 
 void parse_test(std::map<std::string, std::any> &data);
 void parse_render(std::map<std::string, std::any>& data);
+void parse_layers(std::map<std::string, std::any>& data);
