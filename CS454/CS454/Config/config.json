@@ -46,13 +46,18 @@
             }
           },
           {
-           "Action" : 
-            {
-            "text_map" : "Test",
-            "view_scale": 1
+            "Action": {
+              "text_map": "TileMap_Foreground.csv",
+              "view_scale": 2
+            }
+          },
+          {
+            "Backround": {
+              "text_map": "TileMap_Backround.csv",
+              "view_scale" : 2
             }
           }
-        ]
+                 ]
      }
    }
 }

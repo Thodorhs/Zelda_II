@@ -306,13 +306,16 @@ void fill_grid() {
 }
 
 
-
+void intit_layers_test(std::string asset_path)
+{
+	auto map_iterator = get_config_value<std::map<std::string, std::any>>(configurators_t::LAYER_CONFIG, "0");
+}
 
 
 void init_layers(std::string asset_path) {
-	Dim ac_scale  =(Dim)get_config_value<int>(RENDER_CONFIG, "view_scale_action");
-	Dim back_scale=(Dim) get_config_value<int>(RENDER_CONFIG, "view_scale_back");
-	Dim hor_scale =(Dim)get_config_value<int>(RENDER_CONFIG, "view_scale_hor");
+	Dim ac_scale  =(Dim)get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale_action");
+	Dim back_scale=(Dim) get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale_back");
+	Dim hor_scale =(Dim)get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale_hor");
 
 	//for now keep them with the same viewwindow ,it can be changed 
 	SDL_Texture* action_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
@@ -394,9 +397,9 @@ void ZeldaApp::Initialise(void) {
 		&w, &h);
 	std::cout << " w=" << w << " h=" << h << std::endl;
 	
-	auto mm = get_config_value<std::map<std::string, std::any>>(configurators_t::LAYER_CONFIG,"0");
-	auto it = std::any_cast<std::map<std::string, std::any>>(mm.at("Horizon"));
-	std::cout << it.begin()->first<<"\n";
+	//auto mm = get_config_value<std::map<std::string, std::any>>(configurators_t::LAYER_CONFIG,"0");
+	//auto it = std::any_cast<std::map<std::string, std::any>>(mm.at("Horizon"));
+	//std::cout << it.begin()->first<<"\n";
 
 	game.SetInput(myInput);
 	game.SetRender(myRender);

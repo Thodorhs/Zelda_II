@@ -35,7 +35,7 @@ void SetGridTileFlags(GridMap* m, Dim col, Dim row, GridIndex flags)
 }
 void SetGridTileTopSolidOnly(GridMap* m, Dim col, Dim row)
 {
-	SetGridTileFlags(m, row, col, GRID_TOP_SOLID_MASK);
+	SetGridTileFlags(m, col, row, GRID_TOP_SOLID_MASK);
 }
 bool CanPassGridTile(GridMap* m, Dim col, Dim row, GridIndex flags) // i.e. checks if flags set
 {

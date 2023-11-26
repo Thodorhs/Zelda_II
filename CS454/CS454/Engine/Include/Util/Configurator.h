@@ -4,11 +4,16 @@
 #include <any>
 #include <functional>
 
-typedef  enum {
-	MAP_CONFIG = 0,
-	RENDER_CONFIG =1,
-	LAYER_CONFIG =2 
-} configurators_t;
+
+typedef  enum class configurators_t {
+	MAP_CONFIG = 1,
+	RENDER_CONFIG =2,
+	LAYER_CONFIG =3 
+} ;
+
+
+
+
 
 class Configurator {
 protected:
@@ -22,8 +27,7 @@ protected:
 	virtual std::map<std::string, std::any> get_data_sw() = 0;
     virtual void set_parser(const ParseFunc& f) = 0;
 	virtual void print_data() = 0;
-	
-	
+
 		
 };
 
@@ -57,7 +61,7 @@ public:
 			std::cout << "value:" << std::any_cast<int>(it.second);
 		}
 	}
-
+	
 	};
 
 
