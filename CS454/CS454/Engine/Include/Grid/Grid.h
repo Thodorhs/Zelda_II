@@ -27,26 +27,26 @@
 #define GRID_BLOCK_SIZEOF \
 (GRID_ELEMENTS_PER_TILE * sizeof(GridIndex))
 
-typedef std::vector<std::vector<GridIndex>> GridMap;
+typedef std::vector<std::vector<GridIndex>> GridMapOld;
 typedef struct grid_block {
 	Dim row,col;
 	std::vector<Index> els;
 	Dim flags;
 };
-typedef std::vector<std::vector<grid_block>> S_Grid_Map;
+typedef std::vector<std::vector<grid_block>> GridMap;
 
 class _Grid_ {
 	
 private:
 	
-		GridMap grid_old;
-		S_Grid_Map grid;
+		GridMapOld grid_old;
+		GridMap grid;
 		Index empty = 31;
 		Index empty_tiles[5] = {0,1,2,3,4};
 public:
 
-		GridMap& get_grid() { return grid_old; }
-		S_Grid_Map& get_s_grid() { return grid; }
+		GridMapOld& get_grid() { return grid_old; }
+		GridMap& get_s_grid() { return grid; }
 		Index get_empty() { return empty; }
 
 	
@@ -66,8 +66,8 @@ inline int grid_max_height();
 inline int grid_max_width();
 inline int grid_elements_per_tile();
 bool IsTileIndexAssumedEmpty(_Grid_ &grid,Index index);
-void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index);
-grid_block GetGridTile(const S_Grid_Map* m, Dim col, Dim row);
+void SetGridTile(GridMapOld* m, Dim col, Dim row, GridIndex index);
+grid_block GetGridTile(const GridMap* m, Dim col, Dim row);
 
 void ComputeTileGridBlocksOld(const TileMap* map,std::unique_ptr<_Grid_>&grid_cl);
 

@@ -37,7 +37,7 @@ void update_map(std::map<std::string, std::any>& data, json_serialized prop) {
         }
         else if (it.value().is_object()) {
 
-            std::cout << "inserting object" << it.key() << "\n";
+            
             std::map<std::string, std::any> obj_map;
             update_map(obj_map,it.value().items());
             val = obj_map;

@@ -12,12 +12,12 @@ bool IsTileIndexAssumedEmpty(std::unique_ptr<_Grid_>& grid_cl, Index index) {
 
 }
 
-void SetGridTile(GridMap* m, Dim col, Dim row, GridIndex index)
+void SetGridTile(GridMapOld* m, Dim col, Dim row, GridIndex index)
 {
 	(*m)[row][col] = index;
 }
 
-grid_block GetGridTile(const S_Grid_Map* m, Dim col, Dim row)
+grid_block GetGridTile(const GridMap* m, Dim col, Dim row)
 {
 	return (*m)[row][col];
 }
@@ -69,8 +69,8 @@ grid_block _Grid_::GetGridTileBlock(Dim rowTile, Dim colTile) {return grid[rowTi
 
 _Grid_::_Grid_()
 {
-	grid_old = GridMap(grid_max_height(), std::vector<GridIndex>(grid_max_width(), 0));
-	grid = S_Grid_Map(grid_max_height(), std::vector<grid_block>(grid_max_width()));
+	grid_old = GridMapOld(grid_max_height(), std::vector<GridIndex>(grid_max_width(), 0));
+	grid = GridMap(grid_max_height(), std::vector<grid_block>(grid_max_width()));
 }
 
 
@@ -79,7 +79,7 @@ void ComputeTileGridBlocks(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl)
 	Index grid_col = 0;
 	Dim col;
 	Dim row;
-	S_Grid_Map& grid = grid_cl->get_s_grid();
+	GridMap& grid = grid_cl->get_s_grid();
 	for (row = 0; row < Engine_Consts.map_rows; row++) {
 		std::vector<grid_block>& gr_row = grid[grid_idx];
 		grid_col = 0;
@@ -100,7 +100,6 @@ void ComputeTileGridBlocks(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl)
 		}
 		grid_idx++;
 	}
-	grid_cl->print_grid();
 }
 //END OF CLASS FUNCS
 //!!WHEN VECTOR IS ALLOCATED USE INSERT!!!!!!//// FUAAA GIATIII
@@ -109,7 +108,7 @@ void ComputeTileGridBlocksOld(const TileMap* map, std::unique_ptr<_Grid_>& grid_
 	Index grid_col = 0;
 	Dim col;
 	Dim row;
-	GridMap& grid = grid_cl->get_grid();
+	GridMapOld& grid = grid_cl->get_grid();
 	for (row = 0; row < Engine_Consts.map_rows; row++){ 
 		std::vector<GridIndex>& gr_row = grid[grid_idx];
 		grid_col = 0;

@@ -74,13 +74,13 @@ void update_press(Sint32 code, bool state) {
 
 }
 
-int dx = 1;
+
 void move_rect()
 {
-	
+	int dx = 1;
 	FilterGridMotionRight(&grid_class->get_s_grid(), moving_rect, &dx);
 	moving_rect.x += dx;
-	dx = 1;
+	
 	
 }
 
@@ -335,7 +335,7 @@ void init_engine_constants() {
 	
 }
 void fill_grid() {
-	pr_info("Initializing grid_old..");
+	pr_info("Initializing grid..");
 
 	#ifdef _GRID_2
 		ComputeTileGridBlocks(GetMapData(), grid_class); //grid_old supports action layer 
@@ -399,6 +399,7 @@ void init_layers(std::string asset_path) {
 
 
 void ZeldaApp::Initialise(void) {
+	pr_start_msg();
 	pr_info("Initializing configurators..");
 	init_configurators();
 	
@@ -466,6 +467,8 @@ void ZeldaApp::Initialise(void) {
 	game.SetDone(myDone);
 	init_layers(full_asset_path);
 	is_running = true;
+	pr_info("Done!");
+	
 	
 }
 
