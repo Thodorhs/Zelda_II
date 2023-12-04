@@ -14,10 +14,8 @@
 #define GRID_SOLID_TILE \
 (GRID_LEFT_SOLID_MASK | GRID_RIGHT_SOLID_MASK | GRID_TOP_SOLID_MASK | GRID_BOTTOM_SOLID_MASK)
 
-
 #define MAX_PIXEL_WIDTH(i,power)  (MUL_TILE_WIDTH(i,power))
 #define MAX_PIXEL_HEIGHT(i,power) (MUL_TILE_HEIGHT(i,power))
-
 
 #define DIV_GRID_ELEMENT_WIDTH(i,power)		((i)>>power)
 #define DIV_GRID_ELEMENT_HEIGHT(i,power)	((i)>>power)
@@ -27,16 +25,16 @@
 #define GRID_BLOCK_SIZEOF \
 (GRID_ELEMENTS_PER_TILE * sizeof(GridIndex))
 
-typedef std::vector<std::vector<GridIndex>> GridMapOld;
 typedef struct grid_block {
-	Dim row,col;
+	Dim row, col;
 	std::vector<Index> els;
 	Dim flags;
 };
+
+typedef std::vector<std::vector<GridIndex>> GridMapOld;
 typedef std::vector<std::vector<grid_block>> GridMap;
 
 class _Grid_ {
-	
 private:
 	
 		GridMapOld grid_old;
@@ -44,17 +42,14 @@ private:
 		Index empty = 31;
 		Index empty_tiles[5] = {0,1,2,3,4};
 public:
-
 		GridMapOld& get_grid() { return grid_old; }
 		GridMap& get_s_grid() { return grid; }
 		Index get_empty() { return empty; }
 
-	
-
 		Index* get_emp_tiles() { return empty_tiles; }
 		 _Grid_();
 
-		GridIndex GetOldGridTileBlock(Dim colTile, Dim rowTile);
+		GridIndex GetOldGridTileBlock(Dim rowTile, Dim colTile);
 		grid_block GetGridTileBlock(Dim rowTile, Dim colTile);
 		
 		void print_grid();
@@ -68,9 +63,7 @@ inline int grid_elements_per_tile();
 bool IsTileIndexAssumedEmpty(_Grid_ &grid,Index index);
 void SetGridTile(GridMapOld* m, Dim col, Dim row, GridIndex index);
 grid_block GetGridTile(const GridMap* m, Dim col, Dim row);
-
-void ComputeTileGridBlocksOld(const TileMap* map,std::unique_ptr<_Grid_>&grid_cl);
-
 void DisplayGridOld(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl);
 void DisplayGrid(const SDL_Rect& viewWin, SDL_Renderer* myrenderer,const std::unique_ptr<_Grid_>& grid_cl,const int scale);
 void ComputeTileGridBlocks(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl);
+void ComputeTileGridBlocksOld(const TileMap* map,std::unique_ptr<_Grid_>&grid_cl);

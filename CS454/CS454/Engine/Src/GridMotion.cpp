@@ -1,6 +1,6 @@
-#include "../../../Engine/Include/Grid/GridMotion.h"
-#include "../../../Engine/Include/Util/Print.h"
-#include "../../../Engine/Include/Util/ConfigFuncs.h"
+#include "../Include/Grid/GridMotion.h"
+#include "../Include/Util/Print.h"
+#include "../Include/Util/ConfigFuncs.h"
 
 void SetSolidGridTile(GridMapOld* m, Dim col, Dim row)
 {

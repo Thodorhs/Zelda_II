@@ -3,13 +3,7 @@
 #include "SDL.h"
 #include <cassert>
 
-
-
-
-
 void SetGridTile(GridMapOld* m, Dim col, Dim row, GridIndex index);
-
-
 
 void SetSolidGridTile(GridMapOld* m, Dim col, Dim row);
 
