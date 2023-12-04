@@ -26,6 +26,6 @@ void app::Game::MainLoopIteration(void) {
 		frames = 0;
 		deltaTime -= CLOCKS_PER_SEC;
 		averageFrameTimeMilliseconds = 1000.0 / (frameRate == 0 ? 0.001 : frameRate);
-			std::cout << "CPU time was:" << averageFrameTimeMilliseconds << std::endl;
+			//std::cout << "CPU time was:" << averageFrameTimeMilliseconds << std::endl;
 	}
 }

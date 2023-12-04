@@ -2,6 +2,9 @@
 #include "Grid/GridLayer.h"
 #include "ViewWindow.h"
 #include "Util/ConfigFuncs.h"
+class TileLayer;
+typedef  std::map<const std::string,std::unique_ptr<TileLayer>> Layer_container;
+
 class TileLayer {
 private:
 	TileMap map ;
@@ -25,7 +28,7 @@ public:
 	{
 		return (map)[row][col];
 	}
-	const Point Pick(Dim x, Dim y) const {
+	 Point Pick(Dim x, Dim y) const {
 		return { DIV_TILE_WIDTH(x + viewWin.x,Engine_Consts.power),
 		DIV_TILE_HEIGHT(y + viewWin.y,Engine_Consts.power) };
 	}
@@ -36,8 +39,8 @@ public:
 	}
 	void set_dpy_changed() { dpyChanged = true; }
 	
-	int GetPixelWidth(void) const { return Engine_Consts.Map_width; }
-	int GetPixelHeight(void) const { return Engine_Consts.Map_height; }
+	static int GetPixelWidth(void)  { return Engine_Consts.Map_width; }
+	static int GetPixelHeight(void)  { return Engine_Consts.Map_height; }
 
 	void Scroll(int dx, int dy);
 	void FilterScrollDistance(int viewStartCoord, int viewSize, int* d, int maxMapSize);

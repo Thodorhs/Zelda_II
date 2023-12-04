@@ -3,6 +3,7 @@
 #include <map>
 #include <any>
 #include <functional>
+#include <ranges>
 
 
 typedef  enum class configurators_t {
@@ -12,12 +13,12 @@ typedef  enum class configurators_t {
 } ;
 
 
-
+typedef std::map<std::string, std::any> Config_data_t;
 
 
 class Configurator {
 protected:
-	std::map<std::string, std::any>data;
+	Config_data_t data;
 	public:
 	using ParseFunc = std::function<void(std::map < std::string, std::any>&)>;
 	virtual void parse_data() = 0;
@@ -122,8 +123,8 @@ public:
 	void init() override {}
 
 	void print_data() override {
-		for (auto it : data) {
-			std::cout << "value:" << std::any_cast<int>(it.second);
+		for (auto val : data | std::views::values) {
+			std::cout << "value:" << std::any_cast<int>(val);
 		}
 	}
 

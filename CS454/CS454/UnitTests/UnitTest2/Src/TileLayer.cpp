@@ -64,9 +64,11 @@ void TileLayer::Display(SDL_Texture* prev,bool final_layer,SDL_Texture* Tileset,
 		SDL_SetRenderTarget(myrenderer, dpybuffer);
 		for (unsigned short row = startRow; row <= endRow; ++row)
 			for (unsigned short col = startCol; col <= endCol; ++col) {
-				if ((map)[row][col] == 0xffff)//clarify this
+				if ((map)[row][col] == 0xffff)//-1 
 					continue;
-				PutTile(MUL_TILE_WIDTH(col - startCol, Engine_Consts.power), MUL_TILE_HEIGHT(row - startRow, Engine_Consts.power), (map)[row][col], myrenderer, Tileset);
+				PutTile(MUL_TILE_WIDTH(col - startCol, Engine_Consts.power),
+					MUL_TILE_HEIGHT(row - startRow, Engine_Consts.power), 
+					(map)[row][col], myrenderer, Tileset);
 			}
 		dpyChanged = false;
 		
@@ -80,8 +82,8 @@ void TileLayer::Display(SDL_Texture* prev,bool final_layer,SDL_Texture* Tileset,
 	PTdstrect.w = viewWin.w * scale;//scaled //GWINDOW
 	
 	if (final_layer) {
-		SDL_SetRenderTarget(myrenderer, NULL);
-		SDL_RenderCopy(myrenderer, dpybuffer, NULL, &PTdstrect);
+		SDL_SetRenderTarget(myrenderer, nullptr);
+		SDL_RenderCopy(myrenderer, dpybuffer, nullptr, &PTdstrect);
 	}
 }
 

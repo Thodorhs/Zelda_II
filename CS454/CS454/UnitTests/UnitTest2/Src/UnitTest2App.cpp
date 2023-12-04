@@ -6,6 +6,8 @@
 //#include "../../../Engine/Include/Util/ConfigFuncs.h"
 #include "../../../Engine/Include/Grid/Grid.h"
 #include "../../../Engine/Include/TileLayer.h"
+#include "../../../Engine/Include/Util/Print.h"
+
 int TIMER_INTERVAL = 100;
 Uint64 last = 0;
 Uint64 curr;
@@ -14,9 +16,10 @@ std::unique_ptr<TileLayer> Action_Layer;
 std::unique_ptr<TileLayer> Horizon_Layer;
 std::unique_ptr<TileLayer> Backround_Layer;
 
+size_t layer_num;
+Layer_container Layers;
 
-
-
+SDL_Rect moving_rect = { 0,48,16,16 };
 Render* global_render_vars;
 Render* render_vars_horizon;
 Render* render_vars_backround;
@@ -42,7 +45,7 @@ void disable_pr() {
 void update_keys() {
 	KEY_MAP_t::iterator pr_it;
 
-	for (auto it : released_keys) {
+	for (auto& it : released_keys) {
 		if (it.second) {
 			pr_it = pressed_keys.find(it.first);
 			pr_it->second = false;
@@ -71,13 +74,22 @@ void update_press(Sint32 code, bool state) {
 
 }
 
-void move_horizon() {
+int dx = 1;
+void move_rect()
+{
 	
+	FilterGridMotionRight(&grid_class->get_s_grid(), moving_rect, &dx);
+	moving_rect.x += dx;
+	dx = 1;
+	
+}
+
+void move_horizon() {
+
 	Horizon_Layer->scroll_horizon(1);
-		//Horizon_Layer->set_dpy_changed();
+	//Horizon_Layer->set_dpy_changed();
 	Action_Layer->ScrollWithBoundsCheck(0, 0);
 	Backround_Layer->ScrollWithBoundsCheck(0, 0);
-	
 }
 
 void move_tiles_x(int tiles) {
@@ -93,9 +105,11 @@ void move_tiles_y(int tiles) {
 }
 
 void move_pixels_x(int pixels) {
+
 	
-	Action_Layer->ScrollWithBoundsCheck(pixels, 0);
-	Backround_Layer->ScrollWithBoundsCheck(pixels, 0);
+	//Action_Layer->ScrollWithBoundsCheck(pixels, 0);
+	//Backround_Layer->ScrollWithBoundsCheck(pixels, 0);
+	move_rect();
 	if(Action_Layer->GetViewWindow().x == 0)
 		return;
 	Horizon_Layer->scroll_horizon(pixels);
@@ -217,24 +231,43 @@ void myInput() {
 }
 
 #define _GRID_2
+//#define _LAYERS_
 
 void show_grid() {
 	#ifdef _GRID_2
-		DisplayGrid_2(Action_Layer->GetViewWindow(), global_render_vars->myrenderer, grid_class,global_render_vars->view_scale);
+		DisplayGrid(Action_Layer->GetViewWindow(), global_render_vars->myrenderer, grid_class,global_render_vars->view_scale);
 	#else
-		DisplayGrid(render_vars->ViewWindowR, render_vars->myrenderer, grid_class);
+		DisplayGridOld(render_vars->ViewWindowR, render_vars->myrenderer, grid_class);
 	#endif
 }
-SDL_Texture* test_image;
+
+
+
+void render_layers()
+{
+	//not working for now (who knows)
+	size_t n = 1;
+	for(auto it = Layers.begin(); it!= Layers.end(); ++it)
+	{
+		bool final_layer = n == layer_num ? true : false;
+		it->second->Display(n==1 ? nullptr : it->second->get_bitmap(), final_layer, global_render_vars->Tileset, global_render_vars->myrenderer);
+		n++;
+	}
+}
 
 void myRender() {
 	SDL_RenderClear(global_render_vars->myrenderer);
-
+	#ifndef _LAYERS_
 	
 	Horizon_Layer->Display(nullptr, false,global_render_vars->Tileset, global_render_vars->myrenderer);
 	Backround_Layer->Display(Horizon_Layer->get_bitmap(), false, global_render_vars->Tileset,global_render_vars->myrenderer);
 	Action_Layer->Display(Backround_Layer->get_bitmap(), true, global_render_vars->Tileset,global_render_vars->myrenderer);
-	
+	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 200, 0, 200, 255);
+	SDL_RenderFillRect(global_render_vars->myrenderer, &moving_rect);
+	#else
+	render_layers();
+	#endif
+
 	if(display_grid)
 		show_grid();
 	SDL_RenderPresent(global_render_vars->myrenderer);
@@ -249,6 +282,8 @@ bool myDone() {
 
 
 void init_key_map() {
+	pr_info("Initializing keyboard..");
+
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_LEFT, false));
@@ -268,6 +303,8 @@ Dim get_2_power(Dim w, Dim h) {
 }
 
 void init_engine_constants() {
+	pr_info("Initializing engine constants..");
+
 	configurators_t map = configurators_t::MAP_CONFIG;
 
 	int px_h = get_config_value<int>(map, "pixel_height");
@@ -298,21 +335,45 @@ void init_engine_constants() {
 	
 }
 void fill_grid() {
+	pr_info("Initializing grid_old..");
+
 	#ifdef _GRID_2
-		ComputeTileGridBlocks1_5(GetMapData(), grid_class);
+		ComputeTileGridBlocks(GetMapData(), grid_class); //grid_old supports action layer 
 	#else
 		ComputeTileGridBlocks1(GetMapData(), grid_class);
 	#endif	
 }
 
 
-void intit_layers_test(std::string asset_path)
-{
-	auto map_iterator = get_config_value<std::map<std::string, std::any>>(configurators_t::LAYER_CONFIG, "0");
-}
+
+
 
 
 void init_layers(std::string asset_path) {
+	pr_info("Initializing layers..");
+
+	#ifdef _LAYERS_
+
+		layer_num = static_cast<size_t> (get_config_value<int>(configurators_t::MAP_CONFIG, "Layer_num"));
+		//auto it = std::any_cast<std::map<std::string, std::any>>(mm.at("Horizon"));
+		for(size_t i = 0 ; i<layer_num; i++)
+		{
+			auto mm = get_config_value<Config_data_t>(configurators_t::LAYER_CONFIG, std::to_string(i));
+			for(auto itterator = mm.begin(); itterator!= mm.end(); ++itterator)
+			{
+				auto obj_map = std::any_cast<Config_data_t>(itterator->second);
+				Dim scale =static_cast<Dim> (std::any_cast<int>(obj_map.at("view_scale")));
+				SDL_Texture *target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
+				if (!target) {
+					pr_error(SDL_GetError());
+					exit(EXIT_FAILURE);
+				}
+				ReadTextMap(asset_path + "\\" + std::any_cast<std::string>(obj_map.at("text_map")));
+				Layers.insert(std::make_pair(itterator->first, std::make_unique<TileLayer>(global_render_vars->ViewWindowR, target, GetMapData(), itterator->first, scale)));
+			}
+		}
+
+	#else
 	Dim ac_scale  =(Dim)get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale_action");
 	Dim back_scale=(Dim) get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale_back");
 	Dim hor_scale =(Dim)get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale_hor");
@@ -329,12 +390,16 @@ void init_layers(std::string asset_path) {
 	SDL_Texture* backround_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
 	ReadTextMap(asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map_back"));
 	Backround_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,backround_target, GetMapData(),"backround",back_scale);
+	
+	#endif
+
 }
 
 
 
 
 void ZeldaApp::Initialise(void) {
+	pr_info("Initializing configurators..");
 	init_configurators();
 	
 
@@ -350,8 +415,8 @@ void ZeldaApp::Initialise(void) {
 		
 		
 		int scale = get_config_value<int>(render, "view_scale_global");
-	
-		std::cout << "Subsystems Initialised!..." << std::endl;
+
+		pr_info("Subsystems Initialised!...");
 		global_render_vars = new Render(start_x, start_y, view_w, view_h, scale);
 
 		int win_w = get_config_value<int>(render, "render_w_w");
@@ -365,7 +430,7 @@ void ZeldaApp::Initialise(void) {
 		if (global_render_vars->myrenderer)
 		{
 			SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 0, 0, 0);
-			std::cout << "Renderer created!" << std::endl;
+			pr_info("Renderer created!");
 		}
 
 	}
@@ -381,25 +446,20 @@ void ZeldaApp::Initialise(void) {
 	std::string half_path = find_first_part_path.substr(0, pos);
 	std::string const full_asset_path = half_path + "UnitTests\\UnitTest2\\UnitTest2Media\\Zelda";
 
-	test_image = IMG_LoadTexture(global_render_vars->myrenderer,(full_asset_path + "\\Layer_3_b.png").c_str());
-
 	ReadTextMap(full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map"));
 	global_render_vars->ImgSurface = IMG_Load((full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
 	fill_grid();
-	std::cout << " w=" << global_render_vars->ImgSurface->w << " h=" << global_render_vars->ImgSurface->h << std::endl;
+	
 	global_render_vars->Tileset = SDL_CreateTextureFromSurface(global_render_vars->myrenderer, global_render_vars->ImgSurface);
-	//SDL_FreeSurface(render_vars->ImgSurface);
+	
 
 	int w;
 	int h;
 	SDL_QueryTexture(global_render_vars->Tileset,
 		NULL, NULL,
 		&w, &h);
-	std::cout << " w=" << w << " h=" << h << std::endl;
-	
-	//auto mm = get_config_value<std::map<std::string, std::any>>(configurators_t::LAYER_CONFIG,"0");
-	//auto it = std::any_cast<std::map<std::string, std::any>>(mm.at("Horizon"));
-	//std::cout << it.begin()->first<<"\n";
+	//std::cout << " w=" << w << " h=" << h << std::endl;
+
 
 	game.SetInput(myInput);
 	game.SetRender(myRender);
