@@ -1,85 +1,59 @@
 ﻿#pragma once
 #include "Grid/GridLayer.h"
 #include "ViewWindow.h"
+#include "Util/ConfigFuncs.h"
+class TileLayer;
+typedef  std::map<const std::string,std::unique_ptr<TileLayer>> Layer_container;
 
 class TileLayer {
 private:
-	
-	TileMap map;
-	GridLayer* grid = nullptr;
+	TileMap map ;
 	Dim totalRows = 0, totalColumns = 0;
-	BitmapSurface tileSet;
-	SDL_Rect viewWin;
-	SDL_Texture* dpyBuffer;
-	struct cord {
-		int min, max;
-	}typedef cords;
-
-	cords MaxRoomWidth[NUMBEROFROOMS] = { {0, 40 * 32 }, {50 * 32, 215 * 32} };
-
-	//ElevatorCordPairs[0][0].x = 36;
-	
-
-	unsigned CurrentRoom = 0;
-	bool dpyChanged = true; //this has changed to cache VW
-	void Allocate(void) {
-		/*dpyBuffer = BitmapCreate(
-			GetResWidth() + 2 * TILE_WIDTH,
-			GetResHeight() + 2 * TILE_HEIGHT
-		);*/
-	}
-
+	bool dpyChanged = true;
+	Dim dpyX = 0, dpyY = 0;
+	Point viewPosCached{ -1, -1 };
+	SDL_Texture* dpybuffer;
+	std::string id;
+	ViewWindow_t viewWin;
+	void Allocate(void);
+	void pre_cache(void);
+	Dim scale;
 public:
+	TileLayer(SDL_Rect _ViewWin, SDL_Texture* _dpybuffer,TileMap* _map, std::string _id, Dim _scale);
+	TileLayer() = default;
+	void SetTile(Dim col, Dim row, Index index);
+	SDL_Texture* get_bitmap();
 	
-	bool GetDpyChanged() { return dpyChanged; }
-	void SetTile(Dim col, Dim row, Index index) { map[row][col] = index;}
-	Index GetTile(Dim col, Dim row) const { return map[row][col]; };
+	Index GetTile(Dim col, Dim row) const
+	{
+		return (map)[row][col];
+	}
+	 Point Pick(Dim x, Dim y) const {
+		return { DIV_TILE_WIDTH(x + viewWin.x,Engine_Consts.power),
+		DIV_TILE_HEIGHT(y + viewWin.y,Engine_Consts.power) };
+	}
+	 SDL_Rect& GetViewWindow(void)  { return viewWin; }
+	void SetViewWindow(const SDL_Rect& r)
+	{
+		viewWin = r; dpyChanged = true;
+	}
+	void set_dpy_changed() { dpyChanged = true; }
+	
+	static int GetPixelWidth(void)  { return Engine_Consts.Map_width; }
+	static int GetPixelHeight(void)  { return Engine_Consts.Map_height; }
+
+	void Scroll(int dx, int dy);
+	void FilterScrollDistance(int viewStartCoord, int viewSize, int* d, int maxMapSize);
+	void FilterScroll(int* dx, int* dy);
+	void ScrollWithBoundsCheck(int dx, int dy);
+	bool CanScrollHoriz(int dx) const;
+	bool CanScrollVert(int dy) const;
+
 	void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture);
 
-	const SDL_Rect& GetViewWindow(void) const { return viewWin;}
-	void SetViewWindow(const SDL_Rect& r) { viewWin = r; dpyChanged = true; }
-	
-	BitmapTexture* GetBitmap(void) const { return dpyBuffer; }
-	int GetPixelWidth(void) const { return viewWin.w; }
-	int GetPixelHeight(void) const { return viewWin.h; }
-	int GetMapPixelHeight() { return 16 * 32; }
-	int GetMapPixelWidth() { return MaxRoomWidth[CurrentRoom].max; }
-	int GetMapPixelMinWidth() { return MaxRoomWidth[CurrentRoom].min; }
-	void NextRoom() { CurrentRoom++; }
-	void PrevRoom() { CurrentRoom--; }
-	unsigned GetTileWidth(void) const { return DIV_TILE_WIDTH(viewWin.w); }
-	unsigned GetTileHeight(void) const { return DIV_TILE_HEIGHT(viewWin.h); }
+	void Display();
+	void Display(SDL_Texture* prev, bool final_layer, SDL_Texture* Tileset, SDL_Renderer* myrenderer);
 
-	void Display(SDL_Surface* ImgSurface, SDL_Renderer* myrenderer, SDL_Texture* PrevLayerBuffer, bool FinalLayer, SDL_Texture* Tileset, SDL_Texture* dpy_text);
-	const SDL_Point Pick(Dim x, Dim y) const;
+	void scroll_horizon(int dx);
 
-	void ScrollWithBoundsCheck(float& dx, float dy);
-	void FilterScrollDistance(
-		int viewStartCoord, // x or y
-		int viewSize, // w or h
-		float* d, // dx or dy
-		int maxMapSize // w or h 
-	);
-	void FilterScroll(float* dx, float* dy);
-	void Scroll(float dx, float dy);
-	bool CanScrollHoriz(float dx) const;
-	bool CanScrollVert(float dy) const;
-
-
-	auto ToString(void) const -> const std::string; // unparse
-	bool FromString(const std::string&); // parse
-	void Save(const std::string& path) const
-	{
-		fclose(WriteText(fopen(path.c_str(), "wt")));
-	}
-	bool Load(const std::string& path);
-	FILE* WriteText(FILE* fp) const
-	{
-		fprintf(fp, "%s", ToString().c_str()); return fp;
-	}
-	bool ReadText(FILE* fp); // TODO: carefull generic parsing
-	TileLayer();
-	TileLayer(Dim _rows, Dim _cols, BitmapSurface _tileSet, TileMap _map);
-	TileLayer(Dim _rows, Dim _cols, BitmapSurface _tileSet, TileMap _map, GridLayer* grid);
-	//~TileLayer(); // cleanup here with care!
 };

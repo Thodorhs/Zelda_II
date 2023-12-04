@@ -3,16 +3,16 @@
 #include "GridMotion.h"
 #include "GridCompute.h"
 //#include "../../../Engine/Include/GridCompute2.h"
-
+/*
 class GridLayer {
 private:
-	GridIndex* grid = nullptr;
+	GridIndex* grid_old = nullptr;
 	unsigned total = 0;
 	Dim totalRows = 0, totalColumns = 0;
 	void Allocate(void) {
 		total = totalRows * totalColumns * GRID_ELEMENTS_PER_TILE;
-		grid = new GridIndex[total];
-		memset(grid, GRID_EMPTY_TILE, total);
+		grid_old = new GridIndex[total];
+		memset(grid_old, GRID_EMPTY_TILE, total);
 	}
 	// TODO: adapt as needed and insert all rest motion control functions 
 	// inside the private section
@@ -27,8 +27,8 @@ public:
 		FilterGridMotionDown(r, &dy);
 		return dy == 0; // if true IS attached to solid ground
 	}
-	GridIndex* &GetBuffer(void) { return grid; }
-	//const GridIndex*& GetBuffer(void) const { return grid; }
+	GridIndex* &GetBuffer(void) { return grid_old; }
+	//const GridIndex*& GetBuffer(void) const { return grid_old; }
 	GridLayer();
 	GridLayer(unsigned rows, unsigned cols);
-};
+};*/

@@ -15,7 +15,8 @@ void pre_cache(void) {
 
 
 void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
-	
+	if (tile == 0xffff)
+		return;
 	PTsrcrect.x = MUL_TILE_WIDTH(mod_index[tile],Engine_Consts.power);
 	PTsrcrect.y = MUL_TILE_HEIGHT(div_index[tile],Engine_Consts.power);
 	
@@ -31,6 +32,7 @@ void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* te
 
 void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& displayArea, SDL_Renderer* myrenderer, SDL_Texture* Tileset, SDL_Texture* RenderTextureTarget) {
 	Dim power = Engine_Consts.power;
+
 	if (viewPosCached.x != viewWin.x || viewPosCached.y != viewWin.y) {
 		auto startCol = DIV_TILE_WIDTH(viewWin.x,power);
 		auto startRow = DIV_TILE_HEIGHT(viewWin.y,power);

@@ -2,8 +2,8 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#define MAX_WIDTH  680
-#define MAX_HEIGHT 1024
+#define MAX_WIDTH  5000
+#define MAX_HEIGHT 5000
 typedef unsigned short Index;
 typedef unsigned short Dim;
 typedef std::vector<std::vector<Index>> TileMap;

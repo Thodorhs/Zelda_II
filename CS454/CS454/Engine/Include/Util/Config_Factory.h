@@ -31,13 +31,13 @@ public:
 			_function_map[id] = _fn;
 		}
 
-		base_type* create(int id)
+		base_type* create(configurators_t id)
 		{
 			return _function_map[id]->create();
 		}
-
+		 
 	private:
-		std::map<int, config_creator<derived_type,base_type>*> _function_map;
+		std::map<configurators_t, config_creator<derived_type,base_type>*> _function_map;
 	};
 
 
