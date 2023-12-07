@@ -1,68 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="grass_biome" tilewidth="16" tileheight="16" tilecount="252" columns="12">
+<tileset version="1.9" tiledversion="1.9.2" name="overworld_tileset_grass" tilewidth="16" tileheight="16" tilecount="252" columns="12">
  <image source="overworld_tileset_grass.png" width="192" height="336"/>
- <terraintypes>
-  <terrain name="Grass" tile="13"/>
-  <terrain name="Water" tile="0"/>
-  <terrain name="Forest" tile="0"/>
-  <terrain name="Swampgrass" tile="0"/>
-  <terrain name="Swamp" tile="0"/>
- </terraintypes>
- <tile id="0" terrain="0,0,0,0" probability="20"/>
- <tile id="1" terrain="0,0,0,0"/>
- <tile id="2" terrain="0,0,0,0"/>
- <tile id="3" terrain="0,0,0,0"/>
- <tile id="4" terrain="0,0,0,0"/>
- <tile id="13" terrain="0,0,0,0"/>
- <tile id="14" terrain="0,0,0,0"/>
- <tile id="25" terrain="0,0,0,0"/>
- <tile id="26" terrain="0,0,0,0"/>
- <tile id="37" terrain="0,0,0,0"/>
- <tile id="38" terrain="0,0,0,0"/>
- <tile id="48" terrain="0,0,0,1"/>
- <tile id="49" terrain="0,0,1,1"/>
- <tile id="50" terrain="0,0,1,0"/>
- <tile id="51" terrain="3,3,3,4"/>
- <tile id="52" terrain="3,3,4,4"/>
- <tile id="53" terrain="3,3,4,3"/>
- <tile id="57" terrain="0,0,0,2"/>
- <tile id="58" terrain="0,0,2,2"/>
- <tile id="59" terrain="0,0,2,0"/>
- <tile id="60" terrain="0,1,0,1"/>
- <tile id="61" terrain="1,1,1,1"/>
- <tile id="62" terrain="1,0,1,0"/>
- <tile id="63" terrain="3,4,3,4"/>
- <tile id="64" terrain="4,4,4,4"/>
- <tile id="65" terrain="4,3,4,3"/>
- <tile id="69" terrain="0,2,0,2"/>
- <tile id="70" terrain="2,2,2,2"/>
- <tile id="71" terrain="2,0,2,0"/>
- <tile id="72" terrain="0,1,0,0"/>
- <tile id="73" terrain="1,1,0,0"/>
- <tile id="74" terrain="1,0,0,0"/>
- <tile id="75" terrain="3,4,3,3"/>
- <tile id="76" terrain="4,4,3,3"/>
- <tile id="77" terrain="4,3,3,3"/>
- <tile id="81" terrain="0,2,0,0"/>
- <tile id="82" terrain="2,2,0,0"/>
- <tile id="83" terrain="2,0,0,0"/>
- <tile id="84" terrain="1,1,1,0"/>
- <tile id="85" terrain="1,1,0,1"/>
- <tile id="87" terrain="4,4,4,3"/>
- <tile id="88" terrain="4,4,3,4"/>
- <tile id="89" terrain="3,3,3,3"/>
- <tile id="93" terrain="2,2,2,0"/>
- <tile id="94" terrain="2,2,0,2"/>
- <tile id="96" terrain="1,0,1,1"/>
- <tile id="97" terrain="0,1,1,1"/>
- <tile id="99" terrain="4,3,4,4"/>
- <tile id="100" terrain="3,4,4,4"/>
- <tile id="105" terrain="2,0,2,2"/>
- <tile id="106" terrain="0,2,2,2"/>
- <tile id="123" terrain="3,3,3,3"/>
- <tile id="124" terrain="3,3,3,3"/>
- <tile id="125" terrain="3,3,3,3"/>
- <tile id="135" terrain="3,3,3,3"/>
- <tile id="136" terrain="3,3,3,3"/>
- <tile id="137" terrain="3,3,3,3"/>
+ <tile id="0" probability="20"/>
+ <wangsets>
+  <wangset name="Terrains" type="corner" tile="-1">
+   <wangcolor name="Grass" color="#ff0000" tile="13" probability="1"/>
+   <wangcolor name="Water" color="#00ff00" tile="0" probability="1"/>
+   <wangcolor name="Forest" color="#0000ff" tile="0" probability="1"/>
+   <wangcolor name="Swampgrass" color="#ff7700" tile="0" probability="1"/>
+   <wangcolor name="Swamp" color="#00e9ff" tile="0" probability="1"/>
+   <wangtile tileid="0" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="1" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="2" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="3" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="4" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="13" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="14" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="25" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="26" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="37" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="38" wangid="0,1,0,1,0,1,0,1"/>
+   <wangtile tileid="48" wangid="0,1,0,2,0,1,0,1"/>
+   <wangtile tileid="49" wangid="0,1,0,2,0,2,0,1"/>
+   <wangtile tileid="50" wangid="0,1,0,1,0,2,0,1"/>
+   <wangtile tileid="51" wangid="0,4,0,5,0,4,0,4"/>
+   <wangtile tileid="52" wangid="0,4,0,5,0,5,0,4"/>
+   <wangtile tileid="53" wangid="0,4,0,4,0,5,0,4"/>
+   <wangtile tileid="57" wangid="0,1,0,3,0,1,0,1"/>
+   <wangtile tileid="58" wangid="0,1,0,3,0,3,0,1"/>
+   <wangtile tileid="59" wangid="0,1,0,1,0,3,0,1"/>
+   <wangtile tileid="60" wangid="0,2,0,2,0,1,0,1"/>
+   <wangtile tileid="61" wangid="0,2,0,2,0,2,0,2"/>
+   <wangtile tileid="62" wangid="0,1,0,1,0,2,0,2"/>
+   <wangtile tileid="63" wangid="0,5,0,5,0,4,0,4"/>
+   <wangtile tileid="64" wangid="0,5,0,5,0,5,0,5"/>
+   <wangtile tileid="65" wangid="0,4,0,4,0,5,0,5"/>
+   <wangtile tileid="69" wangid="0,3,0,3,0,1,0,1"/>
+   <wangtile tileid="70" wangid="0,3,0,3,0,3,0,3"/>
+   <wangtile tileid="71" wangid="0,1,0,1,0,3,0,3"/>
+   <wangtile tileid="72" wangid="0,2,0,1,0,1,0,1"/>
+   <wangtile tileid="73" wangid="0,2,0,1,0,1,0,2"/>
+   <wangtile tileid="74" wangid="0,1,0,1,0,1,0,2"/>
+   <wangtile tileid="75" wangid="0,5,0,4,0,4,0,4"/>
+   <wangtile tileid="76" wangid="0,5,0,4,0,4,0,5"/>
+   <wangtile tileid="77" wangid="0,4,0,4,0,4,0,5"/>
+   <wangtile tileid="81" wangid="0,3,0,1,0,1,0,1"/>
+   <wangtile tileid="82" wangid="0,3,0,1,0,1,0,3"/>
+   <wangtile tileid="83" wangid="0,1,0,1,0,1,0,3"/>
+   <wangtile tileid="84" wangid="0,2,0,1,0,2,0,2"/>
+   <wangtile tileid="85" wangid="0,2,0,2,0,1,0,2"/>
+   <wangtile tileid="87" wangid="0,5,0,4,0,5,0,5"/>
+   <wangtile tileid="88" wangid="0,5,0,5,0,4,0,5"/>
+   <wangtile tileid="89" wangid="0,4,0,4,0,4,0,4"/>
+   <wangtile tileid="93" wangid="0,3,0,1,0,3,0,3"/>
+   <wangtile tileid="94" wangid="0,3,0,3,0,1,0,3"/>
+   <wangtile tileid="96" wangid="0,1,0,2,0,2,0,2"/>
+   <wangtile tileid="97" wangid="0,2,0,2,0,2,0,1"/>
+   <wangtile tileid="99" wangid="0,4,0,5,0,5,0,5"/>
+   <wangtile tileid="100" wangid="0,5,0,5,0,5,0,4"/>
+   <wangtile tileid="105" wangid="0,1,0,3,0,3,0,3"/>
+   <wangtile tileid="106" wangid="0,3,0,3,0,3,0,1"/>
+   <wangtile tileid="123" wangid="0,4,0,4,0,4,0,4"/>
+   <wangtile tileid="124" wangid="0,4,0,4,0,4,0,4"/>
+   <wangtile tileid="125" wangid="0,4,0,4,0,4,0,4"/>
+   <wangtile tileid="135" wangid="0,4,0,4,0,4,0,4"/>
+   <wangtile tileid="136" wangid="0,4,0,4,0,4,0,4"/>
+   <wangtile tileid="137" wangid="0,4,0,4,0,4,0,4"/>
+  </wangset>
+ </wangsets>
 </tileset>

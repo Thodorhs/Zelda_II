@@ -51,7 +51,7 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 
 		SDL_SetRenderTarget(myrenderer, NULL); //Unsetting the target of SDL_RenderCopy (now the target is the screen render)
 	}
-	int scale = get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale");
+	int scale = get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale_global");
 	PTdstrect.x = 0;
 	PTdstrect.y = 0;
 	PTdstrect.h = viewWin.h*scale;

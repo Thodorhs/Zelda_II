@@ -1,12 +1,12 @@
 #include <filesystem>
 #include <cmath>
+#include <cassert>
 #include "../../../Engine/Include/ZeldaApp.h"
-//#include "../../../Engine/Include/ViewWindow.h"
-//#include "../../../Engine/Include/Util/ConfiguratorManager.h"
-//#include "../../../Engine/Include/Util/ConfigFuncs.h"
+#include "../../../Engine/Include/ViewWindow.h"
+#include "../../../Engine/Include/Util/ConfigFuncs.h"
 #include "../../../Engine/Include/Grid/Grid.h"
-#include "../../../Engine/Include/TileLayer.h"
 #include "../../../Engine/Include/Util/Print.h"
+#include "../../../Engine/Include/Grid/GridMotion.h"
 
 SDL_Rect moving_rect = { 0,48,16,16 };
 Render* global_render_vars;
@@ -177,8 +177,9 @@ void show_grid() {
 
 void myRender() {
 	SDL_RenderClear(global_render_vars->myrenderer);
-	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 200, 0, 200, 255);
-	SDL_RenderFillRect(global_render_vars->myrenderer, &moving_rect);
+	//SDL_SetRenderDrawColor(global_render_vars->myrenderer, 200, 0, 200, 255);
+	//SDL_RenderFillRect(global_render_vars->myrenderer, &moving_rect);
+	TileTerrainDisplay(GetMapData(), global_render_vars->ViewWindowR, { 0, 0,-1,0 }, global_render_vars->myrenderer, global_render_vars->Tileset, global_render_vars->RenderTextureTarget);
 	if(display_grid) show_grid();
 	SDL_RenderPresent(global_render_vars->myrenderer);
 }
@@ -239,48 +240,54 @@ void fill_grid() {
 	ComputeTileGridBlocks(GetMapData(), grid_class); //grid_old supports action layer 
 }
 
+auto asset_path() {
+	std::filesystem::path cwd = std::filesystem::current_path();
+	std::string find_first_part_path = cwd.string();
+	size_t pos = find_first_part_path.find("out");
+	std::string half_path = find_first_part_path.substr(0, pos);
+	std::string full_asset_path = half_path + "UnitTests\\UnitTest2";
+	return full_asset_path;
+}
+
 void ZeldaApp::Initialise(void) {
+	assert(SDL_Init(SDL_INIT_EVERYTHING) == 0);
 	pr_start_msg();
 	pr_info("Initializing configurators..");
-	init_configurators();
+	std::string full_asset_path = asset_path();
+	init_configurators(full_asset_path);
 	configurators_t map = configurators_t::MAP_CONFIG;
 	configurators_t render = configurators_t::RENDER_CONFIG;
 	const int view_w = get_config_value<int>(render, "view_win_w");
 	const int view_h = get_config_value<int>(render, "view_win_h");
 	int start_x =get_config_value<int>(render, "start_x");
 	int start_y = get_config_value<int>(render, "start_y");
-	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
-	{
-		int scale = get_config_value<int>(render, "view_scale_global");
+	
+	int scale = get_config_value<int>(render, "view_scale_global");
 
-		pr_info("Subsystems Initialised!...");
-		global_render_vars = new Render(start_x, start_y, view_w, view_h, scale);
+	pr_info("Subsystems Initialised!...");
+	global_render_vars = new Render(start_x, start_y, view_w, view_h, scale);
 
-		int win_w = get_config_value<int>(render, "render_w_w");
-		int win_h = get_config_value<int>(render, "render_w_h");
-		init_engine_constants();
+	int win_w = get_config_value<int>(render, "render_w_w");
+	int win_h = get_config_value<int>(render, "render_w_h");
+	init_engine_constants();
 
-		global_render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, 0);
-		if (global_render_vars->Gwindow) std::cout << "Window created!" << std::endl;
+	global_render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, 0);
+	if (global_render_vars->Gwindow) std::cout << "Window created!" << std::endl;
 		
-		global_render_vars->myrenderer = SDL_CreateRenderer(global_render_vars->Gwindow, -1, 0);
-		if (global_render_vars->myrenderer)
-		{
-			SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 0, 0, 0);
-			pr_info("Renderer created!");
-		}
+	global_render_vars->myrenderer = SDL_CreateRenderer(global_render_vars->Gwindow, -1, 0);
+	if (global_render_vars->myrenderer)
+	{
+		SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 0, 0, 0);
+		pr_info("Renderer created!");
 	}
+	
 
 	init_key_map();
 	pre_cache();
 
-	std::filesystem::path cwd = std::filesystem::current_path();
-	std::string find_first_part_path = cwd.string();
-	size_t pos = find_first_part_path.find("out");
-	std::string half_path = find_first_part_path.substr(0, pos);
-	std::string const full_asset_path = half_path + "UnitTests\\UnitTest2\\UnitTest2Media";
-	ReadTextMap(full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map"));
-	global_render_vars->ImgSurface = IMG_Load((full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
+	ReadTextMap(full_asset_path + "\\UnitTest2Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map"));
+	print();
+	global_render_vars->ImgSurface = IMG_Load((full_asset_path + "\\UnitTest2Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
 	fill_grid();
 	
 	global_render_vars->Tileset = SDL_CreateTextureFromSurface(global_render_vars->myrenderer, global_render_vars->ImgSurface);

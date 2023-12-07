@@ -23,12 +23,13 @@ typedef struct Render {
 	
 	int view_scale;
 
-	Render(int x, int y, int w, int h,int scale) :
-		ViewWindowR({ x,y,w/scale,h/scale }),
+	Render(int x, int y, int w, int h, int scale) :
+		ViewWindowR({ x, y, w/scale, h/scale }),
 		ImgSurface((SDL_Surface*)0),
 		myrenderer((SDL_Renderer*)0),
-		Gwindow((SDL_Window*)0), Tileset((SDL_Texture*)0),
-		view_scale( scale),
+		Gwindow((SDL_Window*)0), 
+		Tileset((SDL_Texture*)0),
+		view_scale(scale),
 		RenderTextureTarget((SDL_Texture*)0) {};
 	Render() = default;
 };

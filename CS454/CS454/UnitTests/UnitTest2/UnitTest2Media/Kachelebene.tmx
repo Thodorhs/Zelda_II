@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.5" orientation="orthogonal" renderorder="right-down" width="21" height="42" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.9" tiledversion="1.9.2" orientation="orthogonal" renderorder="right-down" width="21" height="42" tilewidth="16" tileheight="16" infinite="0" nextlayerid="3" nextobjectid="1">
  <tileset firstgid="1" source="grass_biome.tsx"/>
- <layer id="1" name="Kachelebene 1" width="21" height="42">
+ <layer id="1" name="Kachelebene_layer1 " width="21" height="42">
   <data encoding="csv">
 62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,
 62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,
@@ -47,7 +47,7 @@
 62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62,62
 </data>
  </layer>
- <layer id="2" name="Tile Layer 2" width="21" height="42">
+ <layer id="2" name="Kachelebene_layer2 " width="21" height="42">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

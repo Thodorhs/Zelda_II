@@ -2,7 +2,6 @@
 //#include "../../../Engine/Include/ViewWindow.h"
 #include <filesystem>
 //#include "../../../Engine/Include/Util/ConfiguratorManager.h"
-
 //#include "../../../Engine/Include/Util/ConfigFuncs.h"
 #include "../../../Engine/Include/Grid/Grid.h"
 #include "../../../Engine/Include/TileLayer.h"
@@ -368,7 +367,7 @@ void init_layers(std::string asset_path) {
 					pr_error(SDL_GetError());
 					exit(EXIT_FAILURE);
 				}
-				ReadTextMap(asset_path + "\\" + std::any_cast<std::string>(obj_map.at("text_map")));
+				ReadTextMap(asset_path + std::any_cast<std::string>(obj_map.at("text_map")));
 				Layers.insert(std::make_pair(itterator->first, std::make_unique<TileLayer>(global_render_vars->ViewWindowR, target, GetMapData(), itterator->first, scale)));
 			}
 		}
@@ -383,12 +382,12 @@ void init_layers(std::string asset_path) {
 	Action_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,action_target,GetMapData(),"action",ac_scale);
 
 	SDL_Texture* horizon_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
-	ReadTextMap(asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map_hor"));
+	ReadTextMap(asset_path + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map_hor"));
 	Horizon_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,horizon_target,GetMapData(),"horizon",hor_scale);
 
 
 	SDL_Texture* backround_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
-	ReadTextMap(asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map_back"));
+	ReadTextMap(asset_path + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map_back"));
 	Backround_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,backround_target, GetMapData(),"backround",back_scale);
 	
 	#endif
@@ -396,64 +395,56 @@ void init_layers(std::string asset_path) {
 }
 
 
-
+auto asset_path() {
+	std::filesystem::path cwd = std::filesystem::current_path();
+	std::string find_first_part_path = cwd.string();
+	size_t pos = find_first_part_path.find("out");
+	std::string half_path = find_first_part_path.substr(0, pos);
+	std::string full_asset_path = half_path + "UnitTests\\UnitTest3";
+	return full_asset_path;
+}
 
 void ZeldaApp::Initialise(void) {
+	assert(SDL_Init(SDL_INIT_EVERYTHING) == 0);
 	pr_start_msg();
 	pr_info("Initializing configurators..");
-	init_configurators();
-	
-
+	std::string full_asset_path = asset_path();
+	init_configurators(full_asset_path);
 	configurators_t map = configurators_t::MAP_CONFIG;
 	configurators_t render = configurators_t::RENDER_CONFIG;
 	const int view_w = get_config_value<int>(render, "view_win_w");
 	const int view_h = get_config_value<int>(render, "view_win_h");
 	int start_x =get_config_value<int>(render, "start_x");
 	int start_y = get_config_value<int>(render, "start_y");
-	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
+	
+	int scale = get_config_value<int>(render, "view_scale_global");
+
+	pr_info("Subsystems Initialised!...");
+	global_render_vars = new Render(start_x, start_y, view_w, view_h, scale);
+
+	int win_w = get_config_value<int>(render, "render_w_w");
+	int win_h = get_config_value<int>(render, "render_w_h");
+	init_engine_constants();
+
+	global_render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, 0);
+	if (global_render_vars->Gwindow) std::cout << "Window created!" << std::endl;
+		
+	global_render_vars->myrenderer = SDL_CreateRenderer(global_render_vars->Gwindow, -1, 0);
+	if (global_render_vars->myrenderer)
 	{
-		
-		
-		
-		int scale = get_config_value<int>(render, "view_scale_global");
-
-		pr_info("Subsystems Initialised!...");
-		global_render_vars = new Render(start_x, start_y, view_w, view_h, scale);
-
-		int win_w = get_config_value<int>(render, "render_w_w");
-		int win_h = get_config_value<int>(render, "render_w_h");
-		init_engine_constants();
-
-		global_render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, 0);
-		if (global_render_vars->Gwindow) std::cout << "Window created!" << std::endl;
-		
-		global_render_vars->myrenderer = SDL_CreateRenderer(global_render_vars->Gwindow, -1, 0);
-		if (global_render_vars->myrenderer)
-		{
-			SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 0, 0, 0);
-			pr_info("Renderer created!");
-		}
-
+		SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 0, 0, 0);
+		pr_info("Renderer created!");
 	}
-
 
 	init_key_map();
 	pre_cache();
-
-	
-	std::filesystem::path cwd = std::filesystem::current_path();
-	std::string find_first_part_path = cwd.string();
-	size_t pos = find_first_part_path.find("out");
-	std::string half_path = find_first_part_path.substr(0, pos);
-	std::string const full_asset_path = half_path + "UnitTests\\UnitTest2\\UnitTest2Media\\Zelda";
-
-	ReadTextMap(full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map"));
-	global_render_vars->ImgSurface = IMG_Load((full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
+	ReadTextMap(full_asset_path + "\\UnitTest3Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map"));
+	global_render_vars->ImgSurface = IMG_Load((full_asset_path + "\\UnitTest3Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
 	fill_grid();
-	
+	init_layers(full_asset_path + "\\UnitTest3Media\\");
+
 	global_render_vars->Tileset = SDL_CreateTextureFromSurface(global_render_vars->myrenderer, global_render_vars->ImgSurface);
 	
-
 	int w;
 	int h;
 	SDL_QueryTexture(global_render_vars->Tileset,
@@ -461,15 +452,12 @@ void ZeldaApp::Initialise(void) {
 		&w, &h);
 	//std::cout << " w=" << w << " h=" << h << std::endl;
 
-
 	game.SetInput(myInput);
 	game.SetRender(myRender);
 	game.SetDone(myDone);
-	init_layers(full_asset_path);
+	
 	is_running = true;
 	pr_info("Done!");
-	
-	
 }
 
 void ZeldaApp::Load() {

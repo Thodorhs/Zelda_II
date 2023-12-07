@@ -39,26 +39,27 @@
       }
 
     },
-    "Layers" : {  "LayerArray": [{
-          "1_Horizon": 
-            {
+    "Layers": {
+      "LayerArray": [
+        {
+          "1_Horizon": {
             "text_map": "TileMap_Horizon.csv",
             "view_scale": 1
-            }
-          },
-          {
-            "2_Background": {
-              "text_map": "TileMap_Backround.csv",
-              "view_scale": 2
-            }
-          },
-          {
-            "3_Action": {
-              "text_map": "TileMap_Foreground.csv",
-              "view_scale": 2
-            }
           }
-                 ]
-     }
-   }
+        },
+        {
+          "2_Background": {
+            "text_map": "TileMap_Backround.csv",
+            "view_scale": 2
+          }
+        },
+        {
+          "3_Action": {
+            "text_map": "TileMap_Foreground.csv",
+            "view_scale": 2
+          }
+        }
+      ]
+    }
+  }
 }

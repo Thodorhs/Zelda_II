@@ -229,49 +229,51 @@ void init_engine_constants() {
 	Engine_Consts.grid_power = power_grid;
 }
 
-
-void ZeldaApp::Initialise(void) {
-	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
-	{
-		configurators_t map = configurators_t::MAP_CONFIG;
-		configurators_t render = configurators_t::RENDER_CONFIG;
-		init_configurators();
-		int view_w, view_h;
-		int scale = get_config_value<int>(render, "view_scale");
-		view_w = get_config_value<int>(render, "view_win_w");
-		view_h = get_config_value<int>(render, "view_win_h");
-		std::cout << "Subsystems Initialised!..." << std::endl;
-		global_render_vars = new Render(0,0,view_w, view_h,scale);
-		int win_w, win_h; 
-		win_w = get_config_value<int>(render, "render_w_w");
-		win_h = get_config_value<int>(render, "render_w_h");
-		init_engine_constants();
-
-		global_render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, 0);
-		if (global_render_vars->Gwindow) std::cout << "Window created!" << std::endl;
-
-		global_render_vars->myrenderer = SDL_CreateRenderer(global_render_vars->Gwindow, -1, 0);
-		if (global_render_vars->myrenderer)
-		{
-			SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 0, 0, 0);
-			std::cout << "Renderer created!" << std::endl;
-		}
-	}
-
-
-	init_key_map();
-	pre_cache();
+auto asset_path() {
 	std::filesystem::path cwd = std::filesystem::current_path();
 	std::string find_first_part_path = cwd.string();
 	size_t pos = find_first_part_path.find("out");
 	std::string half_path = find_first_part_path.substr(0, pos);
-	std::string full_asset_path = half_path + "UnitTests\\UnitTest1\\UnitTest1Media";
+	std::string full_asset_path = half_path + "UnitTests\\UnitTest1";
+	return full_asset_path;
+}
+
+void ZeldaApp::Initialise(void) {
+	assert(SDL_Init(SDL_INIT_EVERYTHING) == 0);
+	configurators_t map = configurators_t::MAP_CONFIG;
+	configurators_t render = configurators_t::RENDER_CONFIG;
+	std::string full_asset_path = asset_path();
+	init_configurators(full_asset_path);
+	int view_w, view_h;
+	int scale = get_config_value<int>(render, "view_scale_global");
+	view_w = get_config_value<int>(render, "view_win_w");
+	view_h = get_config_value<int>(render, "view_win_h");
+	std::cout << "Subsystems Initialised!..." << std::endl;
+	global_render_vars = new Render(0,0,view_w, view_h,scale);
+	int win_w, win_h; 
+	win_w = get_config_value<int>(render, "render_w_w");
+	win_h = get_config_value<int>(render, "render_w_h");
+	init_engine_constants();
+
+	global_render_vars->Gwindow = SDL_CreateWindow("ZeldaEngine", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, win_w, win_h, 0);
+	if (global_render_vars->Gwindow) std::cout << "Window created!" << std::endl;
+
+	global_render_vars->myrenderer = SDL_CreateRenderer(global_render_vars->Gwindow, -1, 0);
+	if (global_render_vars->myrenderer)
+	{
+		SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 0, 0, 0);
+		std::cout << "Renderer created!" << std::endl;
+	}
+	
 
 
-	ReadTextMap(full_asset_path + "\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG,"text_map"));
-	global_render_vars -> ImgSurface = IMG_Load((full_asset_path + "\\"+ get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
+	init_key_map();
+	pre_cache();
 
-	std::cout << " w="<< global_render_vars->ImgSurface->w << " h=" << global_render_vars->ImgSurface->h << std::endl;
+	ReadTextMap(full_asset_path + "\\UnitTest1Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG,"text_map"));
+	global_render_vars -> ImgSurface = IMG_Load((full_asset_path + "\\UnitTest1Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
+
+	//std::cout << " w="<< global_render_vars->ImgSurface->w << " h=" << global_render_vars->ImgSurface->h << std::endl;
 	global_render_vars ->Tileset = SDL_CreateTextureFromSurface(global_render_vars->myrenderer, global_render_vars->ImgSurface);
 	//SDL_FreeSurface(render_vars->ImgSurface);
 
@@ -288,6 +290,7 @@ void ZeldaApp::Initialise(void) {
 	game.SetRender(myRender);
 	game.SetDone(myDone);
 	is_running = true;
+	
 }
 
 void ZeldaApp::Load() {

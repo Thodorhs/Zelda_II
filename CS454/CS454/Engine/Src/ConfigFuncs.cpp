@@ -22,9 +22,9 @@ void test_init(ConfiguratorManager* cf,Tfunc &parser,configurators_t type)
 
 using Parser = Configurator::ParseFunc;
 
-void init_configurators() {
+void init_configurators(std::string conf_path) {
+	set_conf_path(conf_path);
 	ConfiguratorManager* cf = ConfiguratorManager::GetInstance();
-
 	Parser map = parse_test;
 	Parser ren = parse_render;
 	Parser layer = parse_layers;

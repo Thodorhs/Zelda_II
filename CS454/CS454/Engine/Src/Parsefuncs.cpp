@@ -1,15 +1,17 @@
 #include "../Include/Util/ParseFuncs.h"
+#include <cassert>
 using namespace nlohmann;
 
+std::string conf_file_path;
+
+void set_conf_path(std::string f) {
+    std::string conf_file = f + "\\conf\\config.json";
+    conf_file_path = conf_file;
+}
 
 auto get_json_file() {
-    std::filesystem::path cwd = std::filesystem::current_path();
-    std::string find_first_part_path = cwd.string();
-    size_t pos = find_first_part_path.find("out");
-    std::string half_path = find_first_part_path.substr(0, pos);
-    std::string full_asset_path = half_path + "Config";
-
-    std::ifstream f(full_asset_path + "\\config.json");
+    assert(!conf_file_path.empty());
+    std::ifstream f(conf_file_path);
     return f;
 }
 
