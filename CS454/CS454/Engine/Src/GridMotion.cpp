@@ -2,33 +2,23 @@
 #include "../Include/Util/Print.h"
 #include "../Include/Util/ConfigFuncs.h"
 
-void SetSolidGridTile(GridMapOld* m, Dim col, Dim row)
-{
-	SetGridTile(m, col, row, GRID_SOLID_TILE);
-}
-void SetEmptyGridTile(GridMapOld* m, Dim col, Dim row)
-{
-	SetGridTile(m, col, row, GRID_EMPTY_TILE);
-}
-void SetGridTileFlags(GridMapOld* m, Dim col, Dim row, GridIndex flags)
-{
-	SetGridTile(m, col, row, flags);
-}
-void SetGridTileTopSolidOnly(GridMapOld* m, Dim col, Dim row)
-{
-	SetGridTileFlags(m, col, row, GRID_TOP_SOLID_MASK);
-}
-bool CanPassGridTile(GridMap* m, Dim col, Dim row, GridIndex flags) // i.e. checks if flags set
-{
+void SetSolidGridTile(GridMapOld* m, Dim col, Dim row) { SetGridTile(m, col, row, GRID_SOLID_TILE); }
+
+void SetEmptyGridTile(GridMapOld* m, Dim col, Dim row) { SetGridTile(m, col, row, GRID_EMPTY_TILE); }
+
+void SetGridTileFlags(GridMapOld* m, Dim col, Dim row, GridIndex flags) { SetGridTile(m, col, row, flags); }
+
+void SetGridTileTopSolidOnly(GridMapOld* m, Dim col, Dim row) { SetGridTileFlags(m, col, row, GRID_TOP_SOLID_MASK); }
+
+bool CanPassGridTile(GridMap* m, Dim col, Dim row, GridIndex flags) { // i.e. checks if flags set
 	auto fl = (*m)[row][col].flags;
 	auto res = fl & flags;
 	return res == 0;
 }
 
-void FilterGridMotionLeft(GridMap* m, const SDL_Rect& r, int* dx){}
+void FilterGridMotionLeft(GridMap* m, const SDL_Rect& r, int* dx) {}
 
-void FilterGridMotionRight(GridMap* m, const SDL_Rect& r, int* dx)
-{
+void FilterGridMotionRight(GridMap* m, const SDL_Rect& r, int* dx) {
 	Dim power = Engine_Consts.grid_power;
 	Dim scale = static_cast<Dim>(get_config_value<int>(configurators_t::RENDER_CONFIG,"view_scale_action"));
 	auto x2 = (r.x + r.w - 1)/scale;
@@ -58,8 +48,7 @@ void FilterGridMotionUp(GridMap* m, const SDL_Rect& r, int* dy){}
 void FilterGridMotionDown(GridMap* m, const SDL_Rect& r, int* dy){}
 
 
-void FilterGridMotion(GridMap* m, const SDL_Rect& r, int* dx, int* dy)
-{
+void FilterGridMotion(GridMap* m, const SDL_Rect& r, int* dx, int* dy) {
 	assert(
 		abs(*dx) <= Engine_Consts.Grid_el_sz && abs(*dy) <= Engine_Consts.Grid_el_sz
 	);

@@ -5,7 +5,6 @@ Point viewPosCached{ -1, -1 };
 SDL_Rect PTsrcrect;
 SDL_Rect PTdstrect;
 
-
 Dim dpyX = 0, dpyY = 0;
 
 void pre_cache(void) {
@@ -13,14 +12,12 @@ void pre_cache(void) {
 		div_index[i] = i / 12,mod_index[i] = i % 12;
 }
 
-
 void PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
 	if (tile == 0xffff)
 		return;
 	PTsrcrect.x = MUL_TILE_WIDTH(mod_index[tile],Engine_Consts.power);
 	PTsrcrect.y = MUL_TILE_HEIGHT(div_index[tile],Engine_Consts.power);
 	
-
 	PTsrcrect.h = PTsrcrect.w = 16;
 
 	PTdstrect.x = x-dpyX;
@@ -60,32 +57,15 @@ void TileTerrainDisplay(TileMap* map, const SDL_Rect& viewWin, const SDL_Rect& d
 	//SDL_RenderCopy(myrenderer, RenderTextureTarget, NULL, NULL); //Setting the texture we loaded earlier(Rendertexture) to be displayed on our window
 }
 
+int GetMapPixelWidth() { return Engine_Consts.Map_width; }
 
+int GetMapPixelHeight() { return Engine_Consts.Map_height; }
 
-int GetMapPixelWidth()
-{
-	return Engine_Consts.Map_width ;
-}
+void Scroll(SDL_Rect* viewWin, int dx, int dy) { viewWin->x += dx; viewWin->y += dy; }
 
-int GetMapPixelHeight()
-{
-	return Engine_Consts.Map_height;
-}
+bool CanScrollHoriz(const SDL_Rect& viewWin, int dx) { return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth(); }
 
-void Scroll(SDL_Rect* viewWin, int dx, int dy)
-{
-	viewWin->x += dx; viewWin->y += dy;
-}
-
-bool CanScrollHoriz(const SDL_Rect& viewWin, int dx)
-{
-	return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth();
-}
-
-bool CanScrollVert(const SDL_Rect& viewWin, int dy)
-{
-	return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight();
-}
+bool CanScrollVert(const SDL_Rect& viewWin, int dy){ return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight(); }
 
 void FilterScrollDistance(
 	int viewStartCoord, // x or y

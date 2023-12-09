@@ -1,45 +1,33 @@
-
 #include "Configurator.h"
 #include <map>
-
-
-
-
 
 template < class T >
 class base_creator
 {
 public:
 	virtual T* create() = 0;
-	
 };
 
-	template < class derived_type, class base_type >
-	class config_creator : base_creator<base_type> {
-	public:
-		base_type* create()  override {
-			return new derived_type();
-		}
-	};
+template < class derived_type, class base_type >
+class config_creator : base_creator<base_type> {
+public:
+	base_type* create()  override {
+		return new derived_type();
+	}
+};
 
-	template <class derived_type, class base_type >
-	class factory
-	{
-	public:
-		void register_type(configurators_t id, config_creator<derived_type,base_type>* _fn)
-		{
-			_function_map[id] = _fn;
-		}
+template <class derived_type, class base_type >
+class factory
+{
+public:
+	void register_type(configurators_t id, config_creator<derived_type,base_type>* _fn) {
+		_function_map[id] = _fn;
+	}
 
-		base_type* create(configurators_t id)
-		{
-			return _function_map[id]->create();
-		}
+	base_type* create(configurators_t id) {
+		return _function_map[id]->create();
+	}
 		 
-	private:
-		std::map<configurators_t, config_creator<derived_type,base_type>*> _function_map;
-	};
-
-
-	
-
+private:
+	std::map<configurators_t, config_creator<derived_type,base_type>*> _function_map;
+};

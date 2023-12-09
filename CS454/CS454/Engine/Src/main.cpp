@@ -5,6 +5,5 @@ int main() {
 	App.Initialise();
 	App.Load();
 	App.Run();
-
 	return 0;
 }

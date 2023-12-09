@@ -1,5 +1,4 @@
 #include <utility>
-
 #include "../Include/TileLayer.h"
 
 TileLayer::TileLayer(ViewWindow_t _ViewWin,SDL_Texture* _dpybuffer,TileMap* _map,std::string _id,Dim _scale) {
@@ -13,20 +12,13 @@ TileLayer::TileLayer(ViewWindow_t _ViewWin,SDL_Texture* _dpybuffer,TileMap* _map
 	pre_cache();
 }
 
-
-
-SDL_Texture* TileLayer::get_bitmap() {
-	return dpybuffer;
-}
-
+SDL_Texture* TileLayer::get_bitmap() { return dpybuffer; }
 
 void TileLayer::PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_Texture* texture) {
-	
 	ViewWindow_t PTsrcrect{};
 	ViewWindow_t PTdstrect{};
 	PTsrcrect.x = MUL_TILE_WIDTH(mod_index[tile], Engine_Consts.power);
 	PTsrcrect.y = MUL_TILE_HEIGHT(div_index[tile], Engine_Consts.power);
-
 
 	PTsrcrect.h = PTsrcrect.w = Engine_Consts.Tile_width;
 
@@ -35,16 +27,14 @@ void TileLayer::PutTile(Dim x, Dim y, Index tile, SDL_Renderer* myrenderer, SDL_
 	PTdstrect.h = PTdstrect.w = Engine_Consts.Tile_width;
 	SDL_RenderCopy(myrenderer, texture, &(PTsrcrect), &(PTdstrect)); //Same as SDL_BlitSurface but uses the gpu so its faster
 }
+
 void  TileLayer::pre_cache(void) {
 	unsigned short tileset_cols =(unsigned short) get_config_value<int>(configurators_t::MAP_CONFIG, "tileset_columns");
 	for (unsigned short i = 0; i < 255; ++i)
 		div_index[i] = i / tileset_cols, mod_index[i] = i % tileset_cols;
 }
 
-
-
 void TileLayer::Display(SDL_Texture* prev,bool final_layer,SDL_Texture* Tileset,SDL_Renderer* myrenderer) {
-
 	Dim power = Engine_Consts.power;
 
 	if (dpyChanged) {
@@ -59,7 +49,6 @@ void TileLayer::Display(SDL_Texture* prev,bool final_layer,SDL_Texture* Tileset,
 		if (prev != nullptr)
 			dpybuffer = prev;
 		
-		
 		 //Setting the target of SDL_RenderCopy to be the texture
 		SDL_SetRenderTarget(myrenderer, dpybuffer);
 		for (unsigned short row = startRow; row <= endRow; ++row)
@@ -71,7 +60,6 @@ void TileLayer::Display(SDL_Texture* prev,bool final_layer,SDL_Texture* Tileset,
 					(map)[row][col], myrenderer, Tileset);
 			}
 		dpyChanged = false;
-		
 		 //Unsetting the target of SDL_RenderCopy (now the target is the screen render)
 	}
 	
@@ -87,7 +75,6 @@ void TileLayer::Display(SDL_Texture* prev,bool final_layer,SDL_Texture* Tileset,
 	}
 }
 
-
 void TileLayer::scroll_horizon(int dx) {
 	viewWin.x += dx;
 	if (viewWin.x < 0)
@@ -98,21 +85,11 @@ void TileLayer::scroll_horizon(int dx) {
 	dpyChanged = true;
 }
 
+bool TileLayer::CanScrollHoriz(int dx) const { return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth(); }
 
-bool TileLayer::CanScrollHoriz(int dx) const 
-{
-	return viewWin.x >= -dx && (viewWin.x + viewWin.w + dx) <= GetMapPixelWidth();
-}
+bool TileLayer::CanScrollVert( int dy) const { return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight(); }
 
-bool TileLayer::CanScrollVert( int dy) const 
-{
-	return viewWin.y >= -dy && (viewWin.y + viewWin.h + dy) <= GetMapPixelHeight();
-}
-
-void TileLayer::Scroll(int dx, int dy)
-{
-	viewWin.x += dx; viewWin.y += dy;
-}
+void TileLayer::Scroll(int dx, int dy) { viewWin.x += dx; viewWin.y += dy; }
 
 void TileLayer::FilterScrollDistance(
 	int viewStartCoord, // x or y

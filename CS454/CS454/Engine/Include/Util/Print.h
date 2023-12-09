@@ -44,10 +44,10 @@ void inline pr_start_msg()
 
 }
 
-void inline def()
-{
+void inline def() {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),DEFAULT_WHITE );
 }
+
 template<typename arg>
 void  pr_info(const arg msg) {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_GREEN);
@@ -70,8 +70,7 @@ void pr_error(const arg msg) {
 }
 
 template<typename arg>
-void pr_def(const arg msg)
-{
+void pr_def(const arg msg) {
 	std::cout << msg << "\n";
 }
 #endif // PRINT_H

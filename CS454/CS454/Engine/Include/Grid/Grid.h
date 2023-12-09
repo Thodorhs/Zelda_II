@@ -30,7 +30,6 @@ typedef struct grid_block {
 	std::vector<Index> els;
 	Dim flags;
 };
-
 typedef std::vector<std::vector<GridIndex>> GridMapOld;
 typedef std::vector<std::vector<grid_block>> GridMap;
 
@@ -40,14 +39,24 @@ private:
 		GridMapOld grid_old;
 		GridMap grid;
 		Index empty = 31;
-		Index empty_tiles[5] = {0,1,2,3,4};
 public:
+		std::unordered_map<Index, bool> static empty_tiles;
+
+		void fill_empty_tiles_map() {
+			for (int i = 0; i <= 100; i++) {
+				empty_tiles[i] = false;
+			}
+			empty_tiles[0] = true;
+			empty_tiles[1] = true;
+			empty_tiles[2] = true;
+			empty_tiles[3] = true;
+			empty_tiles[4] = true;
+		}
 		GridMapOld& get_grid() { return grid_old; }
 		GridMap& get_s_grid() { return grid; }
 		Index get_empty() { return empty; }
 
-		Index* get_emp_tiles() { return empty_tiles; }
-		 _Grid_();
+		_Grid_();
 
 		GridIndex GetOldGridTileBlock(Dim rowTile, Dim colTile);
 		grid_block GetGridTileBlock(Dim rowTile, Dim colTile);

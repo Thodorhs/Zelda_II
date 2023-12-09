@@ -55,13 +55,11 @@ namespace app {
 			double clockToMilliseconds(clock_t ticks){ return (ticks / (double)CLOCKS_PER_SEC) * 1000.0; }
 	};
 
-
 	class App {
 		protected:
 			Game game;
 		
 		public:
-			
 			virtual void Initialise(void) = 0;
 			virtual void Load(void) = 0;
 			virtual void Run(void) { game.MainLoop(); }

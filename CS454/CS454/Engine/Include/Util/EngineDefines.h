@@ -2,8 +2,9 @@
 #include "SDL.h"
 #include <vector>
 #include <map>
-
 #include <memory>
+#include <unordered_map>
+
 typedef SDL_Surface BitmapSurface;
 typedef SDL_Texture BitmapTexture;
 
@@ -35,8 +36,6 @@ extern Engine_Consts_t Engine_Consts;
 #define TILE_WIDTH 16
 #define TILE_HEIGHT 16
 
-
-
 #define TILEX_MASK 0xFF00
 #define TILEX_SHIFT 8
 #define TILEY_MASK 0x00FF
@@ -48,6 +47,3 @@ extern Engine_Consts_t Engine_Consts;
 #define DIV_TILE_HEIGHT(i,power)((i)>>power)
 #define MOD_TILE_WIDTH(i,tw)((i)&(tw-1))
 #define MOD_TILE_HEIGHT(i,th)((i)&(th-1))
-
-
-

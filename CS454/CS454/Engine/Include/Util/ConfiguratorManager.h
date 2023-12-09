@@ -7,6 +7,7 @@
 #include <assert.h>
 #include <any>
 #define CONFIGS 5
+
 class ConfiguratorManager {
 private:
 	static ConfiguratorManager* singleton;
@@ -19,9 +20,6 @@ private:
 	}
 	ConfiguratorManager(void) = default;
 public:
-
-	
-
 	
 	static auto GetInstance(void) -> ConfiguratorManager* { 
 		if (singleton == nullptr)
@@ -91,5 +89,4 @@ public:
 	void print_all() {
 		
 	}
-
 };

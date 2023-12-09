@@ -4,7 +4,7 @@
 #include <any>
 #include <functional>
 #include <ranges>
-
+#include <assert.h>
 
 typedef  enum class configurators_t {
 	MAP_CONFIG = 1,
@@ -12,9 +12,7 @@ typedef  enum class configurators_t {
 	LAYER_CONFIG =3 
 } ;
 
-
 typedef std::map<std::string, std::any> Config_data_t;
-
 
 class Configurator {
 protected:
@@ -32,8 +30,6 @@ protected:
 		
 };
 
-
-#include <assert.h>
 class map_config : public Configurator {
 private:
 	
@@ -127,5 +123,4 @@ public:
 			std::cout << "value:" << std::any_cast<int>(val);
 		}
 	}
-
 };

@@ -4,7 +4,6 @@
 #include "SDL_Image.h"
 #include"Util/EngineDefines.h"
 #include "MapEditor.h"
-
 //#include "Util/ConfigFuncs.h"
 
 struct Point { int x, y; };
@@ -53,5 +52,4 @@ static void FilterScrollDistance(
 );
 void FilterScroll(const SDL_Rect& viewWin, int* dx, int* dy);
 void ScrollWithBoundsCheck(SDL_Rect* viewWin, int dx, int dy);
-
 void pre_cache(void);

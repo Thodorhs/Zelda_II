@@ -1,21 +1,17 @@
 #include "../Include/Grid/Grid.h"
 #include "../Include/Util/ConfigFuncs.h"
 
+std::unordered_map<unsigned short, bool> _Grid_::empty_tiles;
+
 bool IsTileIndexAssumedEmpty(std::unique_ptr<_Grid_>& grid_cl, Index index) {
 	if (index == 0xffff)
 		return true;
-	auto tiles = grid_cl->get_emp_tiles();
-	for (int i=0; i <5; i++) {
-		if (tiles[i] == index)
-			return true;
-	}
-	return false;
-
+	return grid_cl->empty_tiles[index];
 }
 
-void SetGridTile(GridMapOld* m, Dim col, Dim row, GridIndex index){ (*m)[row][col] = index; }
+void SetGridTile(GridMapOld* m, Dim col, Dim row, GridIndex index) { (*m)[row][col] = index; }
 
-grid_block GetGridTile(const GridMap* m, Dim col, Dim row){ return (*m)[row][col]; }
+grid_block GetGridTile(const GridMap* m, Dim col, Dim row) { return (*m)[row][col]; }
 
 /*****************CLASS FUNCS**********************/
 
@@ -45,6 +41,7 @@ grid_block _Grid_::GetGridTileBlock(Dim rowTile, Dim colTile) { return grid[rowT
 _Grid_::_Grid_() {
 	//grid_old = GridMapOld(grid_max_height(), std::vector<GridIndex>(grid_max_width(), 0));
 	grid = GridMap(grid_max_height(), std::vector<grid_block>(grid_max_width()));
+	fill_empty_tiles_map();
 }
 
 void ComputeTileGridBlocks(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl) {

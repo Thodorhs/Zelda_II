@@ -6,37 +6,24 @@
 #include "../Include/MapEditor.h"
 #include "../Include/Util/EngineDefines.h"
 
-void SetTile(Dim col, Dim row, Index index)
-{ MapData[row][col] = index; }
+void SetTile(Dim col, Dim row, Index index) { MapData[row][col] = index; }
 
-Index GetTile(Dim col, Dim row)
-{ return MapData[row][col]; }
+Index GetTile(Dim col, Dim row) { return MapData[row][col]; }
 
-void WriteBinMap(const TileMap* m, FILE* fp)
-{ fwrite(m, sizeof(TileMap), 1, fp); }
+void WriteBinMap(const TileMap* m, FILE* fp) { fwrite(m, sizeof(TileMap), 1, fp); }
 
-bool ReadBinMap(TileMap* m, FILE* fp) {
-	/* binary formatted read, like descent parsing */ 
-	return true;
-}
+bool ReadBinMap(TileMap* m, FILE* fp) { return true; } /* binary formatted read, like descent parsing */ 
 
-void WriteTextMap(const TileMap*, FILE* fp) {
-	/* custom write in text format */
-}
-
-
+void WriteTextMap(const TileMap*, FILE* fp) {} /* custom write in text format */
 
 void ReadTextMap(const std::string path) {
-	
 	std::string line, word;
 	std::fstream file(path, std::ios::in);
 	uint64_t line_idx = 0;
 	uint64_t word_idx = 0;
 
-	if (file.is_open())
-	{
-		while (getline(file, line))
-		{
+	if (file.is_open()) {
+		while (getline(file, line)) {
 			std::vector<Index> row(MAX_WIDTH, 0);
 
 			std::stringstream str(line);
@@ -71,5 +58,4 @@ void print() {
 	}
 }
 
-TileMap* GetMapData()
-{ return &MapData; }
+TileMap* GetMapData() { return &MapData; }
