@@ -46,7 +46,7 @@ public:
 			for (int i = 0; i <= 100; i++) {
 				empty_tiles[i] = false;
 			}
-			empty_tiles[0] = true;
+			empty_tiles[61] = true;
 			empty_tiles[1] = true;
 			empty_tiles[2] = true;
 			empty_tiles[3] = true;

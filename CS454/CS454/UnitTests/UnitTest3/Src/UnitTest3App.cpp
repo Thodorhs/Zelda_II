@@ -64,10 +64,10 @@ void update_press(Sint32 code, bool state) {
 	}
 }
 
-void move_rect() {
-	int dx = 1;
-	FilterGridMotionRight(&grid_class->get_s_grid(), moving_rect, &dx);
+void move_rect(int dx, int dy) {
+	FilterGridMotion(&grid_class->get_s_grid(), moving_rect, &dx, &dy);
 	moving_rect.x += dx;
+	moving_rect.y += dy;
 }
 
 void move_horizon() {
@@ -77,22 +77,10 @@ void move_horizon() {
 	Backround_Layer->ScrollWithBoundsCheck(0, 0);
 }
 
-void move_tiles_x(int tiles) {
-	int scroll_dist = MUL_TILE_WIDTH(tiles, Engine_Consts.power);
-	if (CanScrollHoriz((global_render_vars->ViewWindowR), scroll_dist)) 
-		Scroll(&(global_render_vars->ViewWindowR), scroll_dist, 0);
-}
-
-void move_tiles_y(int tiles) {
-	int scroll_dist = MUL_TILE_WIDTH(tiles, Engine_Consts.power);
-	if (CanScrollVert((global_render_vars->ViewWindowR), scroll_dist))
-		Scroll(&(global_render_vars->ViewWindowR), 0, scroll_dist);
-}
-
 void move_pixels_x(int pixels) {
 	//Action_Layer->ScrollWithBoundsCheck(pixels, 0);
 	//Backround_Layer->ScrollWithBoundsCheck(pixels, 0);
-	move_rect();
+	move_rect(1, 0);
 	if(Action_Layer->GetViewWindow().x == 0)
 		return;
 	Horizon_Layer->scroll_horizon(pixels);

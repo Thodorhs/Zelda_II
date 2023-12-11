@@ -103,7 +103,7 @@ void DisplayGrid(const SDL_Rect& viewWin, SDL_Renderer* myrenderer,const std::un
 	auto dpyY = MOD_TILE_WIDTH(viewWin.y, Engine_Consts.Tile_height);
 	int grid_rows =  grid_block_rows();
 	int grid_cols = grid_block_columns();
-	Dim space = 1; //space between grid_old elements 
+	Dim space = 0; //space between grid_old elements 
 	for (Dim rowTile = startRow; rowTile <= endRow; ++rowTile) {
 		for (Dim colTile = startCol; colTile <= endCol; ++colTile) {
 			auto block = grid_cl->GetGridTileBlock(rowTile, colTile);

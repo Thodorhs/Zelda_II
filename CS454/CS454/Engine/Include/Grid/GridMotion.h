@@ -17,12 +17,12 @@ bool CanPassGridTile(GridMap* m, Dim col, Dim row, GridIndex flags); // i.e. che
 
 void PrintMap(GridMapOld m);
 
-void FilterGridMotion(GridMapOld* m, const SDL_Rect& r, int* dx, int* dy);
+void FilterGridMotion(GridMap* m, const SDL_Rect& r, int* dx, int* dy);
 
-void FilterGridMotionLeft(GridMapOld* m, const SDL_Rect& r, int* dx);
+void FilterGridMotionLeft(GridMap* m, const SDL_Rect& r, int* dx);
 
 void FilterGridMotionRight(GridMap* m, const SDL_Rect& r, int* dx);
 
-void FilterGridMotionUp(GridMapOld* m, const SDL_Rect& r, int* dy);
+void FilterGridMotionUp(GridMap* m, const SDL_Rect& r, int* dy);
 
-void FilterGridMotionDown(GridMapOld* m, const SDL_Rect& r, int* dy);
+void FilterGridMotionDown(GridMap* m, const SDL_Rect& r, int* dy);

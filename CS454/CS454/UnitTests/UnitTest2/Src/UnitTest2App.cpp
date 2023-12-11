@@ -8,7 +8,7 @@
 #include <cmath>
 #include <cassert>
 
-SDL_Rect moving_rect = { 0,48,16,16 };
+SDL_Rect moving_rect = { 0,0,32,32 };
 Render* global_render_vars;
 Engine_Consts_t Engine_Consts;
 bool is_running; //used by done()
@@ -55,10 +55,10 @@ void update_press(Sint32 code, bool state) {
 	}
 }
 
-void move_rect() {
-	int dx = 1;
-	FilterGridMotionRight(&grid_class->get_s_grid(), moving_rect, &dx);
+void move_rect(int dx, int dy) {
+	FilterGridMotion(&grid_class->get_s_grid(), moving_rect, &dx, &dy);
 	moving_rect.x += dx;
+	moving_rect.y += dy;
 }
 
 void move_pixels_x(int pixels) {
@@ -86,6 +86,21 @@ void move() {
 				break;
 			case SDL_KeyCode::SDLK_RIGHT:
 				move_pixels_x(1);
+				break;
+			case SDL_KeyCode::SDLK_g:
+				display_grid = !display_grid;
+				break;
+			case SDL_KeyCode::SDLK_a:
+				move_rect(-1, 0);
+				break;
+			case SDL_KeyCode::SDLK_s:
+				move_rect(0, 1);
+				break;
+			case SDL_KeyCode::SDLK_d:
+				move_rect(1, 0);
+				break;
+			case SDL_KeyCode::SDLK_w:
+				move_rect(0, -1);
 				break;
 			case SDLK_HOME:
 				global_render_vars->ViewWindowR.x = 0;
@@ -140,8 +155,6 @@ void myInput() {
 			}
 			break;
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_g)
-				display_grid = !display_grid;
 			update_press(event.key.keysym.sym, true);
 			break;
 		case SDL_QUIT:
@@ -164,10 +177,11 @@ void show_grid() {
 }
 
 void myRender() {
+	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 255, 0, 255);
 	SDL_RenderClear(global_render_vars->myrenderer);
-	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 200, 0, 200, 255);
-	SDL_RenderFillRect(global_render_vars->myrenderer, &moving_rect);
 	TileTerrainDisplay(GetMapData(), global_render_vars->ViewWindowR, { 0, 0,-1,0 }, global_render_vars->myrenderer, global_render_vars->Tileset, global_render_vars->RenderTextureTarget);
+	SDL_RenderDrawRect(global_render_vars->myrenderer, &moving_rect);
+	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 255, 0, 200, 255);
 	if(display_grid) show_grid();
 	SDL_RenderPresent(global_render_vars->myrenderer);
 }
@@ -183,6 +197,11 @@ void init_key_map() {
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_RIGHT, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_HOME, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_END, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_g, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_a, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_s, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_d, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_w, false));
 	/*RELEASE*/
 	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
 	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
