@@ -23,22 +23,22 @@ void FilterGridMotionLeft(GridMap* m, const SDL_Rect& r, int* dx) {
 void FilterGridMotionRight(GridMap* m, const SDL_Rect& r, int* dx) {
 	Dim power = Engine_Consts.grid_power;
 	Dim scale = static_cast<Dim>(get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale_action"));
-	auto x2 = (r.x + r.w - 1) / scale;
+	auto x2 = (r.x + r.w - 1);
 	auto x2_next = x2 + *dx;
 	if (x2_next >= Engine_Consts.Map_width) {
 		*dx = (Engine_Consts.Map_width - 1) - x2;
 	}
 	else {
-		auto newCol = DIV_GRID_ELEMENT_WIDTH(x2_next, power);
-		auto currCol = DIV_GRID_ELEMENT_WIDTH(x2, power);
+		auto newCol = DIV_GRID_ELEMENT_WIDTH(x2_next, power)/scale; 
+		auto currCol = DIV_GRID_ELEMENT_WIDTH(x2, power)/scale; 
 		if (newCol != currCol) {
 			assert(newCol - 1 == currCol); // we really move right
-			auto startRow = DIV_GRID_ELEMENT_HEIGHT(r.y, power);
-			auto endRow = DIV_GRID_ELEMENT_HEIGHT(r.y + r.h - 1, power);
+			auto startRow = DIV_GRID_ELEMENT_HEIGHT(r.y, power)/scale;
+			auto endRow = DIV_GRID_ELEMENT_HEIGHT(r.y + r.h - 1, power)/scale;
 			for (auto row = startRow; row <= endRow; ++row)
 				if (!CanPassGridTile(m, newCol, row, GRID_LEFT_SOLID_MASK)) {
 					pr_warning("can't move right");
-					*dx = (MUL_GRID_ELEMENT_WIDTH(newCol, power) - 1) - x2;
+					*dx = (MUL_GRID_ELEMENT_WIDTH(newCol, power) - 1) - x2/scale;
 					break;
 				}
 		}

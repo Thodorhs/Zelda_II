@@ -6,14 +6,14 @@
         "render_w_h": 380
       },
       "ViewWindow": {
-        "view_win_w": 640,
-        "view_win_h": 400,
-        "view_scale_global": 2,
-        "view_scale_back": 2,
+        "view_win_w": 320,
+        "view_win_h": 200,
+        "view_scale_global": 1,
+        "view_scale_back": 1,
         "view_scale_hor": 1,
         "view_scale_action": 2,
         "start_x": 0,
-        "start_y": 25
+        "start_y": 0
       }
     },
     "map": {

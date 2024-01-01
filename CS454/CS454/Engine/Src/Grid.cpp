@@ -63,7 +63,8 @@ void ComputeTileGridBlocks(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl)
 				elements.push_back(flags);
 			}
 			grid_block gb{ row,col,elements,flags};
-			gr_row.insert(gr_row.begin() + col, gb);			
+			//gr_row.insert(gr_row.begin() + col, gb);
+			gr_row[col] = gb;
 		}
 		grid_idx++;
 	}
@@ -94,6 +95,7 @@ void ComputeTileGridBlocksOld(const TileMap* map, std::unique_ptr<_Grid_>& grid_
 	
 }
 
+//view win was too large when scale = 1 so endcol,row went out of bounds
 void DisplayGrid(const SDL_Rect& viewWin, SDL_Renderer* myrenderer,const std::unique_ptr<_Grid_>& grid_cl,const int scale) {
 	auto startCol = DIV_TILE_WIDTH(viewWin.x, Engine_Consts.power);
 	auto startRow = DIV_TILE_HEIGHT(viewWin.y, Engine_Consts.power);

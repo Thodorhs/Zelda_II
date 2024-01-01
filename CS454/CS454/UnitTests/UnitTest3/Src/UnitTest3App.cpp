@@ -20,7 +20,7 @@ std::unique_ptr<TileLayer> Backround_Layer;
 size_t layer_num;
 Layer_container Layers;
 
-SDL_Rect moving_rect = { 0,48,16,16 };
+SDL_Rect moving_rect = { 0,128,16,16 };
 Render* global_render_vars;
 Render* render_vars_horizon;
 Render* render_vars_backround;
@@ -186,7 +186,7 @@ void myInput() {
 
 void show_grid() {
 	#ifdef _GRID_2
-		DisplayGrid(Action_Layer->GetViewWindow(), global_render_vars->myrenderer, grid_class,global_render_vars->view_scale);
+		DisplayGrid(Action_Layer->GetViewWindow(), global_render_vars->myrenderer, grid_class,Action_Layer->get_scale());
 	#else
 		DisplayGridOld(render_vars->ViewWindowR, render_vars->myrenderer, grid_class);
 	#endif

@@ -43,4 +43,5 @@ class TileLayer {
 		void Display();
 		void Display(SDL_Texture* prev, bool final_layer, SDL_Texture* Tileset, SDL_Renderer* myrenderer);
 		void scroll_horizon(int dx);
+		Dim get_scale() { return scale; }
 };
