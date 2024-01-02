@@ -57,7 +57,7 @@ void ComputeTileGridBlocks(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl)
 			Index tile = GetTile(col, row);
 			int count = 0;
 			std::vector<Index>elements;
-			Dim flags = IsTileIndexAssumedEmpty(grid_cl, tile) ?
+			GridIndex flags = IsTileIndexAssumedEmpty(grid_cl, tile) ?
 			GRID_EMPTY_TILE : GRID_SOLID_TILE;
 			for (auto el =0; el <grid_elements_per_tile(); el++) {
 				elements.push_back(flags);

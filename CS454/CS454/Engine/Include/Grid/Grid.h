@@ -28,7 +28,7 @@
 typedef struct grid_block {
 	Dim row, col;
 	std::vector<Index> els;
-	Dim flags;
+	GridIndex flags; //epifilaktika
 };
 typedef std::vector<std::vector<GridIndex>> GridMapOld;
 typedef std::vector<std::vector<grid_block>> GridMap;
@@ -43,14 +43,12 @@ public:
 		std::unordered_map<Index, bool> static empty_tiles;
 
 		void fill_empty_tiles_map() {
-			for (int i = 0; i <= 100; i++) {
-				empty_tiles[i] = false;
-			}
+			for (int i = 0; i <= 100; i++) { empty_tiles[i] = false; }
 			empty_tiles[61] = true;
-			empty_tiles[1] = true;
-			empty_tiles[2] = true;
-			empty_tiles[3] = true;
-			empty_tiles[4] = true;
+			empty_tiles[1]  = true;
+			empty_tiles[2]  = true;
+			empty_tiles[3]  = true;
+			empty_tiles[4]  = true;
 		}
 		GridMapOld& get_grid() { return grid_old; }
 		GridMap& get_s_grid() { return grid; }
