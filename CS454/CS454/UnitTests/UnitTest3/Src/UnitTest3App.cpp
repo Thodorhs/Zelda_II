@@ -107,6 +107,21 @@ void move() {
 			case SDL_KeyCode::SDLK_RIGHT:
 				move_pixels_x(1);
 				break;
+			case SDL_KeyCode::SDLK_g:
+				display_grid = !display_grid;
+				break;
+			case SDL_KeyCode::SDLK_a:
+				move_rect(-1, 0);
+				break;
+			case SDL_KeyCode::SDLK_s:
+				move_rect(0, 1);
+				break;
+			case SDL_KeyCode::SDLK_d:
+				move_rect(1, 0);
+				break;
+			case SDL_KeyCode::SDLK_w:
+				move_rect(0, -1);
+				break;
 			case SDLK_HOME:
 				global_render_vars->ViewWindowR.x = 0;
 				global_render_vars->ViewWindowR.y = 0;
@@ -162,8 +177,6 @@ void myInput() {
 			}
 			break;
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_g)
-				display_grid = !display_grid;
 			update_press(event.key.keysym.sym, true);
 			break;
 		case SDL_QUIT:
@@ -225,13 +238,19 @@ void myRender() {
 bool myDone() {	return is_running; }
 
 void init_key_map() {
-	pr_info("Initializing keyboard..");
+	/*PRESS*/
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_LEFT, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_RIGHT, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_HOME, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_END, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_g, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_a, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_s, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_d, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_w, false));
+	/*RELEASE*/
 	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
 	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
 }
