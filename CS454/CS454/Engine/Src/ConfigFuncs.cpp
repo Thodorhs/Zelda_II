@@ -28,11 +28,12 @@ void init_configurators(std::string conf_path) {
 	Parser map = parse_test;
 	Parser ren = parse_render;
 	Parser layer = parse_layers;
-	
+	Parser films = parse_films;
 
 	test_init<map_config, Configurator::ParseFunc>(cf,map , configurators_t::MAP_CONFIG);
 	test_init<Render_config,Configurator::ParseFunc>(cf, ren, configurators_t::RENDER_CONFIG);
 	test_init<Layer_config,Configurator::ParseFunc>(cf, layer, configurators_t::LAYER_CONFIG);
+	//test_init<Layer_config,Configurator::ParseFunc>(cf, films, configurators_t::FILM_CONFIG);
 	
 	cf->initialise();
 	cf->parse();

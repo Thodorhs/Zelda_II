@@ -350,6 +350,18 @@ auto asset_path() {
 	return full_asset_path;
 }
 
+
+#include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
+#include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
+
+AnimationFilmHolder AnimationFilmHolder::FilmHolder_Instance;
+void init_films() {
+	AnimationFilmHolder& holder = AnimationFilmHolder::getInstance();
+	holder.Load(asset_path(), FilmParser, global_render_vars->myrenderer);
+	auto f = holder.GetFilm("Link.Run.left");
+	f->GetId();
+}
+
 void ZeldaApp::Initialise(void) {
 	assert(SDL_Init(SDL_INIT_EVERYTHING) == 0);
 	pr_start_msg();
@@ -393,7 +405,7 @@ void ZeldaApp::Initialise(void) {
 	game.SetInput(myInput);
 	game.SetRender(myRender);
 	game.SetDone(myDone);
-	
+	init_films();
 	is_running = true;
 	pr_info("Done!");
 }
