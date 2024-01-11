@@ -20,7 +20,7 @@ std::unique_ptr<TileLayer> Backround_Layer;
 size_t layer_num;
 Layer_container Layers;
 
-SDL_Rect moving_rect = { 0,128,16,16 };
+SDL_Rect moving_rect = { 64,128,16,16 };
 Render* global_render_vars;
 Render* render_vars_horizon;
 Render* render_vars_backround;
@@ -64,11 +64,6 @@ void update_press(Sint32 code, bool state) {
 	}
 }
 
-void move_rect(int dx, int dy) {
-	FilterGridMotion(&grid_class->get_s_grid(), moving_rect, &dx, &dy);
-	moving_rect.x += dx;
-	moving_rect.y += dy;
-}
 
 void move_horizon() {
 	Horizon_Layer->scroll_horizon(1);
@@ -78,9 +73,9 @@ void move_horizon() {
 }
 
 void move_pixels_x(int pixels) {
-	//Action_Layer->ScrollWithBoundsCheck(pixels, 0);
-	//Backround_Layer->ScrollWithBoundsCheck(pixels, 0);
-	move_rect(1, 0);
+	Action_Layer->ScrollWithBoundsCheck(pixels, 0);
+	Backround_Layer->ScrollWithBoundsCheck(pixels, 0);
+	
 	if(Action_Layer->GetViewWindow().x == 0)
 		return;
 	Horizon_Layer->scroll_horizon(pixels);
@@ -89,6 +84,21 @@ void move_pixels_x(int pixels) {
 void move_pixels_y(int pixels) {
 	if (CanScrollVert((global_render_vars->ViewWindowR), pixels))
 		Scroll(&(global_render_vars->ViewWindowR), 0, pixels);
+}
+
+
+
+void move_rect(int dx, int dy) {
+	FilterGridMotion(&grid_class->get_s_grid(), moving_rect, &dx, &dy);
+	
+	if (dx == 0 && dy == 0)
+		return;
+	move_pixels_x(dx);
+	moving_rect.x += dx;
+	moving_rect.y += dy;
+	
+
+	
 }
 
 void move() {
@@ -225,7 +235,9 @@ void myRender() {
 	Backround_Layer->Display(Horizon_Layer->get_bitmap(), false, global_render_vars->Tileset,global_render_vars->myrenderer);
 	Action_Layer->Display(Backround_Layer->get_bitmap(), true, global_render_vars->Tileset,global_render_vars->myrenderer);
 	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 200, 0, 200, 255);
-	SDL_RenderFillRect(global_render_vars->myrenderer, &moving_rect);
+	SDL_Rect dst = { moving_rect.x,moving_rect.y,moving_rect.h,moving_rect.w }; //only for rect movement
+	dst.x -= (Action_Layer->GetViewWindow().x)*Action_Layer->get_scale();
+	SDL_RenderFillRect(global_render_vars->myrenderer, &dst);
 	#else
 	render_layers();
 	#endif
