@@ -25,7 +25,6 @@ bool FilmParser(std::list<AnimationFilm::Data>& output,std::string path){
     json data = json::parse(f);
     for (const auto& item : data["engine"]["Films"].items())
     {
-        std::cout << item.key() << "\n";
          for (const auto& val : item.value().items())
         {
              
@@ -48,7 +47,7 @@ bool FilmParser(std::list<AnimationFilm::Data>& output,std::string path){
     }
 
     
-   holder.print_for_humans(); 
+   //holder.print_for_humans(); 
    
    std::vector<Film_holder>temp = holder.get_films();
 

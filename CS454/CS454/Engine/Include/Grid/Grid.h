@@ -39,6 +39,7 @@ private:
 		GridMapOld grid_old;
 		GridMap grid;
 		Index empty = 31;
+		Dim grid_layer_scale = 1;
 public:
 		std::unordered_map<Index, bool> static empty_tiles;
 
@@ -53,13 +54,26 @@ public:
 		GridMapOld& get_grid() { return grid_old; }
 		GridMap& get_s_grid() { return grid; }
 		Index get_empty() { return empty; }
+		void set_scale(const Dim _scale) { grid_layer_scale = _scale; }
 
 		_Grid_();
 
 		GridIndex GetOldGridTileBlock(Dim rowTile, Dim colTile);
-		grid_block GetGridTileBlock(Dim rowTile, Dim colTile);
+		grid_block GetGridTileBlock(Dim rowTile, Dim colTile)const;
 		
 		void print_grid();
+
+
+		bool LayerCanPassGridTile(Dim col, Dim row, GridIndex flags) const;
+		void LayerFilterGridMotion(const SDL_Rect& r, int* dx, int* dy)const;
+
+		void LayerFilterGridMotionLeft(const SDL_Rect& r, int* dx)const;
+
+		void LayerFilterGridMotionRight(const SDL_Rect& r, int* dx)const;
+
+		void LayerFilterGridMotionUp(const SDL_Rect& r, int* dy)const;
+
+		void LayerFilterGridMotionDown(const SDL_Rect& r, int* dy)const;
 };
 
 inline int grid_block_columns();
@@ -71,6 +85,6 @@ bool IsTileIndexAssumedEmpty(_Grid_ &grid,Index index);
 void SetGridTile(GridMapOld* m, Dim col, Dim row, GridIndex index);
 grid_block GetGridTile(const GridMap* m, Dim col, Dim row);
 void DisplayGridOld(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl);
-void DisplayGrid(const SDL_Rect& viewWin, SDL_Renderer* myrenderer,const std::unique_ptr<_Grid_>& grid_cl,const int scale);
+void DisplayGrid(const SDL_Rect& viewWin, SDL_Renderer* myrenderer,const _Grid_& grid_cl,const int scale);
 void ComputeTileGridBlocks(const TileMap* map, std::unique_ptr<_Grid_>& grid_cl);
 void ComputeTileGridBlocksOld(const TileMap* map,std::unique_ptr<_Grid_>&grid_cl);

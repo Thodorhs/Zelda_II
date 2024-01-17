@@ -6,7 +6,7 @@
         "render_w_h": 420
       },
       "ViewWindow": {
-        "view_win_w": 320,
+        "view_win_w": 640,
         "view_win_h": 420,
         "view_scale_global": 1,
         "view_scale_back": 1,
@@ -111,6 +111,16 @@
           ]
         }
       }
+    },
+    "Sprites" : {
+      "Sprite_list" :  {
+        "Link" : {
+          "Films" : { "0" : "Link.Run.left",
+                      "1":"Link.Run.right" },
+          "start x" :  20,
+          "start_y" :  15
+          }
+        }
+      }
     }
-  }
 }

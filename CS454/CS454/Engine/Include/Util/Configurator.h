@@ -10,7 +10,7 @@ typedef  enum class configurators_t {
 	MAP_CONFIG = 1,
 	RENDER_CONFIG = 2,
 	LAYER_CONFIG = 3,
-	FILM_CONFIG = 4
+	SPRITE_CONFIG = 4
 } ;
 
 typedef std::map<std::string, std::any> Config_data_t;
@@ -127,12 +127,12 @@ public:
 };
 
 
-class Film_config : public Configurator { //not used but just in case 
+class Sprite_config : public Configurator { //not used but just in case 
 private:
 
 	Configurator::ParseFunc parser;
 public:
-	Film_config() = default;
+	Sprite_config() = default;
 	void parse_data() override {
 		assert(parser);
 		parser(this->data);

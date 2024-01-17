@@ -1,5 +1,7 @@
 #include "../Include/Util/ParseFuncs.h"
 #include <cassert>
+
+#include "../Include/Util/Print.h"
 using namespace nlohmann;
 
 std::string conf_file_path;
@@ -22,6 +24,7 @@ void update_map(std::map<std::string, std::any>& data, json_serialized prop) {
     for (auto it : prop) {
         std::any val;
        
+        
         if (it.value().is_number_integer()) {
             val = it.value().get<int>();
         }
@@ -88,11 +91,11 @@ void parse_render(std::map<std::string, std::any>& data) {
     f.close(); 
 }
 
-void parse_films(std::map<std::string, std::any>& data) { //not used but just in case
+void parse_sprites(std::map<std::string, std::any>& data) { //not used but just in case
     auto f = get_json_file();
     json js = json::parse(f);
-    for (auto prop : js["engine"].items()) {
-        auto ins = js["engine"][prop.key()].items();
+    for (auto prop : js["engine"]["Sprites"].items()) {
+        auto ins = js["engine"]["Sprites"].items();
         update_map(data, ins);
     }
 

@@ -19,7 +19,13 @@ add_executable(UnitTest3
 "../../Engine/Src/TileLayer.cpp"
 "../../Engine/Src/GridMotion.cpp"
 "../../Engine/Src/FilmParser.cpp"
-"../../Engine/Src/AnimationFilmHolder.cpp")
+"../../Engine/Src/AnimationFilmHolder.cpp" 
+	"Src/Animation_testing.cpp"
+"../../Engine/Src/Sprites/Sprite.cpp"
+"../../Engine/Src/Sprites/Clipper.cpp"
+"../../Engine/Src/Sprites/MotionQuantizer.cpp"
+"../../Engine/Src/Sprites/SpriteHelpers.cpp"
+)
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image)
 
