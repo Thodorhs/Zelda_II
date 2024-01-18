@@ -117,7 +117,7 @@
         "Link" : {
           "Films" : { "0" : "Link.Run.left",
                       "1":"Link.Run.right" },
-          "start x" :  20,
+          "start_x" :  20,
           "start_y" :  15
           }
         }

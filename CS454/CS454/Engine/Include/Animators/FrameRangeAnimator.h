@@ -21,4 +21,7 @@ public:
 		NotifyAction(*anim);
 	}
 	FrameRangeAnimator(void) = default;
+	FrameRangeAnimator(FrameRangeAnimation* _anim) : anim(_anim) {}
+	auto GetAnimation()const-> const FrameRangeAnimation& { return *anim; }
+	
 };

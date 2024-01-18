@@ -8,6 +8,8 @@
 #include "../../../Engine/Include/Sprites/SpriteManager.h"
 
 #include "../../../Engine/Include/Sprites/SpriteHelpers.h"
+#include "../../../Engine/Include/Animators/AnimatorManager.h"
+#include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
 
 SpriteManager SpriteManager::singleton;
 
@@ -30,32 +32,43 @@ void render_sprite(SDL_Renderer* renderer, TileLayer* layer)
 }
 
 
-Sprite* sprite_test(SDL_Renderer *render, TileLayer* layer) {
+
+void create_and_register_sprites(TileLayer *layer)
+{
 	AnimationFilmHolder& holder = AnimationFilmHolder::getInstance();
-	const AnimationFilm* film = holder.GetFilm("Link.Run.left");
-	const Clipper clipper = MakeTileLayerClipper(layer);
-	Sprite* s = new Sprite(40,40,const_cast<AnimationFilm*>(film), "Link");
-	SDL_Surface dst{};
 	SpriteManager& manager = SpriteManager::GetSingleton();
-	manager.Add(s);
-	return s;
+	const Clipper clipper = MakeTileLayerClipper(layer);
+	auto s_list = get_sprite_name_list();
+	for (auto &it : s_list)
+	{
+		auto [x, y] = get_sprite_start_pos(it);
+		Sprite* sprite =new Sprite(x, y, const_cast<AnimationFilm*>(holder.GetFilm(get_sprite_initial_film(it))),it);
+		auto f = sprite->MakeSpriteGridLayerMover(layer, sprite);
+		sprite->SetMover(f);
+		manager.Add(sprite);
+	}
 	
 }
 
-
-void list_sprites()
+void animators_testing()
 {
-	auto s_list = get_sprite_name_list();
-	for (auto it : s_list)
-		pr_error(it);
-	pr_error(get_sprite_initial_film(s_list.at(0)));
+	Sprite* Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+
+	AnimatorManager& manager = AnimatorManager::GetSingleton();
+	Animator* animator= new FrameRangeAnimator(new FrameRangeAnimation("link.run", 0, 3, 1, 0, 0, 0));
+
+	animator->SetOnAction([Link](Animator* animator, const Animation& anim) {
+		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
+		});
+	animator->SetOnStart([](Animator* animator) {});
+	animator->SetOnFinish([](Animator* animator) {});
+	
 }
+
 
 void init_tests(SDL_Renderer* renderer,TileLayer* layer) {
 	pr_info("testing!!");
-	Sprite* s = sprite_test(renderer,layer);
-	auto f = s->MakeSpriteGridLayerMover(layer, s);
-	s->SetMover(f);
-	list_sprites();
-	
+	create_and_register_sprites(layer);
+	animators_testing();
+
 }
