@@ -22,6 +22,8 @@ void move_Link(int dx,int dy)
 		if (it->GetTypeId() == "Link") {
 			it->Move(dx, dy);
 			//animator_manager.MarkAsSuspended(animator_manager.Get_by_Id("Link"));
+			if (!animator_manager.Get_by_Id("Link")->HasFinished())
+				return;
 			animator_manager.Get_by_Id("Link")->Start(GetSystemTime());
 		}
 	}
