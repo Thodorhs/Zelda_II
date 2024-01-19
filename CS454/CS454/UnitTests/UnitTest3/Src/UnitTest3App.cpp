@@ -11,6 +11,7 @@
 #include "../Include/Animation_testing.h"
 #include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
 #include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
+#include "../../../Engine/Include/Util/SystemClock.h"
 
 int TIMER_INTERVAL = 100;
 Uint64 last = 0;
@@ -157,20 +158,31 @@ void move() {
 	}
 }
 
- 
+
+#include "../../../Engine/Include/Animators/AnimatorManager.h"
+void animation_handler()
+{
+	AnimatorManager::GetSingleton().Progress(GetSystemTime());
+}
+
+
+
 void myInput() {
 	TIMER_INTERVAL = 100;
 	int CameraPosX, CameraPosY;
 	int PrevCameraPosX = 0, PrevCameraPosY = 0;
-	curr = SDL_GetTicks64();
+	curr = GetSystemTime();
 	if (curr > last + TIMER_INTERVAL) {
 		last = curr;
 	    move_horizon();
 	}
 	
 	SDL_Event event;
-	const Uint8* keys = SDL_GetKeyboardState((int*)nullptr);
+	
+	
+	int i = 0;
 	while (SDL_PollEvent(&event)) {
+		i++;
 		switch (event.type) {
 		case SDL_MOUSEMOTION:
 			if (mouse_down) { // if i am holding down the left click button and i am moving it then scroll..
@@ -188,6 +200,7 @@ void myInput() {
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				mouse_down = true; // i'am holding it down so set it true
+				
 				SDL_GetMouseState(&PrevCameraPosX, &PrevCameraPosY);
 			}
 			break;
@@ -205,7 +218,8 @@ void myInput() {
 			is_running = false;
 			break;
 		case SDL_KEYUP:
-			//update_released(event.key.keysym.sym, true);
+			update_press(event.key.keysym.sym, false);
+			
 			break;
 		default:
 			break;
@@ -216,6 +230,7 @@ void myInput() {
 	disable_pr();
 	
 	//update_keys();
+	
 }
 
 #define _GRID_2
@@ -440,6 +455,7 @@ void ZeldaApp::Initialise(void) {
 	game.SetInput(myInput);
 	game.SetRender(myRender);
 	game.SetDone(myDone);
+	game.SetAnim(animation_handler);
 	init_films();
 	init_tests(global_render_vars->myrenderer,Action_Layer);
 	is_running = true;

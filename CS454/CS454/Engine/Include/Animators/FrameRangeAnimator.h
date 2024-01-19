@@ -7,11 +7,13 @@ protected:
 	FrameRangeAnimation* anim = nullptr;
 	unsigned currFrame = 0; // animation state
 	unsigned currRep = 0; // animation state
+	
 public:
 	void Progress(timestamp_t currTime);
 	unsigned GetCurrFrame(void) const { return currFrame; }
 	unsigned GetCurrRep(void) const { return currRep; }
 	void Start(FrameRangeAnimation* a, timestamp_t t) {
+	
 		anim = a;
 		lastTime = t;
 		state = ANIMATOR_RUNNING;
@@ -20,7 +22,21 @@ public:
 		NotifyStarted();
 		NotifyAction(*anim);
 	}
+
+	void Start(timestamp_t t) 
+	override{
+		lastTime = t;
+		state = ANIMATOR_RUNNING;
+		currFrame = anim->GetStartFrame();
+		currRep = 0;
+		NotifyStarted();
+		NotifyAction(*anim);
+	}
+
+	std::string Get_ID() const override { return  id; }
 	FrameRangeAnimator(void) = default;
+	FrameRangeAnimator(const std::string& _id) { id = _id; }
+	FrameRangeAnimator(const std::string& _id,FrameRangeAnimation *_anim) : anim(_anim) { id = _id; }
 	FrameRangeAnimator(FrameRangeAnimation* _anim) : anim(_anim) {}
 	auto GetAnimation()const-> const FrameRangeAnimation& { return *anim; }
 	

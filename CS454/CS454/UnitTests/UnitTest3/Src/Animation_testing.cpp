@@ -10,15 +10,20 @@
 #include "../../../Engine/Include/Sprites/SpriteHelpers.h"
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
 #include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
+#include "../../../Engine/Include/Util/SystemClock.h"
 
 SpriteManager SpriteManager::singleton;
 
 void move_Link(int dx,int dy)
 {
+	AnimatorManager& animator_manager = AnimatorManager::GetSingleton();
 	for (SpriteManager& s_manager = SpriteManager::GetSingleton(); auto it : s_manager.GetDisplayList())
 	{
-		if (it->GetTypeId() == "Link")
+		if (it->GetTypeId() == "Link") {
 			it->Move(dx, dy);
+			//animator_manager.MarkAsSuspended(animator_manager.Get_by_Id("Link"));
+			animator_manager.Get_by_Id("Link")->Start(GetSystemTime());
+		}
 	}
 }
 
@@ -50,18 +55,26 @@ void create_and_register_sprites(TileLayer *layer)
 	
 }
 
-void animators_testing()
+void animators_testing(TileLayer *layer,SDL_Renderer *renderer)
 {
 	Sprite* Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 
 	AnimatorManager& manager = AnimatorManager::GetSingleton();
-	Animator* animator= new FrameRangeAnimator(new FrameRangeAnimation("link.run", 0, 3, 1, 0, 0, 0));
+	
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.run", 0, 3,1 , 0, 0, 150);
+	FrameRangeAnimator* animator = new FrameRangeAnimator("Link",fr_animation);
 
-	animator->SetOnAction([Link](Animator* animator, const Animation& anim) {
-		FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);
-		});
-	animator->SetOnStart([](Animator* animator) {});
-	animator->SetOnFinish([](Animator* animator) {});
+	animator->SetOnAction([Link](Animator* animator, const Animation& anim) {FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);});
+	animator->SetOnStart([](Animator* animator)
+	{
+		AnimatorManager::GetSingleton().MarkAsRunning(animator);
+	});
+	animator->SetOnFinish([Link](Animator* animator)
+	{
+		AnimatorManager::GetSingleton().MarkAsSuspended(animator);
+	});
+	
+	//animator->Start(fr_animation, GetSystemTime());
 	
 }
 
@@ -69,6 +82,6 @@ void animators_testing()
 void init_tests(SDL_Renderer* renderer,TileLayer* layer) {
 	pr_info("testing!!");
 	create_and_register_sprites(layer);
-	animators_testing();
+	animators_testing(layer,renderer);
 
 }

@@ -18,6 +18,14 @@ void Animator::NotifyAction(const Animation& anim) {
 	if (onAction)
 		(onAction)(this, anim);
 }
+
+void Animator::NotifyStarted()
+{
+	if (onStart)
+		(onStart)(this);
+}
+
+
 void Animator::TimeShift(timestamp_t offset)
 {
 	lastTime += offset;

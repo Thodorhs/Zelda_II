@@ -28,6 +28,7 @@ add_executable(UnitTest3
 "../../Engine/Src/Animators/Animator.cpp"
 "../../Engine/Src/Animators/FrameRangeAnimator.cpp"
 "../../Engine/Src/Animators/AnimatorManager.cpp"
+"../../Engine/Src/SystemClock/SystemClock.cpp"
 )
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image)
