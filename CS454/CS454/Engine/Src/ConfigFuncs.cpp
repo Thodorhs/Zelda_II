@@ -1,5 +1,5 @@
-#include "../Include/Util/ConfigFuncs.h";
-#include "../Include/Util/ParseFuncs.h";
+#include "../Include/Util/ConfigFuncs.h"
+#include "../Include/Util/ParseFuncs.h"
 
 ConfiguratorManager* ConfiguratorManager::singleton;
 
@@ -22,17 +22,18 @@ void test_init(ConfiguratorManager* cf,Tfunc &parser,configurators_t type)
 
 using Parser = Configurator::ParseFunc;
 
-void init_configurators(std::string conf_path) {
+void init_configurators(const std::string& conf_path) {
 	set_conf_path(conf_path);
 	ConfiguratorManager* cf = ConfiguratorManager::GetInstance();
 	Parser map = parse_test;
 	Parser ren = parse_render;
 	Parser layer = parse_layers;
-	
+	Parser sprites = parse_sprites;
 
 	test_init<map_config, Configurator::ParseFunc>(cf,map , configurators_t::MAP_CONFIG);
 	test_init<Render_config,Configurator::ParseFunc>(cf, ren, configurators_t::RENDER_CONFIG);
 	test_init<Layer_config,Configurator::ParseFunc>(cf, layer, configurators_t::LAYER_CONFIG);
+	test_init<Layer_config,Configurator::ParseFunc>(cf, sprites, configurators_t::SPRITE_CONFIG);
 	
 	cf->initialise();
 	cf->parse();

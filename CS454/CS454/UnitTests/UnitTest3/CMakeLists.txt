@@ -7,7 +7,29 @@ find_package(SDL2_image REQUIRED)
 #Add source to this project's executable.
 
 
-add_executable(UnitTest3     "Src/UnitTest3App.cpp"   "../../Engine/Src/main.cpp" "../../Engine/Src/GameLoop.cpp"   "../../Engine/Src/MapEditor.cpp" "../../Engine/Src/ViewWindow.cpp"  "../../Engine/Src/Parsefuncs.cpp" "../../Engine/Src/ConfigFuncs.cpp" "../../Engine/Src/Grid.cpp" "../../Engine/Src/TileLayer.cpp" "../../Engine/Src/GridMotion.cpp")
+add_executable(UnitTest3     
+"Src/UnitTest3App.cpp"  
+"../../Engine/Src/main.cpp"
+"../../Engine/Src/GameLoop.cpp"  
+"../../Engine/Src/MapEditor.cpp" 
+"../../Engine/Src/ViewWindow.cpp" 
+"../../Engine/Src/Parsefuncs.cpp" 
+"../../Engine/Src/ConfigFuncs.cpp"
+"../../Engine/Src/Grid.cpp"
+"../../Engine/Src/TileLayer.cpp"
+"../../Engine/Src/GridMotion.cpp"
+"../../Engine/Src/FilmParser.cpp"
+"../../Engine/Src/AnimationFilmHolder.cpp" 
+	"Src/Animation_testing.cpp"
+"../../Engine/Src/Sprites/Sprite.cpp"
+"../../Engine/Src/Sprites/Clipper.cpp"
+"../../Engine/Src/Sprites/MotionQuantizer.cpp"
+"../../Engine/Src/Sprites/SpriteHelpers.cpp"
+"../../Engine/Src/Animators/Animator.cpp"
+"../../Engine/Src/Animators/FrameRangeAnimator.cpp"
+"../../Engine/Src/Animators/AnimatorManager.cpp"
+"../../Engine/Src/SystemClock/SystemClock.cpp"
+)
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image)
 

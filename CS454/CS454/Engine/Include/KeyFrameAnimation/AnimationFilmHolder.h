@@ -18,7 +18,7 @@ public:
 			std::vector<SDL_Rect>& rectsOutput
 			)
 	>;
-	static AnimationFilmHolder& getInstance() { return holder; }
+	static AnimationFilmHolder& getInstance() { return FilmHolder_Instance; }
 
 	void Load(const std::string& text, const EntryParser& entryParser, SDL_Renderer* GameRenderer);
 	void Load(const std::string& text, const Parser& parser, SDL_Renderer* GameRenderer);
@@ -29,9 +29,9 @@ private:
 	using Films = std::map<std::string, AnimationFilm*>;
 	Films films;
 	BitmapLoader bitmaps; // only for loading of film bitmaps
-	static AnimationFilmHolder holder; // singleton
+	static AnimationFilmHolder FilmHolder_Instance; // singleton
 	AnimationFilmHolder(void) {}
 	~AnimationFilmHolder() { CleanUp(); }
-	static auto Get(void) -> const AnimationFilmHolder& { return holder; }
+	static auto Get(void) -> const AnimationFilmHolder& { return FilmHolder_Instance; }
 
 };

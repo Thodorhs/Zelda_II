@@ -1,10 +1,10 @@
+#pragma once
 #include <iostream>
 #include <functional>
 #include "SDL.h"
 #include "../TileLayer.h"
 
-// generic clipper assuming any terrain-based view
-// and any bitmap-based display area
+
 class Clipper {
 public:
 	using View = std::function<const SDL_Rect& (void)>;

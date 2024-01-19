@@ -8,19 +8,23 @@
 #include "../../../Engine/Include/Grid/GridMotion.h"
 #include "../../../Engine/Include/Grid/GridCompute.h"
 #include <filesystem>
+#include "../Include/Animation_testing.h"
+#include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
+#include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
+#include "../../../Engine/Include/Util/SystemClock.h"
 
 int TIMER_INTERVAL = 100;
 Uint64 last = 0;
 Uint64 curr;
 
-std::unique_ptr<TileLayer> Action_Layer;
-std::unique_ptr<TileLayer> Horizon_Layer;
-std::unique_ptr<TileLayer> Backround_Layer;
+TileLayer* Action_Layer;
+TileLayer* Horizon_Layer;
+TileLayer* Backround_Layer;
 
 size_t layer_num;
 Layer_container Layers;
 
-SDL_Rect moving_rect = { 0,48,16,16 };
+SDL_Rect moving_rect = { 64,128,16,16 };
 Render* global_render_vars;
 Render* render_vars_horizon;
 Render* render_vars_backround;
@@ -30,14 +34,14 @@ bool mouse_down = false; //bool to check if i hold down the the left click
 bool display_grid = false;
 KEY_MAP_t pressed_keys;
 KEY_MAP_t released_keys;
-std::unique_ptr<_Grid_> grid_class;
+//std::unique_ptr<_Grid_> grid_class;
 
 void disable_pr() {
-	KEY_MAP_t::iterator pr_it;
-	for (pr_it = pressed_keys.begin(); pr_it != pressed_keys.end(); pr_it++) {
+	for (auto pr_it = pressed_keys.begin(); pr_it != pressed_keys.end(); ++pr_it) {
 		pr_it->second = false;
 	}
 }
+/*
 
 void update_keys() {
 	KEY_MAP_t::iterator pr_it;
@@ -56,6 +60,9 @@ void update_released(Sint32 code, bool state) {
 	if (it != released_keys.end())
 		it->second = state;
 }
+*/
+
+
 
 void update_press(Sint32 code, bool state) {
 	KEY_MAP_t::iterator it = pressed_keys.find(code);
@@ -64,11 +71,6 @@ void update_press(Sint32 code, bool state) {
 	}
 }
 
-void move_rect(int dx, int dy) {
-	FilterGridMotion(&grid_class->get_s_grid(), moving_rect, &dx, &dy);
-	moving_rect.x += dx;
-	moving_rect.y += dy;
-}
 
 void move_horizon() {
 	Horizon_Layer->scroll_horizon(1);
@@ -78,9 +80,9 @@ void move_horizon() {
 }
 
 void move_pixels_x(int pixels) {
-	//Action_Layer->ScrollWithBoundsCheck(pixels, 0);
-	//Backround_Layer->ScrollWithBoundsCheck(pixels, 0);
-	move_rect(1, 0);
+	Action_Layer->ScrollWithBoundsCheck(pixels, 0);
+	Backround_Layer->ScrollWithBoundsCheck(pixels, 0);
+	
 	if(Action_Layer->GetViewWindow().x == 0)
 		return;
 	Horizon_Layer->scroll_horizon(pixels);
@@ -91,8 +93,23 @@ void move_pixels_y(int pixels) {
 		Scroll(&(global_render_vars->ViewWindowR), 0, pixels);
 }
 
+
+
+void move_rect(int dx, int dy) {
+	//FilterGridMotion(Action_Layer->get_grid_layer().get_s_grid(), moving_rect, &dx, &dy);
+	Action_Layer->get_grid_layer().LayerFilterGridMotion(moving_rect, &dx, &dy);
+	if (dx == 0 && dy == 0)
+		return;
+	move_pixels_x(dx);
+	moving_rect.x += dx;
+	moving_rect.y += dy;
+	
+
+	
+}
+
 void move() {
-	for (auto it : pressed_keys) {
+	for (const auto& it : pressed_keys) {
 		if (it.second) {
 			switch (it.first) {
 			case SDL_KeyCode::SDLK_UP:
@@ -106,6 +123,25 @@ void move() {
 				break;
 			case SDL_KeyCode::SDLK_RIGHT:
 				move_pixels_x(1);
+				break;
+			case SDL_KeyCode::SDLK_g:
+				display_grid = !display_grid;
+				break;
+			case SDL_KeyCode::SDLK_a:
+				move_Link(-1, 0);
+				//move_rect(-1, 0);
+				break;
+			case SDL_KeyCode::SDLK_s:
+				move_Link(0, 1);
+				//move_rect(0, 1);
+				break;
+			case SDL_KeyCode::SDLK_d:
+				move_Link(1, 0);
+				//move_rect(1, 0);
+				break;
+			case SDL_KeyCode::SDLK_w:
+				move_Link(0, -1);
+				//move_rect(0, -1);
 				break;
 			case SDLK_HOME:
 				global_render_vars->ViewWindowR.x = 0;
@@ -122,18 +158,31 @@ void move() {
 	}
 }
 
+
+#include "../../../Engine/Include/Animators/AnimatorManager.h"
+void animation_handler()
+{
+	AnimatorManager::GetSingleton().Progress(GetSystemTime());
+}
+
+
+
 void myInput() {
 	TIMER_INTERVAL = 100;
 	int CameraPosX, CameraPosY;
 	int PrevCameraPosX = 0, PrevCameraPosY = 0;
-	curr = SDL_GetTicks64();
+	curr = GetSystemTime();
 	if (curr > last + TIMER_INTERVAL) {
 		last = curr;
 	    move_horizon();
 	}
+	
 	SDL_Event event;
-	const Uint8* keys = SDL_GetKeyboardState((int*)nullptr);
+	
+	
+	int i = 0;
 	while (SDL_PollEvent(&event)) {
+		i++;
 		switch (event.type) {
 		case SDL_MOUSEMOTION:
 			if (mouse_down) { // if i am holding down the left click button and i am moving it then scroll..
@@ -151,6 +200,7 @@ void myInput() {
 		case SDL_MOUSEBUTTONDOWN:
 			if (event.button.button == SDL_BUTTON_LEFT) {
 				mouse_down = true; // i'am holding it down so set it true
+				
 				SDL_GetMouseState(&PrevCameraPosX, &PrevCameraPosY);
 			}
 			break;
@@ -162,23 +212,25 @@ void myInput() {
 			}
 			break;
 		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_g)
-				display_grid = !display_grid;
 			update_press(event.key.keysym.sym, true);
 			break;
 		case SDL_QUIT:
 			is_running = false;
 			break;
 		case SDL_KEYUP:
-			update_released(event.key.keysym.sym, true);
+			update_press(event.key.keysym.sym, false);
+			
 			break;
 		default:
 			break;
 		}
 	}
 	move();
+	
 	disable_pr();
+	
 	//update_keys();
+	
 }
 
 #define _GRID_2
@@ -186,7 +238,7 @@ void myInput() {
 
 void show_grid() {
 	#ifdef _GRID_2
-		DisplayGrid(Action_Layer->GetViewWindow(), global_render_vars->myrenderer, grid_class,global_render_vars->view_scale);
+		DisplayGrid(Action_Layer->GetViewWindow(), global_render_vars->myrenderer, Action_Layer->get_grid_layer(),Action_Layer->get_scale());
 	#else
 		DisplayGridOld(render_vars->ViewWindowR, render_vars->myrenderer, grid_class);
 	#endif
@@ -204,15 +256,26 @@ void render_layers() {
 	}
 }
 
+
+
+
+
 void myRender() {
 	SDL_RenderClear(global_render_vars->myrenderer);
 	#ifndef _LAYERS_
+	
+	
 	
 	Horizon_Layer->Display(nullptr, false,global_render_vars->Tileset, global_render_vars->myrenderer);
 	Backround_Layer->Display(Horizon_Layer->get_bitmap(), false, global_render_vars->Tileset,global_render_vars->myrenderer);
 	Action_Layer->Display(Backround_Layer->get_bitmap(), true, global_render_vars->Tileset,global_render_vars->myrenderer);
 	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 200, 0, 200, 255);
-	SDL_RenderFillRect(global_render_vars->myrenderer, &moving_rect);
+
+	SDL_Rect dst = { moving_rect.x,moving_rect.y,moving_rect.h,moving_rect.w }; //only for rect movement
+	dst.x -= (Action_Layer->GetViewWindow().x)*Action_Layer->get_scale();
+	SDL_RenderFillRect(global_render_vars->myrenderer, &dst);
+
+	render_sprite(global_render_vars->myrenderer, Action_Layer);
 	#else
 	render_layers();
 	#endif
@@ -225,13 +288,19 @@ void myRender() {
 bool myDone() {	return is_running; }
 
 void init_key_map() {
-	pr_info("Initializing keyboard..");
+	/*PRESS*/
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_LEFT, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_RIGHT, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_HOME, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_END, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_g, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_a, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_s, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_d, false));
+	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_w, false));
+	/*RELEASE*/
 	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
 	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
 }
@@ -263,24 +332,24 @@ void init_engine_constants() {
 	Engine_Consts.power = power_tiles;
 	Engine_Consts.grid_power = power_grid;
 	Engine_Consts.Grid_el_sz = grid_el_h;
-	Engine_Consts.map_rows = get_config_value<int>(map, "map_rows");
-	Engine_Consts.map_cols = get_config_value<int>(map, "map_columns");
+	Engine_Consts.map_rows = static_cast<Dim>(get_config_value<int>(map, "map_rows"));
+	Engine_Consts.map_cols = static_cast<Dim>(get_config_value<int>(map, "map_columns"));
 	
-	grid_class = std::make_unique<_Grid_>();
+	
 }
 
-void fill_grid() {
-	pr_info("Initializing grid..");
-	#ifdef _GRID_2
-		ComputeTileGridBlocks(GetMapData(), grid_class); //grid_old supports action layer 
-	#else
-		ComputeTileGridBlocks1(GetMapData(), grid_class);
-	#endif	
-}
 
 void init_layers(std::string asset_path) {
+	
+	pr_info("Initializing grid..");
+	//FILL GRID
+	std::unique_ptr<_Grid_> grid_class = std::make_unique<_Grid_>();
+	#ifdef _GRID_2
+	ComputeTileGridBlocks(GetMapData(), grid_class); //grid_old supports action layer 
+	#else
+	ComputeTileGridBlocks1(GetMapData(), grid_class);
+	#endif
 	pr_info("Initializing layers..");
-
 	#ifdef _LAYERS_
 
 		layer_num = static_cast<size_t> (get_config_value<int>(configurators_t::MAP_CONFIG, "Layer_num"));
@@ -309,15 +378,16 @@ void init_layers(std::string asset_path) {
 
 	//for now keep them with the same viewwindow ,it can be changed 
 	SDL_Texture* action_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
-	Action_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,action_target,GetMapData(),"action",ac_scale);
+	Action_Layer = new TileLayer(global_render_vars->ViewWindowR,action_target,GetMapData(),"action",ac_scale);
+	Action_Layer->set_grid_layer(std::move(grid_class));// to do : for other layers as well if they support grid!
 
 	SDL_Texture* horizon_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
 	ReadTextMap(asset_path + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map_hor"));
-	Horizon_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,horizon_target,GetMapData(),"horizon",hor_scale);
+	Horizon_Layer = new TileLayer(global_render_vars->ViewWindowR,horizon_target,GetMapData(),"horizon",hor_scale);
 
 	SDL_Texture* backround_target = SDL_CreateTexture(global_render_vars->myrenderer, 0, SDL_TEXTUREACCESS_TARGET, global_render_vars->ViewWindowR.w, global_render_vars->ViewWindowR.h);
 	ReadTextMap(asset_path + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map_back"));
-	Backround_Layer = std::make_unique<TileLayer>(global_render_vars->ViewWindowR,backround_target, GetMapData(),"backround",back_scale);
+	Backround_Layer = new TileLayer(global_render_vars->ViewWindowR,backround_target, GetMapData(),"backround",back_scale);
 	
 	#endif
 }
@@ -329,6 +399,17 @@ auto asset_path() {
 	std::string half_path = find_first_part_path.substr(0, pos);
 	std::string full_asset_path = half_path + "UnitTests\\UnitTest3";
 	return full_asset_path;
+}
+
+
+
+
+AnimationFilmHolder AnimationFilmHolder::FilmHolder_Instance;
+void init_films() {
+	AnimationFilmHolder& holder = AnimationFilmHolder::getInstance();
+	holder.Load(asset_path(), FilmParser, global_render_vars->myrenderer);
+	auto f = holder.GetFilm("Link.Run.left");
+	
 }
 
 void ZeldaApp::Initialise(void) {
@@ -366,7 +447,7 @@ void ZeldaApp::Initialise(void) {
 	pre_cache();
 	ReadTextMap(full_asset_path + "\\UnitTest3Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map"));
 	global_render_vars->ImgSurface = IMG_Load((full_asset_path + "\\UnitTest3Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
-	fill_grid();
+	
 	init_layers(full_asset_path + "\\UnitTest3Media\\");
 
 	global_render_vars->Tileset = SDL_CreateTextureFromSurface(global_render_vars->myrenderer, global_render_vars->ImgSurface);
@@ -374,7 +455,9 @@ void ZeldaApp::Initialise(void) {
 	game.SetInput(myInput);
 	game.SetRender(myRender);
 	game.SetDone(myDone);
-	
+	game.SetAnim(animation_handler);
+	init_films();
+	init_tests(global_render_vars->myrenderer,Action_Layer);
 	is_running = true;
 	pr_info("Done!");
 }

@@ -35,4 +35,14 @@ public:
 	{
 		return singleton;
 	}
-};
+
+	auto Get_sprite_by_id(const std::string& id) -> Sprite*
+	{
+		for(auto &it : dpyList)
+		{
+			if (it->GetTypeId() == id)
+				return it;
+		}
+		return nullptr;
+	}
+};

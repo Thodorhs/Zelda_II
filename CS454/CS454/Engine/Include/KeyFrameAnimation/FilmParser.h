@@ -91,7 +91,7 @@ public:
         return films;
     }
     void print_for_humans() {
-        for (auto it : films) {
+        for (auto& it : films) {
             std::cout << "FILM ID:" << it.get_id() << "\n" << "FILM DATA:\n";
             it.print_frame_array();
             std::cout << "BMP PATH:" << it.get_bmp_path() << std::endl;
@@ -101,4 +101,4 @@ public:
 };
 
 
-bool FilmParser(std::list<AnimationFilm::Data>& output, const std::string& path);
+bool FilmParser(std::list<AnimationFilm::Data>& output,std::string path);//std::list<AnimationFilm::Data>& output, const std::string& path

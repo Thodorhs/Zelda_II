@@ -14,8 +14,8 @@ private:
 	std::map < configurators_t, Configurator*> configurator_map;
 	std::function<void(configurators_t)> array[CONFIGS] ;
 	~ConfiguratorManager(void) {
-		for (auto it : configurator_map) {
-			delete(it.second);
+		for (auto& val : configurator_map | std::views::values) {
+			delete(val);
 		}
 	}
 	ConfiguratorManager(void) = default;
@@ -36,7 +36,7 @@ public:
 
 	void initialise(void) {
 		for (size_t i = 0; i < CONFIGS; i++) {
-			if(array[i]!=NULL)
+			if(array[i]!=nullptr)
 				array[i](static_cast<configurators_t>(i));
 		}
 	}

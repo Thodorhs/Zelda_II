@@ -1,11 +1,14 @@
 ﻿#pragma once
 #include "ViewWindow.h"
 #include "Util/ConfigFuncs.h"
+#include "Grid/Grid.h"
+
 class TileLayer;
-typedef  std::map<const std::string,std::unique_ptr<TileLayer>> Layer_container;
+typedef  std::map<const std::string,TileLayer*> Layer_container;
 
 class TileLayer {
 	private:
+		std::unique_ptr<_Grid_> Grid_layer;
 		TileMap map;
 		Dim totalRows = 0, totalColumns = 0;
 		bool dpyChanged = true;
@@ -28,6 +31,15 @@ class TileLayer {
 			return { DIV_TILE_WIDTH(x + viewWin.x,Engine_Consts.power),
 			DIV_TILE_HEIGHT(y + viewWin.y,Engine_Consts.power) };
 		}
+
+		void set_grid_layer(std::unique_ptr<_Grid_> _grid)
+		{
+			_grid->set_scale(scale);
+			this->Grid_layer = std::move(_grid);
+		}
+
+		const _Grid_& get_grid_layer()const { return *Grid_layer; }
+
 		SDL_Rect& GetViewWindow(void) { return viewWin; }
 		void SetViewWindow(const SDL_Rect& r) { viewWin = r; dpyChanged = true; }
 		void set_dpy_changed() { dpyChanged = true; }
@@ -43,4 +55,5 @@ class TileLayer {
 		void Display();
 		void Display(SDL_Texture* prev, bool final_layer, SDL_Texture* Tileset, SDL_Renderer* myrenderer);
 		void scroll_horizon(int dx);
+		Dim get_scale() { return scale; }
 };
