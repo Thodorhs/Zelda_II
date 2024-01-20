@@ -6,7 +6,7 @@
 #include "../Grid/Grid.h"
 #include "SDL.h"
 #include "Clipper.h"
-
+#include "GravityHandler.h"
 
 class Sprite {
 public:
@@ -14,6 +14,7 @@ public:
 
 protected:
 	bool directMotion = false;
+	GravityHandler gravity;
 	byte frameNo = 0;
 	SDL_Rect frameBox; // inside the film
 	int x = 0, y = 0;
@@ -23,9 +24,15 @@ protected:
 	unsigned zorder = 0;
 	std::string typeId, stateId;
 	Mover mover;
-	
+	Dim layer_scale;
 	MotionQuantizer quantizer;
 public:
+	GravityHandler& GetGravityHandler(void)
+	{
+		return gravity;
+	}
+
+
 	template <typename Tfunc>
 	void SetMover(const Tfunc& f)
 	{
@@ -39,11 +46,18 @@ public:
 	}
 	const SDL_Rect GetScaledBox(void)const
 	{
-		return { x, y, frameBox.w/2, frameBox.h/2 };
+		return { x, y, frameBox.w*layer_scale, frameBox.h*layer_scale };
 	}
-	void Move(int dx, int dy)
+	Sprite& Move(int dx, int dy)
 	{
-		quantizer.Move(GetBox(), &dx, &dy);
+		if (directMotion) {
+			x += dx; y += dy;
+		}
+		else {
+			quantizer.Move(GetScaledBox(), &dx, &dy);
+			gravity.Check(GetScaledBox());
+		}
+		return *this;
 	}
 	void SetPos(int _x, int _y) { x = _x; y = _y; }
 	void SetZorder(unsigned z) { zorder = z; }
@@ -58,11 +72,19 @@ public:
 	byte GetFrame(void) const { return frameNo; }
 	
 	auto GetTypeId(void) -> const std::string& { return typeId; }
+
 	void SetVisibility(bool v) { isVisible = v; }
+
 	bool IsVisible(void) const { return isVisible; }
+
 	bool CollisionCheck(const Sprite* s) const;
+
 	static void Blit(SDL_Renderer* renderer,const SDL_Rect& src_rect,const SDL_Rect& dest_rect, SDL_Texture* film_bitmap);
-	Sprite& SetHasDirectMotion(bool v) { directMotion = true; return *this; }
+
+	Sprite& SetHasDirectMotion(const bool v) { directMotion = v; return *this; }
+
+	bool GetHasDirectMotion(void) const { return directMotion; }
+
 	const Mover MakeSpriteGridLayerMover(TileLayer* layer, Sprite* sprite);
 
 	Sprite(int _x, int _y,AnimationFilm* film, std::string _typeId = "") :
@@ -72,3 +94,6 @@ public:
 	}
 
 };
+
+
+void PrepareSpriteGravityHandler(TileLayer* gridLayer, Sprite* sprite);

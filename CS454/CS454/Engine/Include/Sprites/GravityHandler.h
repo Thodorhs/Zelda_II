@@ -8,13 +8,15 @@ public:
 	using OnSolidGroundPred = std::function<bool(const SDL_Rect&)>;
 	using OnStartFalling = std::function<void(void)>;
 	using OnStopFalling = std::function<void(void)>;
-	bool gravityAddicted = false;
-	bool isFalling = false;
+	
 protected:
+	bool gravityAddicted = true;
+	bool isFalling = false;
 	OnStartFalling onStartFalling;
 	OnStopFalling onStopFalling;
-public:
 	OnSolidGroundPred onSolidGround;
+public:
+	
 	template <typename T> void SetOnStartFalling(const T& f)
 	{
 		onStartFalling = f;

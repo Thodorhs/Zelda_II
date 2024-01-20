@@ -74,6 +74,13 @@ public:
 		void LayerFilterGridMotionUp(const SDL_Rect& r, int* dy)const;
 
 		void LayerFilterGridMotionDown(const SDL_Rect& r, int* dy)const;
+
+		bool IsOnSolidGround(const SDL_Rect &r)const
+		{
+			int dy = 3;
+			LayerFilterGridMotionDown(r, &dy);
+			return dy == 0;
+		}
 };
 
 inline int grid_block_columns();

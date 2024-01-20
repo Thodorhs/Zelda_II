@@ -19,6 +19,13 @@ public:
 			}
 		}
 	}
+
+	void AddtoMap(const std::string& type,Sprite* s)
+	{
+		auto list = GetTypeList(type);
+		list.push_back(s);
+	}
+
 	auto GetDisplayList(void) -> const SpriteList&
 	{
 		return dpyList;

@@ -17,15 +17,12 @@ SpriteManager SpriteManager::singleton;
 void move_Link(int dx,int dy)
 {
 	AnimatorManager& animator_manager = AnimatorManager::GetSingleton();
-	for (SpriteManager& s_manager = SpriteManager::GetSingleton(); auto it : s_manager.GetDisplayList())
-	{
-		if (it->GetTypeId() == "Link") {
-			it->Move(dx, dy);
-			//animator_manager.MarkAsSuspended(animator_manager.Get_by_Id("Link"));
+	SpriteManager& s_manager = SpriteManager::GetSingleton();
+	if (auto sprite = s_manager.Get_sprite_by_id("Link")) {
+		sprite->Move(dx, dy);
 			if (!animator_manager.Get_by_Id("Link")->HasFinished())
 				return;
-			animator_manager.Get_by_Id("Link")->Start(GetSystemTime());
-		}
+		animator_manager.Get_by_Id("Link")->Start(GetSystemTime());
 	}
 }
 
@@ -52,38 +49,66 @@ void create_and_register_sprites(TileLayer *layer)
 		Sprite* sprite =new Sprite(x, y, const_cast<AnimationFilm*>(holder.GetFilm(get_sprite_initial_film(it))),it);
 		auto f = sprite->MakeSpriteGridLayerMover(layer, sprite);
 		sprite->SetMover(f);
+	
 		manager.Add(sprite);
 	}
 	
 }
+
+void animator_init(Sprite* sprite,FrameRangeAnimator *animator,FrameRangeAnimation* fr_animation)
+{
+	animator->SetOnAction([sprite](Animator* animator, const Animation& anim) {FrameRange_Action(sprite, animator, (const FrameRangeAnimation&)anim); });
+	animator->SetOnStart([](Animator* animator)
+		{
+			AnimatorManager::GetSingleton().MarkAsRunning(animator);
+		});
+	animator->SetOnFinish([](Animator* animator)
+		{
+			AnimatorManager::GetSingleton().MarkAsSuspended(animator);
+		});
+}
+
 
 void animators_testing(TileLayer *layer,SDL_Renderer *renderer)
 {
 	Sprite* Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 
 	AnimatorManager& manager = AnimatorManager::GetSingleton();
-	
 	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.run", 0, 3,1 , 0, 0, 150);
 	FrameRangeAnimator* animator = new FrameRangeAnimator("Link",fr_animation);
 
-	animator->SetOnAction([Link](Animator* animator, const Animation& anim) {FrameRange_Action(Link, animator, (const FrameRangeAnimation&)anim);});
-	animator->SetOnStart([](Animator* animator)
-	{
-		AnimatorManager::GetSingleton().MarkAsRunning(animator);
-	});
-	animator->SetOnFinish([Link](Animator* animator)
-	{
-		AnimatorManager::GetSingleton().MarkAsSuspended(animator);
-	});
-	
+	animator_init(Link, animator, fr_animation);
+
+	FrameRangeAnimation* fr_falling = new FrameRangeAnimation("fall", 0, 1, 0, 0, 10, 80);
+	FrameRangeAnimator* falling_animator = new FrameRangeAnimator("link_fall", fr_falling);
+
+	animator_init(Link, falling_animator, fr_falling);
+
 	//animator->Start(fr_animation, GetSystemTime());
 	
 }
 
+void gravity_test(TileLayer *layer)
+{
+	SpriteManager& s_manager = SpriteManager::GetSingleton();
+	auto s = s_manager.Get_sprite_by_id("Link");
+	AnimatorManager& animator_man = AnimatorManager::GetSingleton();
+	auto animator = animator_man.Get_by_Id("link_fall");
+	PrepareSpriteGravityHandler(layer, s);
+	s->GetGravityHandler().SetOnStartFalling([animator]()
+		{
+			animator->Start(GetSystemTime());
+		});
+
+	s->GetGravityHandler().SetOnStopFalling([animator]()
+		{
+			animator->Stop();
+		});
+}
 
 void init_tests(SDL_Renderer* renderer,TileLayer* layer) {
 	pr_info("testing!!");
 	create_and_register_sprites(layer);
 	animators_testing(layer,renderer);
-
+	gravity_test(layer);
 }
