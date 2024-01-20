@@ -10,6 +10,7 @@
 #include "../../../Engine/Include/Sprites/SpriteHelpers.h"
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
 #include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
+#include "../../../Engine/Include/Animators/MovingAnimator.h"
 #include "../../../Engine/Include/Util/SystemClock.h"
 
 SpriteManager SpriteManager::singleton;
@@ -55,9 +56,10 @@ void create_and_register_sprites(TileLayer *layer)
 	
 }
 
-void animator_init(Sprite* sprite,FrameRangeAnimator *animator,FrameRangeAnimation* fr_animation)
+
+void animator_init(Sprite* sprite,Animator *animator,Animation* fr_animation)
 {
-	animator->SetOnAction([sprite](Animator* animator, const Animation& anim) {FrameRange_Action(sprite, animator, (const FrameRangeAnimation&)anim); });
+	animator->SetOnAction(animator->generic_animator_action(sprite));
 	animator->SetOnStart([](Animator* animator)
 		{
 			AnimatorManager::GetSingleton().MarkAsRunning(animator);
@@ -69,7 +71,8 @@ void animator_init(Sprite* sprite,FrameRangeAnimator *animator,FrameRangeAnimati
 }
 
 
-void animators_testing(TileLayer *layer,SDL_Renderer *renderer)
+
+void animators_testing(TileLayer *layer)
 {
 	Sprite* Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 
@@ -78,22 +81,38 @@ void animators_testing(TileLayer *layer,SDL_Renderer *renderer)
 	FrameRangeAnimator* animator = new FrameRangeAnimator("Link",fr_animation);
 
 	animator_init(Link, animator, fr_animation);
-
-	FrameRangeAnimation* fr_falling = new FrameRangeAnimation("fall", 0, 1, 0, 0, 10, 80);
-	FrameRangeAnimator* falling_animator = new FrameRangeAnimator("link_fall", fr_falling);
-
-	animator_init(Link, falling_animator, fr_falling);
-
-	//animator->Start(fr_animation, GetSystemTime());
-	
 }
+
+void generic_gravity_init(TileLayer* layer)
+{
+	MovingAnimation* falling = new MovingAnimation("falling", 0, 0, 10, 80);
+	SpriteManager& sprite_manager = SpriteManager::GetSingleton();
+	for(auto &it : sprite_manager.GetDisplayList())
+	{
+		MovingAnimator* animator = new MovingAnimator(it->GetTypeId() + "_falling", falling);
+		animator_init(it, animator, falling);
+		PrepareSpriteGravityHandler(layer, it);
+		it->GetGravityHandler().SetOnStartFalling([animator]()
+			{
+				animator->Start(GetSystemTime());
+			});
+
+		it->GetGravityHandler().SetOnStopFalling([animator]()
+			{
+				animator->Stop();
+			});
+	}
+
+}
+
+
 
 void gravity_test(TileLayer *layer)
 {
 	SpriteManager& s_manager = SpriteManager::GetSingleton();
 	auto s = s_manager.Get_sprite_by_id("Link");
 	AnimatorManager& animator_man = AnimatorManager::GetSingleton();
-	auto animator = animator_man.Get_by_Id("link_fall");
+	auto animator = animator_man.Get_by_Id(s->GetTypeId()+"_falling");
 	PrepareSpriteGravityHandler(layer, s);
 	s->GetGravityHandler().SetOnStartFalling([animator]()
 		{
@@ -109,6 +128,7 @@ void gravity_test(TileLayer *layer)
 void init_tests(SDL_Renderer* renderer,TileLayer* layer) {
 	pr_info("testing!!");
 	create_and_register_sprites(layer);
-	animators_testing(layer,renderer);
-	gravity_test(layer);
+	animators_testing(layer);
+	generic_gravity_init(layer);
+	SpriteManager::GetSingleton().Get_sprite_by_id("Guma")->Move(0,1);
 }

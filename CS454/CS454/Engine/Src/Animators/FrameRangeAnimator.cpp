@@ -30,3 +30,12 @@ void FrameRange_Action(Sprite* sprite, Animator* animator, const FrameRangeAnima
 			FrameRange_Action(sprite, animator, (const FrameRangeAnimation&)anim);
 		});
 }
+
+
+auto FrameRangeAnimator::generic_animator_action(Sprite* s) -> animator_action
+{
+	return ([s](Animator* animator, const Animation& anim)
+		{
+			FrameRange_Action(s, animator, (const FrameRangeAnimation&)anim);
+		});
+};

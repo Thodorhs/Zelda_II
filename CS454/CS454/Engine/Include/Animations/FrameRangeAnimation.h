@@ -22,4 +22,3 @@ public:
 	) : start(s), end(e), MovingAnimation(id, r, dx, dy, d) {}
 	
 };
-void FrameRange_Action(Sprite* sprite, Animator* animator, const FrameRangeAnimation& anim);
