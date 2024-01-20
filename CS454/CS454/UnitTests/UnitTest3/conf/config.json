@@ -19,7 +19,7 @@
     "map": {
       "properties": {
         "pixel_width": 4800,
-        "pixel_height": 256,
+        "pixel_height": 800,
         "map_columns": 300,
         "map_rows": 300,
         "Layer_num": 3
@@ -61,8 +61,8 @@
         }
       ]
     },
-    "Films" : {
-      "Link" :{
+    "Films": {
+      "Link": {
         "Link.Run.left": {
           "bmp": "link-sprites.png",
           "frames": [
@@ -110,17 +110,55 @@
             }
           ]
         }
-      }
+      },
+      "Guma": {
+        "Guma_default" :{
+        "bmp": "enemies-sprites-1.gif",
+        "frames": [
+          {
+            "x": 377,
+            "y": 821,
+            "w": 16,
+            "h": 32
+          },
+          {
+            "x": 403,
+            "y": 821,
+            "w": 18,
+            "h": 32
+          },
+          {
+            "x": 431,
+            "y": 822,
+            "w": 21,
+            "h": 32
+          },
+          {
+            "x": 460,
+            "y": 824,
+            "w": 22,
+            "h": 32
+          }
+        ]
+        }
+        }
     },
     "Sprites" : {
       "Sprite_list" :  {
         "Link" : {
           "Films" : { "0" : "Link.Run.left",
                       "1":"Link.Run.right" },
-          "start_x" :  20,
+          "start_x" :  180,
           "start_y" :  15
-          }
+          },
+        "Guma": {
+          "Films": {
+            "0": "Guma_default"
+          },
+          "start_x": 220,
+          "start_y": 15
         }
+      }
       }
     }
 }

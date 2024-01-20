@@ -17,7 +17,7 @@ void Sprite::Display(SDL_Surface dest, const SDL_Rect& dpyArea, const Clipper& c
 		clippedBox.w,
 		clippedBox.h
 		};
-		SDL_Rect dpyTest = { dpyPos.x , dpyPos.y, clippedBox.w , clippedBox.h  };
+		SDL_Rect dpyTest = { dpyPos.x , dpyPos.y, clippedBox.w*layer_scale , clippedBox.h*layer_scale  };
 		Blit(renderer, clippedFrame,dpyTest, currFilm->GetBitmap());
 	}
 }
@@ -26,18 +26,24 @@ void Sprite::Display(SDL_Surface dest, const SDL_Rect& dpyArea, const Clipper& c
  const Sprite::Mover Sprite::MakeSpriteGridLayerMover(TileLayer *layer, Sprite* sprite)
 
  {
+	layer_scale = layer->get_scale();
 	return [layer, sprite](const SDL_Rect& r, int* dx, int* dy) {
 		// the r is actually awlays the sprite->GetBox():
-		assert(r.x == sprite->GetBox().x
-			 &&r.y == sprite->GetBox().y
-			 &&r.h == sprite->GetBox().h
-			 &&r.w == sprite->GetBox().w);
+		assert(r.x == sprite->GetScaledBox().x
+			 &&r.y == sprite->GetScaledBox().y
+			 &&r.h == sprite->GetScaledBox().h
+			 &&r.w == sprite->GetScaledBox().w);
 		layer->get_grid_layer().LayerFilterGridMotion(r, dx, dy);
-		sprite->SetPos(sprite->GetBox().x + *dx, sprite->GetBox().y + *dy);
+		//sprite->SetPos(sprite->GetBox().x + *dx, sprite->GetBox().y + *dy);
 		if (*dx || *dy) {
-			return;
-			sprite->SetHasDirectMotion(true).Move(*dx, *dy);
-			sprite->SetHasDirectMotion(false);
+			sprite->SetHasDirectMotion(true).Move(*dx, *dy).SetHasDirectMotion(false);
 		}
 		};
 };
+
+ void PrepareSpriteGravityHandler(TileLayer* gridLayer, Sprite* sprite){
+ sprite->GetGravityHandler().SetOnSolidGround(
+	 [gridLayer](const SDL_Rect& r)
+	 { return gridLayer->get_grid_layer().IsOnSolidGround(r); }
+ );
+}

@@ -32,7 +32,7 @@ public:
 		NotifyStarted();
 		NotifyAction(*anim);
 	}
-
+	auto generic_animator_action(Sprite* s) -> animator_action override;
 	std::string Get_ID() const override { return  id; }
 	FrameRangeAnimator(void) = default;
 	FrameRangeAnimator(const std::string& _id) { id = _id; }
@@ -41,3 +41,4 @@ public:
 	auto GetAnimation()const-> const FrameRangeAnimation& { return *anim; }
 	
 };
+void FrameRange_Action(Sprite* sprite, Animator* animator, const FrameRangeAnimation& anim);

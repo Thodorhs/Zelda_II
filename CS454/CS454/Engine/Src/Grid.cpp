@@ -213,8 +213,10 @@ void _Grid_::LayerFilterGridMotionUp(const SDL_Rect& r, int* dy) const{
 	Dim power = Engine_Consts.grid_power;
 	Dim scale = grid_layer_scale;
 	auto y1_next = r.y + *dy;
-	if (y1_next < 0)
+	if (y1_next < 0) {
 		*dy = -r.y;
+		pr_warning("can't move up");
+	}
 	else {
 		auto newRow = DIV_GRID_ELEMENT_HEIGHT(y1_next, power) / scale;
 		auto currRow = DIV_GRID_ELEMENT_HEIGHT(r.y, power) / scale;
@@ -238,6 +240,7 @@ void _Grid_::LayerFilterGridMotionDown(const SDL_Rect& r, int* dy) const{
 	auto y2 = r.y + r.h - 1;
 	auto y2_next = y2 + *dy;
 	if (y2_next >= Engine_Consts.Map_height) {
+		pr_warning("can't move down");
 		*dy = (Engine_Consts.Map_height) - 1 - y2;
 	}
 	else {

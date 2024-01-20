@@ -128,19 +128,19 @@ void move() {
 				display_grid = !display_grid;
 				break;
 			case SDL_KeyCode::SDLK_a:
-				move_Link(-1, 0);
+				move_Link(-8, 0);
 				//move_rect(-1, 0);
 				break;
 			case SDL_KeyCode::SDLK_s:
-				move_Link(0, 1);
+				move_Link(0, 8);
 				//move_rect(0, 1);
 				break;
 			case SDL_KeyCode::SDLK_d:
-				move_Link(1, 0);
+				move_Link(8, 0);
 				//move_rect(1, 0);
 				break;
 			case SDL_KeyCode::SDLK_w:
-				move_Link(0, -1);
+				move_Link(0, -8);
 				//move_rect(0, -1);
 				break;
 			case SDLK_HOME:

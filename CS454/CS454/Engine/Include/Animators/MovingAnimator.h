@@ -20,6 +20,18 @@ public:
 		currRep = 0;
 		NotifyStarted();
 	}
+
+
+	void Start(timestamp_t t) override
+	{
+		lastTime = t;
+		state = ANIMATOR_RUNNING;
+		currRep = 0;
+		NotifyStarted();
+	}
+	auto generic_animator_action(Sprite* s) -> animator_action override;
+	std::string Get_ID() const override { return  id; }
 	MovingAnimator(void) = default;
+	MovingAnimator(const std::string& _id, MovingAnimation* _anim) : anim(_anim) { id = _id; }
 };
 void Sprite_MoveAction(Sprite* sprite, Animator* animator, const MovingAnimation& anim);

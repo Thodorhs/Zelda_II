@@ -9,7 +9,7 @@ enum animatorstate_t {
 };
 class Animator {
 public:
-	
+	using animator_action = std::function<void(Animator*, const Animation&)>;
 	using OnFinish = std::function<void(Animator*)>;
 	using OnStart = std::function<void(Animator*)>;
 	using OnAction = std::function<void(Animator*, const Animation&)>;
@@ -27,7 +27,9 @@ protected:
 public:
 	void Stop(void);
 	virtual void Start(timestamp_t) = 0;
-	
+
+	virtual auto generic_animator_action(Sprite *s) -> animator_action = 0;
+
 	bool HasFinished(void) const { return state != ANIMATOR_RUNNING; }
 	virtual void TimeShift(timestamp_t offset);
 	virtual void Progress(timestamp_t currTime) = 0;
