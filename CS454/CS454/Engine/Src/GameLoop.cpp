@@ -11,7 +11,8 @@ void app::Game::MainLoopIteration(void) {
 	s_clock.Update();
 	Input();
 	if (s_clock.GetDeltaTime() >= (1.0f / 60)) {
-		Render();
+		s_clock.Reset();
+		inputexec();
 		if (!IsPaused()) {
 			ProgressAnimations();
 			AI();
@@ -20,6 +21,8 @@ void app::Game::MainLoopIteration(void) {
 			CommitDestructions();
 			//UserCode();
 		}
+		input_update();
+		Render();
 	}
 	clock_t endFrame = clock();
 	deltaTime += endFrame - beginFrame;

@@ -24,7 +24,7 @@ protected:
 	unsigned zorder = 0;
 	std::string typeId, stateId;
 	Mover mover;
-	Dim layer_scale;
+	Dim layer_scale =1;
 	MotionQuantizer quantizer;
 public:
 	GravityHandler& GetGravityHandler(void)
@@ -62,7 +62,7 @@ public:
 	void SetPos(int _x, int _y) { x = _x; y = _y; }
 	void SetZorder(unsigned z) { zorder = z; }
 	unsigned GetZorder(void) { return zorder; }
-	void Display(SDL_Surface dest, const SDL_Rect& dpyArea, const Clipper& clipper, SDL_Renderer* renderer) const;
+	void Display(const SDL_Rect& dpyArea, const Clipper& clipper, SDL_Renderer* renderer) const;
 	void SetFrame(byte i) {
 		if (i != frameNo) {
 			assert(i < currFilm->GetTotalFrames());

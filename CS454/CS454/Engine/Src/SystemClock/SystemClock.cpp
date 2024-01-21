@@ -21,14 +21,15 @@ SystemClock::SystemClock()
 {
 	Reset();
 	mTimeScale = 1.0f;
+    mElapsedTicks = 0;
+    mDeltaTime = 0.0f;
 }
 
 
 void SystemClock::Reset()
 {
 	mStartTicks = SDL_GetTicks();
-	mElapsedTicks = 0;
-	mDeltaTime = 0.0f;
+	
 }
 
 float SystemClock::GetDeltaTime()

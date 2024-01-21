@@ -7,7 +7,7 @@ void Sprite::Blit(SDL_Renderer* renderer,const SDL_Rect& src_rect,const SDL_Rect
 	SDL_RenderCopy(renderer,film_bitmap, &src_rect, &dest_rect);
 }
 
-void Sprite::Display(SDL_Surface dest, const SDL_Rect& dpyArea, const Clipper& clipper,SDL_Renderer* renderer) const {
+void Sprite::Display(const SDL_Rect& dpyArea, const Clipper& clipper,SDL_Renderer* renderer) const {
 	SDL_Rect clippedBox;
 	SDL_Point dpyPos;
 	if (clipper.Clip(GetBox(), dpyArea, &dpyPos, &clippedBox)) {

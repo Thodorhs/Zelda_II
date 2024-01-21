@@ -31,6 +31,7 @@ add_executable(UnitTest3
 "../../Engine/Src/SystemClock/SystemClock.cpp"
 "../../Engine/Src/Sprites/GravityHandler.cpp"
 "../../Engine/Src/Animators/MovingAnimator.cpp"
+"../../Engine/src/Input.cpp"
 )
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image)

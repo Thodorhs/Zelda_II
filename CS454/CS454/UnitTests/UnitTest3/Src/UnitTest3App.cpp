@@ -12,225 +12,22 @@
 #include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
 #include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
 #include "../../../Engine/Include/Util/SystemClock.h"
+#include "../../../Engine/Include/GameLoopFuncs/Input.h"
+#include "../Include/SharedDefines.h"
 
-int TIMER_INTERVAL = 100;
-Uint64 last = 0;
-Uint64 curr;
-
+//std::unique_ptr<_Grid_> grid_class;
+size_t layer_num;
+Layer_container Layers;
+Render* global_render_vars;
 TileLayer* Action_Layer;
 TileLayer* Horizon_Layer;
 TileLayer* Backround_Layer;
-
-size_t layer_num;
-Layer_container Layers;
-
-SDL_Rect moving_rect = { 64,128,16,16 };
-Render* global_render_vars;
-Render* render_vars_horizon;
-Render* render_vars_backround;
 Engine_Consts_t Engine_Consts;
-bool is_running; //used by done()
-bool mouse_down = false; //bool to check if i hold down the the left click
-bool display_grid = false;
-KEY_MAP_t pressed_keys;
-KEY_MAP_t released_keys;
-//std::unique_ptr<_Grid_> grid_class;
-
-void disable_pr() {
-	for (auto pr_it = pressed_keys.begin(); pr_it != pressed_keys.end(); ++pr_it) {
-		pr_it->second = false;
-	}
-}
-/*
-
-void update_keys() {
-	KEY_MAP_t::iterator pr_it;
-	for (auto& it : released_keys) {
-		if (it.second) {
-			pr_it = pressed_keys.find(it.first);
-			pr_it->second = false;
-			auto val = released_keys.find(it.first);
-			val->second = false;
-		}
-	}
-}
-
-void update_released(Sint32 code, bool state) {
-	KEY_MAP_t::iterator it = released_keys.find(code);
-	if (it != released_keys.end())
-		it->second = state;
-}
-*/
-
-
-
-void update_press(Sint32 code, bool state) {
-	KEY_MAP_t::iterator it = pressed_keys.find(code);
-	if (it != pressed_keys.end()) {
-		it->second = state;
-	}
-}
-
-
-void move_horizon() {
-	Horizon_Layer->scroll_horizon(1);
-	//Horizon_Layer->set_dpy_changed();
-	Action_Layer->ScrollWithBoundsCheck(0, 0);
-	Backround_Layer->ScrollWithBoundsCheck(0, 0);
-}
-
-void move_pixels_x(int pixels) {
-	Action_Layer->ScrollWithBoundsCheck(pixels, 0);
-	Backround_Layer->ScrollWithBoundsCheck(pixels, 0);
-	
-	if(Action_Layer->GetViewWindow().x == 0)
-		return;
-	Horizon_Layer->scroll_horizon(pixels);
-}
-
-void move_pixels_y(int pixels) {
-	if (CanScrollVert((global_render_vars->ViewWindowR), pixels))
-		Scroll(&(global_render_vars->ViewWindowR), 0, pixels);
-}
-
-
-
-void move_rect(int dx, int dy) {
-	//FilterGridMotion(Action_Layer->get_grid_layer().get_s_grid(), moving_rect, &dx, &dy);
-	Action_Layer->get_grid_layer().LayerFilterGridMotion(moving_rect, &dx, &dy);
-	if (dx == 0 && dy == 0)
-		return;
-	move_pixels_x(dx);
-	moving_rect.x += dx;
-	moving_rect.y += dy;
-	
-
-	
-}
-
-void move() {
-	for (const auto& it : pressed_keys) {
-		if (it.second) {
-			switch (it.first) {
-			case SDL_KeyCode::SDLK_UP:
-				move_pixels_y(-1);
-				break;
-			case SDL_KeyCode::SDLK_DOWN:
-				move_pixels_y(1);
-				break;
-			case SDL_KeyCode::SDLK_LEFT:
-				move_pixels_x(-1);
-				break;
-			case SDL_KeyCode::SDLK_RIGHT:
-				move_pixels_x(1);
-				break;
-			case SDL_KeyCode::SDLK_g:
-				display_grid = !display_grid;
-				break;
-			case SDL_KeyCode::SDLK_a:
-				move_Link(-8, 0);
-				//move_rect(-1, 0);
-				break;
-			case SDL_KeyCode::SDLK_s:
-				move_Link(0, 8);
-				//move_rect(0, 1);
-				break;
-			case SDL_KeyCode::SDLK_d:
-				move_Link(8, 0);
-				//move_rect(1, 0);
-				break;
-			case SDL_KeyCode::SDLK_w:
-				move_Link(0, -8);
-				//move_rect(0, -1);
-				break;
-			case SDLK_HOME:
-				global_render_vars->ViewWindowR.x = 0;
-				global_render_vars->ViewWindowR.y = 0;
-				break;
-			case SDLK_END:
-				global_render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size(), Engine_Consts.power) - global_render_vars->ViewWindowR.w;
-				global_render_vars->ViewWindowR.y = MUL_TILE_HEIGHT(GetMapData()->size(), Engine_Consts.power) - global_render_vars->ViewWindowR.h;
-				break;
-			default:
-				break;
-			}
-		}
-	}
-}
-
+InputKeys InputKeys::singleton;
 
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
-void animation_handler()
-{
+void animation_handler() {
 	AnimatorManager::GetSingleton().Progress(GetSystemTime());
-}
-
-
-
-void myInput() {
-	TIMER_INTERVAL = 100;
-	int CameraPosX, CameraPosY;
-	int PrevCameraPosX = 0, PrevCameraPosY = 0;
-	curr = GetSystemTime();
-	if (curr > last + TIMER_INTERVAL) {
-		last = curr;
-	    move_horizon();
-	}
-	
-	SDL_Event event;
-	
-	
-	int i = 0;
-	while (SDL_PollEvent(&event)) {
-		i++;
-		switch (event.type) {
-		case SDL_MOUSEMOTION:
-			if (mouse_down) { // if i am holding down the left click button and i am moving it then scroll..
-				int offsetX = 0, offsetY = 0;
-				SDL_GetMouseState(&CameraPosX, &CameraPosY);
-				if (CameraPosX - PrevCameraPosX > 0) offsetX = 1;  
-				else if (CameraPosX - PrevCameraPosX < 0) offsetX = -1;
-				move_pixels_x(offsetX);
-				if (CameraPosY - PrevCameraPosY > 0) offsetY = 1;
-				else if (CameraPosY - PrevCameraPosY < 0) offsetY = -1;
-				move_pixels_y(offsetY);
-				//ScrollWithBoundsCheck(&render_vars->ViewWindowR, offsetX, offsetY);
-			}
-			break;
-		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_LEFT) {
-				mouse_down = true; // i'am holding it down so set it true
-				
-				SDL_GetMouseState(&PrevCameraPosX, &PrevCameraPosY);
-			}
-			break;
-		case SDL_MOUSEBUTTONUP:
-			if (event.button.button == SDL_BUTTON_LEFT) {
-				//PrevCameraPosY = 0;
-				//PrevCameraPosX = 0;
-				mouse_down = false; // i realesed it
-			}
-			break;
-		case SDL_KEYDOWN:
-			update_press(event.key.keysym.sym, true);
-			break;
-		case SDL_QUIT:
-			is_running = false;
-			break;
-		case SDL_KEYUP:
-			update_press(event.key.keysym.sym, false);
-			
-			break;
-		default:
-			break;
-		}
-	}
-	move();
-	
-	disable_pr();
-	
-	//update_keys();
-	
 }
 
 #define _GRID_2
@@ -244,8 +41,6 @@ void show_grid() {
 	#endif
 }
 
-
-
 void render_layers() {
 	//not working for now (who knows)
 	size_t n = 1;
@@ -256,54 +51,38 @@ void render_layers() {
 	}
 }
 
+void input_handler(){
+	InputKeys::GetSingleton().InputRead();
+}
 
+void execute_input(){
+	InputKeys::GetSingleton().move();
+}
 
-
+void update_input(){
+	InputKeys::GetSingleton().updatePrev();
+}
 
 void myRender() {
 	SDL_RenderClear(global_render_vars->myrenderer);
 	#ifndef _LAYERS_
-	
-	
 	
 	Horizon_Layer->Display(nullptr, false,global_render_vars->Tileset, global_render_vars->myrenderer);
 	Backround_Layer->Display(Horizon_Layer->get_bitmap(), false, global_render_vars->Tileset,global_render_vars->myrenderer);
 	Action_Layer->Display(Backround_Layer->get_bitmap(), true, global_render_vars->Tileset,global_render_vars->myrenderer);
 	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 200, 0, 200, 255);
 
-	SDL_Rect dst = { moving_rect.x,moving_rect.y,moving_rect.h,moving_rect.w }; //only for rect movement
-	dst.x -= (Action_Layer->GetViewWindow().x)*Action_Layer->get_scale();
-	SDL_RenderFillRect(global_render_vars->myrenderer, &dst);
-
 	render_sprite(global_render_vars->myrenderer, Action_Layer);
 	#else
 	render_layers();
 	#endif
 
-	if(display_grid)
+	if(InputKeys::GetSingleton().CanDpyGrid())
 		show_grid();
 	SDL_RenderPresent(global_render_vars->myrenderer);
 }
 
-bool myDone() {	return is_running; }
-
-void init_key_map() {
-	/*PRESS*/
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_LEFT, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_RIGHT, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_HOME, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_END, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_g, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_a, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_s, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_d, false));
-	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_w, false));
-	/*RELEASE*/
-	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_UP, false));
-	released_keys.insert(std::make_pair(SDL_KeyCode::SDLK_DOWN, false));
-}
+bool myDone() {	return InputKeys::GetSingleton().get_is_running(); }
 
 #include <cmath>
 Dim get_2_power(Dim w, Dim h) {
@@ -442,8 +221,7 @@ void ZeldaApp::Initialise(void) {
 		SDL_SetRenderDrawColor(global_render_vars->myrenderer, 0, 0, 0, 0);
 		pr_info("Renderer created!");
 	}
-
-	init_key_map();
+	
 	pre_cache();
 	ReadTextMap(full_asset_path + "\\UnitTest3Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "text_map"));
 	global_render_vars->ImgSurface = IMG_Load((full_asset_path + "\\UnitTest3Media\\" + get_config_value<std::string>(configurators_t::MAP_CONFIG, "tileset")).c_str());
@@ -452,13 +230,18 @@ void ZeldaApp::Initialise(void) {
 
 	global_render_vars->Tileset = SDL_CreateTextureFromSurface(global_render_vars->myrenderer, global_render_vars->ImgSurface);
 
-	game.SetInput(myInput);
+	InputKeys::GetSingleton().init_key_map();
+	InputKeys::GetSingleton().setlayersinput(Action_Layer, Horizon_Layer, Backround_Layer);
+	InputKeys::GetSingleton().setglobal_render_vars(global_render_vars);
+	game.SetInput(input_handler);
 	game.SetRender(myRender);
 	game.SetDone(myDone);
+	game.SetInputExec(execute_input);
+	game.SetInputUpdate(update_input);
 	game.SetAnim(animation_handler);
 	init_films();
 	init_tests(global_render_vars->myrenderer,Action_Layer);
-	is_running = true;
+	InputKeys::GetSingleton().set_is_running(true);
 	pr_info("Done!");
 }
 

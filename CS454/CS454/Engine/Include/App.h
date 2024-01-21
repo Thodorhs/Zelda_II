@@ -14,7 +14,7 @@ namespace app {
 			double  frameRate = 30;
 			double  averageFrameTimeMilliseconds = 33.333;
 		private:
-			Action render, anim, input, ai, physics, destruct, collisions, user, pauseResume;
+			Action render, anim, input, ai, physics, destruct, collisions, user, pauseResume,inputexec,input_update;
 			Pred done;
 			bool isPaused = false;
 			uint64_t pauseTime = 0;
@@ -34,6 +34,8 @@ namespace app {
 
 			void SetRender(const Action& f) { render = f; }
 			void SetInput(const Action& f) { input = f; }
+			void SetInputExec(const Action& f) { inputexec = f; }
+			void SetInputUpdate(const Action& f) { input_update = f; }
 			void SetDone(const Pred& f) { done = f; }
 			void SetAnim(const Action& f) { anim = f;  }
 			void Set_Physics(const Action& f) { physics = f; }

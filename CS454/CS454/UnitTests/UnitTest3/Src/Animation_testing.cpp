@@ -31,8 +31,11 @@ void render_sprite(SDL_Renderer* renderer, TileLayer* layer)
 {
 	for (SpriteManager& s_manager = SpriteManager::GetSingleton(); auto it : s_manager.GetDisplayList())
 	{
-		if (it)
-			it->Display(SDL_Surface{}, { layer->GetViewWindow().x,layer->GetViewWindow().y,layer->GetViewWindow().w,layer->GetViewWindow().h }, MakeTileLayerClipper(layer),renderer);
+		if (it){
+			SDL_Rect dst = { 0,0,layer->GetViewWindow().w,layer->GetViewWindow().h };
+			//dst.x -= layer->GetViewWindow().x;
+			it->Display(dst, MakeTileLayerClipper(layer),renderer);
+		}
 	}
 }
 
@@ -42,7 +45,7 @@ void create_and_register_sprites(TileLayer *layer)
 {
 	AnimationFilmHolder& holder = AnimationFilmHolder::getInstance();
 	SpriteManager& manager = SpriteManager::GetSingleton();
-	const Clipper clipper = MakeTileLayerClipper(layer);
+	//const Clipper clipper = MakeTileLayerClipper(layer);
 	auto s_list = get_sprite_name_list();
 	for (auto &it : s_list)
 	{
@@ -59,6 +62,7 @@ void create_and_register_sprites(TileLayer *layer)
 
 void animator_init(Sprite* sprite,Animator *animator,Animation* fr_animation)
 {
+	
 	animator->SetOnAction(animator->generic_animator_action(sprite));
 	animator->SetOnStart([](Animator* animator)
 		{
@@ -76,7 +80,7 @@ void animators_testing(TileLayer *layer)
 {
 	Sprite* Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 
-	AnimatorManager& manager = AnimatorManager::GetSingleton();
+	//AnimatorManager& manager = AnimatorManager::GetSingleton();
 	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.run", 0, 3,1 , 0, 0, 150);
 	FrameRangeAnimator* animator = new FrameRangeAnimator("Link",fr_animation);
 
@@ -125,8 +129,23 @@ void gravity_test(TileLayer *layer)
 		});
 }
 
+void create_animation(TileLayer* layer) {
+	auto [x, y] = get_sprite_start_pos("Link");
+	Sprite* link = new Sprite(x, y, const_cast<AnimationFilm*> (AnimationFilmHolder::getInstance().GetFilm(get_sprite_initial_film("Link"))), "Link");
+	SpriteManager::GetSingleton().Add(link);
+	FrameRangeAnimation* frame_anim = new FrameRangeAnimation("linkleft", 0, 3, 1, 0, 0, 80);
+	FrameRangeAnimator* frame_animtr = new FrameRangeAnimator("linklefttr", frame_anim);
+	frame_animtr->SetOnAction([link](Animator* animator, const Animation& anim) {
+		FrameRange_Action(link, animator, (const FrameRangeAnimation&)anim); 
+		});
+
+	link->SetMover(link->MakeSpriteGridLayerMover(layer,link));
+	
+}
+
 void init_tests(SDL_Renderer* renderer,TileLayer* layer) {
 	pr_info("testing!!");
+	//create_animation(layer);
 	create_and_register_sprites(layer);
 	animators_testing(layer);
 	generic_gravity_init(layer);
