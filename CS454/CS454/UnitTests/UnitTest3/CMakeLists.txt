@@ -4,6 +4,7 @@
 cmake_minimum_required (VERSION 3.8)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
+#find_package(SDL2_ttf REQUIRED)
 #Add source to this project's executable.
 
 
@@ -33,7 +34,8 @@ add_executable(UnitTest3
 "../../Engine/Src/Animators/MovingAnimator.cpp"
 "../../Engine/src/Input.cpp"
 "../../Engine/src/Sprites/CollisionChecker.cpp"
-  "Src/SpriteHandling/SpriteHandlers.cpp")
+"Src/SpriteHandling/SpriteHandlers.cpp"
+"Src/StatPrinting/StatPrinting.cpp" "Include/StatPrinting/StatPrinting.h" )
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image)
 

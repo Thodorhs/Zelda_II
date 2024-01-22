@@ -59,31 +59,38 @@ void InputKeys::move() {
 	Dim scale = Action_Layer->get_scale();
 	Sprite* link = get_Link();
 	if(KeyPressed(SDLK_a) || KeyDown(SDLK_a)){
-		/*
+		
 		if ((link->GetBox().x - viewin.x * scale) >= viewin.w/2 - LinkSpeed - 16 && (link->GetBox().x - viewin.x * scale) <= viewin.w / 2) {
-			if(move_Link(-1, 0))
+				move_Link(-LinkSpeed, 0);
 				move_pixels_x(-LinkSpeed);
 		}else{
 			move_Link(-LinkSpeed, 0);
-		}*/
+		}
 
-		if((link->GetBox().x - viewin.x*scale) >= viewin.w/2)
+		/*if ((link->GetBox().x - viewin.x * scale) >= viewin.w / 2)
 		{
 			if (move_Link(-LinkSpeed, 0))
 				move_pixels_x(-3);
 		} else
 		{
 			move_Link(-LinkSpeed, 0);
-		}
+		}*/
 		get_Link()->ChangeFilm("Link.Run.left");
 	}
 	if (KeyPressed(SDLK_d) || KeyDown(SDLK_d)) {
 		
-		if ((link->GetBox().x - viewin.x * scale) <= viewin.w / 2) {
+		/*if ((link->GetBox().x - viewin.x * scale) <= viewin.w / 2) {
 			
 			if(move_Link(LinkSpeed, 0))
 				move_pixels_x(3);
 		}else{
+			move_Link(LinkSpeed, 0);
+		}*/
+		if ((link->GetBox().x - viewin.x * scale) <= viewin.w / 2 + LinkSpeed + 16 && (link->GetBox().x - viewin.x * scale) >= viewin.w / 2) {
+			move_Link(LinkSpeed, 0);
+			move_pixels_x(LinkSpeed);
+		}
+		else {
 			move_Link(LinkSpeed, 0);
 		}
 		

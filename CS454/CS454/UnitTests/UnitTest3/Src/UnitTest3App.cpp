@@ -14,7 +14,7 @@
 #include "../../../Engine/Include/Util/SystemClock.h"
 #include "../../../Engine/Include/GameLoopFuncs/Input.h"
 #include "../../../Engine/Include/Sprites/CollisionChecker.h"
-#include "../Include/SharedDefines.h"
+#include "../Include/StatPrinting/StatPrinting.h"
 
 //std::unique_ptr<_Grid_> grid_class;
 size_t layer_num;
@@ -79,6 +79,7 @@ void myRender() {
 	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 200, 0, 200, 255);
 
 	render_sprite(global_render_vars->myrenderer, Action_Layer);
+	render_stats(global_render_vars->myrenderer, Action_Layer);
 	#else
 	render_layers();
 	#endif

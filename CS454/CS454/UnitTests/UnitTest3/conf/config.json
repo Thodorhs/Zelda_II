@@ -3,11 +3,11 @@
     "Render": {
       "RenderWindow": {
         "render_w_w": 640,
-        "render_w_h": 420
+        "render_w_h": 480
       },
       "ViewWindow": {
         "view_win_w": 640,
-        "view_win_h": 420,
+        "view_win_h": 480,
         "view_scale_global": 1,
         "view_scale_back": 1,
         "view_scale_hor": 1,
