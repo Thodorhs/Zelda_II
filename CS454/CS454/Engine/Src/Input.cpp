@@ -44,12 +44,14 @@ bool InputKeys::KeyReleased(SDL_Keycode code){
 }
 
 void InputKeys::move() {
+
 	if(KeyPressed(SDLK_a) || KeyDown(SDLK_a)){
 		move_Link(-LinkSpeed, 0);
+		move_pixels_x(-3);
 	}
 	if (KeyPressed(SDLK_d) || KeyDown(SDLK_d)) {
 		move_Link(LinkSpeed, 0);
-		//move_pixels_x(1);
+		move_pixels_x(3);
 	}
 	if (KeyPressed(SDLK_w) || KeyDown(SDLK_w)) {
 		move_Link(0, -LinkSpeed);

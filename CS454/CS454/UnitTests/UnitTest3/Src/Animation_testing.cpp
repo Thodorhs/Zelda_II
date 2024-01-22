@@ -89,7 +89,7 @@ void animators_testing(TileLayer *layer)
 
 void generic_gravity_init(TileLayer* layer)
 {
-	MovingAnimation* falling = new MovingAnimation("falling", 0, 0, 10, 80);
+	MovingAnimation* falling = new MovingAnimation("falling", 0, 0, 5, 40);
 	SpriteManager& sprite_manager = SpriteManager::GetSingleton();
 	for(auto &it : sprite_manager.GetDisplayList())
 	{

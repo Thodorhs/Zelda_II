@@ -10,7 +10,7 @@ void Sprite::Blit(SDL_Renderer* renderer,const SDL_Rect& src_rect,const SDL_Rect
 void Sprite::Display(const SDL_Rect& dpyArea, const Clipper& clipper,SDL_Renderer* renderer) const {
 	SDL_Rect clippedBox;
 	SDL_Point dpyPos;
-	if (clipper.Clip(GetBox(), dpyArea, &dpyPos, &clippedBox)) {
+	if (clipper.Clip(GetBox(), dpyArea, &dpyPos, &clippedBox,layer_scale)) {
 		SDL_Rect clippedFrame{
 		frameBox.x + clippedBox.x,
 		frameBox.y + clippedBox.y,
