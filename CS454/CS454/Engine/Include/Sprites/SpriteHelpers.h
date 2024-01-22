@@ -16,3 +16,5 @@ SDL_Point get_sprite_start_pos(const std::string& sprite_name);
 
 
 std::vector<std::string> get_sprite_name_list();
+
+std::vector<std::string> get_elevator_names();

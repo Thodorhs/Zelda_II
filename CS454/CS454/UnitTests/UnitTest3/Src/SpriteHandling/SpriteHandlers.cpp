@@ -1,0 +1,67 @@
+#include "../../Include/SpriteHandling/SpriteHandlers.h"
+#include "../../../../Engine/Include/Sprites/CollisionChecker.h"
+#include "../../../../Engine/Include/Animators/AnimatorManager.h"
+
+std::string crouch_films[] = { "Link.Crouch.left","Link.Crouch.right" };
+std::string jump_films[] = { "Link.Attack.right" };
+
+void elevator_action1(Sprite *s1,Sprite *s2) {
+	for (auto& it : crouch_films)
+	{
+		if (s1->GetFilm()->GetId() != it){
+			pr_info("starting action");
+			s1->setGridIgnore(true);
+			s2->setGridIgnore(true);
+			s1->GetGravityHandler().set_gravity_addicted(false);
+			
+			auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator.down");
+			auto l = AnimatorManager::GetSingleton().Get_by_Id("link.el");
+
+			if (l->HasFinished() && e->HasFinished()) {
+				l->Start(GetSystemTime());
+				e->Start(GetSystemTime());
+			}
+			break;
+		}
+			
+	}
+}
+
+void init_elevators() {
+	auto names = get_elevator_names();
+	for (auto& it : names)
+		SpriteManager::GetSingleton().Get_sprite_by_id(it)->GetGravityHandler().set_gravity_addicted(false);
+}
+
+
+void create_and_register_sprites(TileLayer* layer)
+{
+	AnimationFilmHolder& holder = AnimationFilmHolder::getInstance();
+	SpriteManager& manager = SpriteManager::GetSingleton();
+	//const Clipper clipper = MakeTileLayerClipper(layer);
+	auto s_list = get_sprite_name_list();
+	for (auto& it : s_list)
+	{
+		auto [x, y] = get_sprite_start_pos(it);
+		x *= layer->get_scale();
+		y *= layer->get_scale();
+		Sprite* sprite = new Sprite(x, y, const_cast<AnimationFilm*>(holder.GetFilm(get_sprite_initial_film(it))), it);
+		auto f = sprite->MakeSpriteGridLayerMover(layer, sprite);
+		sprite->SetMover(f);
+
+		manager.Add(sprite);
+	}
+	init_elevators();
+
+}
+void register_collisions(){
+	CollisionChecker& col = CollisionChecker::GetSingleton();
+	SpriteManager& manager = SpriteManager::GetSingleton();
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Guma"), [](Sprite *s1,Sprite *s2) {pr_error("collision"); });
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator1_up_down"), elevator_action1);
+}
+
+void init_sprites(TileLayer* layer) {
+	create_and_register_sprites(layer);
+	register_collisions();
+}

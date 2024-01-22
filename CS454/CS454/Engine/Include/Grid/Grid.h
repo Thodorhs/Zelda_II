@@ -46,10 +46,10 @@ public:
 		void fill_empty_tiles_map() {
 			for (int i = 0; i <= 100; i++) { empty_tiles[i] = false; }
 			empty_tiles[61] = true;
-			empty_tiles[1]  = true;
-			empty_tiles[2]  = true;
+			empty_tiles[10] = true;
+			empty_tiles[20] = true;
 			empty_tiles[3]  = true;
-			empty_tiles[4]  = true;
+			empty_tiles[42] = true;
 		}
 		GridMapOld& get_grid() { return grid_old; }
 		GridMap& get_s_grid() { return grid; }

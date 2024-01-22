@@ -13,6 +13,7 @@
 #include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
 #include "../../../Engine/Include/Util/SystemClock.h"
 #include "../../../Engine/Include/GameLoopFuncs/Input.h"
+#include "../../../Engine/Include/Sprites/CollisionChecker.h"
 #include "../Include/SharedDefines.h"
 
 //std::unique_ptr<_Grid_> grid_class;
@@ -61,6 +62,11 @@ void execute_input(){
 
 void update_input(){
 	InputKeys::GetSingleton().updatePrev();
+}
+
+void collision_checking()
+{
+	CollisionChecker::GetSingleton().Check();
 }
 
 void myRender() {
@@ -239,6 +245,7 @@ void ZeldaApp::Initialise(void) {
 	game.SetInputExec(execute_input);
 	game.SetInputUpdate(update_input);
 	game.SetAnim(animation_handler);
+	game.SetCollisionChecking(collision_checking);
 	init_films();
 	init_tests(global_render_vars->myrenderer,Action_Layer);
 	InputKeys::GetSingleton().set_is_running(true);

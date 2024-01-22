@@ -17,6 +17,7 @@ class TileLayer {
 		SDL_Texture* dpybuffer;
 		std::string id;
 		ViewWindow_t viewWin;
+		
 		void Allocate(void);
 		void pre_cache(void);
 		Dim scale;
@@ -41,6 +42,9 @@ class TileLayer {
 		const _Grid_& get_grid_layer()const { return *Grid_layer; }
 
 		SDL_Rect& GetViewWindow(void) { return viewWin; }
+		
+
+			
 		void SetViewWindow(const SDL_Rect& r) { viewWin = r; dpyChanged = true; }
 		void set_dpy_changed() { dpyChanged = true; }
 		static int GetPixelWidth(void) { return Engine_Consts.Map_width; }

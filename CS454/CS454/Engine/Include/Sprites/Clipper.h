@@ -19,7 +19,8 @@ public:
 		const SDL_Rect& r,
 		const SDL_Rect& dpyArea,
 		SDL_Point* dpyPos,
-		SDL_Rect* clippedBox
+		SDL_Rect* clippedBox,
+		const Dim layer_scale
 	) const;
 	Clipper(void) = default;
 	Clipper(const Clipper&) = default;

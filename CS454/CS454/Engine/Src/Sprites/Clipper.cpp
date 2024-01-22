@@ -18,8 +18,8 @@ bool clip_rect(const SDL_Rect& r, const SDL_Rect& area, SDL_Rect* result) {
 		r.h,
 		area.x,
 		area.y,
-		area.w,
-		area.h,
+		area.w*2,
+		area.h*2,
 		&result->x,
 		&result->y,
 		&result->w,
@@ -29,7 +29,7 @@ bool clip_rect(const SDL_Rect& r, const SDL_Rect& area, SDL_Rect* result) {
 
 
 
-bool Clipper::Clip(const SDL_Rect& r, const SDL_Rect& dpyArea, SDL_Point* dpyPos, SDL_Rect* clippedBox) const {
+bool Clipper::Clip(const SDL_Rect& r, const SDL_Rect& dpyArea, SDL_Point* dpyPos, SDL_Rect* clippedBox,const Dim layer_scale) const {
 	SDL_Rect visibleArea;
 	if (!clip_rect(r, view(), &visibleArea))
 	{
@@ -37,12 +37,12 @@ bool Clipper::Clip(const SDL_Rect& r, const SDL_Rect& dpyArea, SDL_Point* dpyPos
 	}
 	else {
 		// clippedBox is in ‘r’ coordinates, sub-rectangle of the input rectangle
-		clippedBox->x = r.x - visibleArea.x;
-		clippedBox->y = r.y - visibleArea.y;
+		clippedBox->x =  visibleArea.x-r.x;
+		clippedBox->y =  visibleArea.y-r.y;
 		clippedBox->w = visibleArea.w;
 		clippedBox->h = visibleArea.h;
-		dpyPos->x = dpyArea.x + (visibleArea.x - view().x);
-		dpyPos->y = dpyArea.y + (visibleArea.y - view().y);
+		dpyPos->x = dpyArea.x + (visibleArea.x - (view().x)*layer_scale);
+		dpyPos->y = dpyArea.y + (visibleArea.y - (view().y)*layer_scale);
 		return true;
 	}
 }

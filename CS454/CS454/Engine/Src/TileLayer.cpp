@@ -8,6 +8,7 @@ TileLayer::TileLayer(ViewWindow_t _ViewWin,SDL_Texture* _dpybuffer,TileMap* _map
 	id = std::move(_id);
 	viewWin = _ViewWin;
 	scale = _scale;
+	
 	dpybuffer = _dpybuffer;
 	pre_cache();
 }
