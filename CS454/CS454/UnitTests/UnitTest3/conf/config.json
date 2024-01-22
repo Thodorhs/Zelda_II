@@ -62,6 +62,19 @@
       ]
     },
     "Films": {
+      "Elevator": {
+        "Elevator_default" : {
+        "bmp": "Palace-Tileset.png",
+        "frames": [
+          {
+            "x": 32,
+            "y": 16,
+            "w": 32,
+            "h": 16
+          }
+        ]
+        }
+       },
       "Link": {
         "Link.Run.left": {
           "bmp": "link-sprites.png",
@@ -93,6 +106,84 @@
           ]
         },
 
+
+        "Link.Run.right": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 167,
+              "y": 0,
+              "w": 20,
+              "h": 31
+            },
+            {
+              "x": 207,
+              "y": 0,
+              "w": 20,
+              "h": 31
+            },
+            {
+              "x": 247,
+              "y": 0,
+              "w": 20,
+              "h": 31
+            },
+            {
+              "x": 287,
+              "y": 0,
+              "w": 20,
+              "h": 31
+            }
+          ]
+        },
+
+        "Link.jump.left": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 128,
+              "y": 81,
+              "w": 16,
+              "h": 31
+            }
+          ]
+        },
+
+        "Link.jump.right": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 168,
+              "y": 81,
+              "w": 16,
+              "h": 31
+            }
+          ]
+        },
+
+        "Link.falling.left": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 8,
+              "y": 81,
+              "w": 16,
+              "h": 31
+            }
+          ]
+        },
+
+        "Link.falling.right": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 288,
+              "y": 81,
+              "w": 16,
+              "h": 31
+            }
+          ]
+        },
         "Link.Attack.left": {
           "bmp": "link-sprites.png",
           "frames": [
@@ -107,56 +198,133 @@
               "y": 40,
               "w": 34,
               "h": 31
+            },
+            {
+              "x": 79,
+              "y": 40,
+              "w": 34,
+              "h": 31
+            }
+          ]
+        },
+
+        "Link.Attack.right": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 164,
+              "y": 39,
+              "w": 25,
+              "h": 31
+            },
+            {
+              "x": 199,
+              "y": 40,
+              "w": 34,
+              "h": 31
+            },
+            {
+              "x": 199,
+              "y": 40,
+              "w": 34,
+              "h": 31
+            }
+          ]
+        },
+        "Link.Crouch.left": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 47,
+              "y": 41,
+              "w": 18,
+              "h": 31
+            }
+          ]
+        },
+
+        "Link.Crouch.right": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 247,
+              "y": 41,
+              "w": 18,
+              "h": 31
             }
           ]
         }
       },
       "Guma": {
-        "Guma_default" :{
-        "bmp": "enemies-sprites-1.gif",
-        "frames": [
-          {
-            "x": 377,
-            "y": 821,
-            "w": 16,
-            "h": 32
-          },
-          {
-            "x": 403,
-            "y": 821,
-            "w": 18,
-            "h": 32
-          },
-          {
-            "x": 431,
-            "y": 822,
-            "w": 21,
-            "h": 32
-          },
-          {
-            "x": 460,
-            "y": 824,
-            "w": 22,
-            "h": 32
-          }
-        ]
+        "Guma_default": {
+          "bmp": "enemies-sprites-1.gif",
+          "frames": [
+            {
+              "x": 377,
+              "y": 821,
+              "w": 16,
+              "h": 32
+            },
+            {
+              "x": 403,
+              "y": 821,
+              "w": 18,
+              "h": 32
+            },
+            {
+              "x": 431,
+              "y": 822,
+              "w": 21,
+              "h": 32
+            },
+            {
+              "x": 460,
+              "y": 824,
+              "w": 22,
+              "h": 32
+            }
+          ]
         }
-        }
+      }
     },
     "Sprites" : {
-      "Sprite_list" :  {
-        "Link" : {
-          "Films" : { "0" : "Link.Run.left",
-                      "1":"Link.Run.right" },
-          "start_x" :  180,
-          "start_y" :  15
+      "Sprite_list": {
+        "Link": {
+          "Films": {
+            "0": "Link.Run.left",
+            "1": "Link.Run.right",
+            "2": "Link.jump.left",
+            "3": "Link.jump.right",
+            "4": "Link.falling.left",
+            "5": "Link.falling.right",
+            "6": "Link.Attack.left",
+            "7": "Link.Attack.right",
+            "8": "Link.Crouch.left",
+            "9": "Link.Crouch.right"
           },
+          "start_x": 180,
+          "start_y": 15
+        },
         "Guma": {
           "Films": {
             "0": "Guma_default"
           },
           "start_x": 220,
           "start_y": 15
+        },
+        "Elevator1_up_down": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 576,
+          "start_y": 200
+        },
+        "Elevator1_up_up": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 576,
+          "start_y": 160
         }
       }
       }

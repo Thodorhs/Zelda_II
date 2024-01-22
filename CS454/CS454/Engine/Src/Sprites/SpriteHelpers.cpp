@@ -41,3 +41,16 @@ std::vector<std::string> get_sprite_name_list()
 	}
 	return list;
 }
+
+std::vector<std::string> get_elevator_names()
+{
+	auto list = get_sprite_name_list();
+	std::vector<std::string> elevators;
+	for(auto it : list)
+	{
+		if (it.find("Elevator") != std::string::npos) {
+			elevators.push_back(it);
+		}
+	}
+	return elevators;
+}

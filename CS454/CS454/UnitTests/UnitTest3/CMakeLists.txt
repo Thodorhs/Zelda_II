@@ -32,7 +32,8 @@ add_executable(UnitTest3
 "../../Engine/Src/Sprites/GravityHandler.cpp"
 "../../Engine/Src/Animators/MovingAnimator.cpp"
 "../../Engine/src/Input.cpp"
-)
+"../../Engine/src/Sprites/CollisionChecker.cpp"
+  "Src/SpriteHandling/SpriteHandlers.cpp")
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image)
 

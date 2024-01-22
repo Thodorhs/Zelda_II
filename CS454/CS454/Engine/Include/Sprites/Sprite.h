@@ -1,7 +1,7 @@
 #pragma once
 
 #include "MotionQuantizer.h"
-#include "../KeyFrameAnimation/AnimationFilm.h"
+#include "../KeyFrameAnimation/AnimationFilmHolder.h"
 #include "../Util/EngineDefines.h"
 #include "../Grid/Grid.h"
 #include "SDL.h"
@@ -26,13 +26,25 @@ protected:
 	Mover mover;
 	Dim layer_scale =1;
 	MotionQuantizer quantizer;
+	bool GridIgnore = false;
 public:
+
+	const bool GetGridIgnore() const { return GridIgnore; }
+
+	void setGridIgnore(const bool value) { GridIgnore = value; }
+	void ChangeFilm(const std::string& id)
+	{
+		if(auto prev = currFilm; prev == AnimationFilmHolder::getInstance().GetFilm(id))
+			return;
+		currFilm =const_cast<AnimationFilm*> (AnimationFilmHolder::getInstance().GetFilm(id));
+		frameNo = currFilm->GetTotalFrames(); SetFrame(0);
+	}
 	GravityHandler& GetGravityHandler(void)
 	{
 		return gravity;
 	}
 
-
+	const AnimationFilm* GetFilm() { return currFilm; }
 	template <typename Tfunc>
 	void SetMover(const Tfunc& f)
 	{

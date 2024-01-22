@@ -16,7 +16,8 @@ protected:
 	OnStopFalling onStopFalling;
 	OnSolidGroundPred onSolidGround;
 public:
-	
+	void set_gravity_addicted(const bool state) { gravityAddicted = state; }
+
 	template <typename T> void SetOnStartFalling(const T& f)
 	{
 		onStartFalling = f;
