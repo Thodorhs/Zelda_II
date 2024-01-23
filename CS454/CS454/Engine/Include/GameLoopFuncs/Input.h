@@ -23,7 +23,7 @@ private:
     Uint64 last=0;
     int distanceJumped = 0;
     int maxdistancejump = 350* (-8);
-    int LinkSpeed = 10;
+    int LinkSpeed = 5;
     int LinkJump = 8;
     int timer_interval = 100;
     TileLayer* Action_Layer;
