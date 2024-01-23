@@ -48,8 +48,10 @@ bool move_Link(int dx,int dy)
 	if (auto sprite = s_manager.Get_sprite_by_id("Link")) {
 		auto [x, y,h,w] = sprite->GetBox();
 		sprite->Move(dx, dy);
-			if (!Link_animators_Notfinished())
-				animator_manager.Get_by_Id("Link")->Start(GetSystemTime());
+		if (!Link_animators_Notfinished()) {
+			
+			animator_manager.Get_by_Id("Link")->Start(GetSystemTime());
+		}
 		
 		return (x != sprite->GetBox().x || y != sprite->GetBox().y);
 	}
@@ -93,11 +95,11 @@ void animators_testing(TileLayer *layer)
 	Sprite* Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 
 	//AnimatorManager& manager = AnimatorManager::GetSingleton();
-	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.frame.animation", 0, 3,1 , 0, 0, 150);
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.frame.animation", 0, 4,1 , 0, 0, 150);
 	FrameRangeAnimator* animator = new FrameRangeAnimator("Link",fr_animation);
 	Link_animators.push_back(animator);
 
-	MovingAnimation* jump = new MovingAnimation("link.jump", 4, 0, -10, 20);
+	MovingAnimation* jump = new MovingAnimation("link.jump", 1, 0, -10, 20);
 	MovingAnimator* jump_anim = new MovingAnimator("link.jump", jump);
 	Link_animators.push_back(jump_anim);
 
