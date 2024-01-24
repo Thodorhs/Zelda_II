@@ -11,7 +11,7 @@
         "view_scale_global": 1,
         "view_scale_back": 1,
         "view_scale_hor": 1,
-        "view_scale_action": 1,
+        "view_scale_action": 2,
         "start_x": 0,
         "start_y": 0
       }
@@ -153,8 +153,8 @@
           "bmp": "link-sprites.png",
           "frames": [
             {
-              "x": 128,
-              "y": 81,
+              "x": 47,
+              "y": 41,
               "w": 20,
               "h": 31
             }
@@ -165,8 +165,8 @@
           "bmp": "link-sprites.png",
           "frames": [
             {
-              "x": 168,
-              "y": 81,
+              "x": 247,
+              "y": 41,
               "w": 20,
               "h": 31
             }
@@ -177,8 +177,8 @@
           "bmp": "link-sprites.png",
           "frames": [
             {
-              "x": 8,
-              "y": 81,
+              "x": 46,
+              "y": 0,
               "w": 20,
               "h": 31
             }
@@ -189,8 +189,8 @@
           "bmp": "link-sprites.png",
           "frames": [
             {
-              "x": 288,
-              "y": 81,
+              "x": 247,
+              "y": 0,
               "w": 20,
               "h": 31
             }

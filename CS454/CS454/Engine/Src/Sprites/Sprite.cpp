@@ -18,6 +18,11 @@ void Sprite::Display(const SDL_Rect& dpyArea, const Clipper& clipper,SDL_Rendere
 		clippedBox.h
 		};
 		SDL_Rect dpyTest = { dpyPos.x , dpyPos.y, clippedBox.w*layer_scale , clippedBox.h*layer_scale  };
+		SDL_Rect s1 = this->GetBox();
+
+		s1.w *= layer_scale;
+		s1.h *= layer_scale;
+		SDL_RenderDrawRect(renderer, &s1);
 		Blit(renderer, clippedFrame,dpyTest, currFilm->GetBitmap());
 	}
 }
@@ -53,11 +58,11 @@ bool Sprite::CollisionCheck(const Sprite* s) const{
 	SDL_Rect s1 = this->GetBox();
 	SDL_Rect s2 = s->GetBox();
 
-	s1.x *= layer_scale;
-	s2.x *= layer_scale;
-
-	s1.y *= layer_scale;
-	s2.y *= layer_scale;
+	s1.w *= layer_scale;
+	s2.w *= layer_scale;
+	
+	s1.h *= layer_scale;
+	s2.h *= layer_scale;
 
 	if(SDL_HasIntersection(&s1,&s2)){
 		return true;
