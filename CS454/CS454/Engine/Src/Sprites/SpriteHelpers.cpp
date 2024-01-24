@@ -54,3 +54,19 @@ std::vector<std::string> get_elevator_names()
 	}
 	return elevators;
 }
+
+
+SDL_Point get_sprite_start_pos_scaled(const std::string& sprite_name)
+{
+	std::vector<std::string> list;
+	auto sprite = std::any_cast<conf_map>(get_config_value<conf_map>(configurators_t::SPRITE_CONFIG, "Sprite_list").at(sprite_name));
+
+	int x = std::any_cast<int>(sprite.at("start_x"));
+	int y = std::any_cast<int>(sprite.at("start_y"));
+
+	auto ac_scale = (int)get_config_value<int>(configurators_t::RENDER_CONFIG, "view_scale_action");
+	x *= ac_scale;
+	y *= ac_scale;
+
+	return { x,y };
+}

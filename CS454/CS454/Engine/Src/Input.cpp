@@ -2,6 +2,7 @@
 #include "../Include/GameLoopFuncs/Input.h"
 #include "../../UnitTests/UnitTest3/Include/Animation_testing.h"
 #include "../Include/Animators/AnimatorManager.h"
+#include "../Include/Animators/MovingAnimator.h"
 
 #include "../Include/Sprites/SpriteManager.h"
 
@@ -54,53 +55,66 @@ void InputKeys::move_pixels_x(int pixels) {
 	Horizon_Layer->scroll_horizon(pixels);
 }
 
+
+void InputKeys::layers_set(int x,int y)
+{
+	Action_Layer->SetViewWindow({ x, y, Action_Layer->GetViewWindow().w, Action_Layer->GetViewWindow().h });
+	Backround_Layer->SetViewWindow({ x, y, Action_Layer->GetViewWindow().w, Action_Layer->GetViewWindow().h });
+}
+
+SDL_Rect prev_link_box;
+void handle_animator_movement(int dx,Animator *scroll, Dim scale, SDL_Rect viewin, Sprite* link)
+{
+	SDL_Rect curr_link_box = link->GetBox();
+	MovingAnimator* mv = dynamic_cast<MovingAnimator*>(AnimatorManager::GetSingleton().Get_by_Id("link.move"));
+	if (scroll->HasFinished() && AnimatorManager::GetSingleton().Get_by_Id("link.move")->HasFinished()){
+		/*if ( ((link->GetBox().x - viewin.x * scale))  == (viewin.w / 2))
+		{
+
+			scroll->Start(GetSystemTime());
+			//prev_link_box = curr_link_box;
+		
+		}*/
+		scroll->Start(GetSystemTime());
+
+		mv->SetDx(dx);
+		AnimatorManager::GetSingleton().Get_by_Id("link.move")->Start(GetSystemTime());
+		move_Link();
+		
+	}
+	
+}
+
+
 Uint64 last_scrol_time;
 void InputKeys::move() {
 	SDL_Rect viewin = Action_Layer->GetViewWindow();
 	Dim scale = Action_Layer->get_scale();
 	Sprite* link = get_Link();
 	Uint64 curr = GetSystemTime();
+	
+
 	auto sc = AnimatorManager::GetSingleton().Get_by_Id("scroll_right");
 	auto sc_l = AnimatorManager::GetSingleton().Get_by_Id("scroll_left");
+
+	if (!SpriteManager::GetSingleton().Get_sprite_by_id("Link")->CanMove())
+		return;
 	if(KeyPressed(SDLK_a) || KeyDown(SDLK_a)){
-		auto run = AnimatorManager::GetSingleton().Get_by_Id("Link");
-		if ((link->GetBox().x - viewin.x * scale) >= viewin.w/2 - LinkSpeed - 16 && (link->GetBox().x - viewin.x * scale) <= viewin.w / 2) {
-			if (move_Link(-LinkSpeed, 0)) {
-				if (sc_l->HasFinished()) {
-					sc_l->Start(GetSystemTime());
-				}
-			}else
-				sc_l->Stop();
-		}else{
-			
-				move_Link(-LinkSpeed, 0);
-		}
+		handle_animator_movement(-1, sc_l, scale, viewin, link);
 		get_Link()->ChangeFilm("Link.Run.left");
 	}
-	if (KeyReleased(SDLK_d))
-		sc->Stop();
-	if (KeyReleased(SDLK_a))
-		sc_l->Stop();
-
+	
 	if (KeyPressed(SDLK_d) || KeyDown(SDLK_d)) {
-		if ((link->GetBox().x - viewin.x * scale) <= viewin.w / 2 + LinkSpeed + 16 && (link->GetBox().x - viewin.x * scale) >= viewin.w / 2) {
-			if (move_Link(LinkSpeed, 0)) {
-				if (sc->HasFinished()) {
-					sc->Start(GetSystemTime());
-				}
-			}
-			else
-				sc->Stop();
-		}
-		else {
-			move_Link(LinkSpeed, 0);
-		}
+		handle_animator_movement(1, sc, scale, viewin, link);
 		get_Link()->ChangeFilm("Link.Run.right");
 	}
-	if (KeyPressed(SDLK_w) || KeyDown(SDLK_w)) {
+	if (KeyPressed(SDLK_w) ) {
 		//move_Link(0, -LinkSpeed);
+		
 		auto att = AnimatorManager::GetSingleton().Get_by_Id("Link.Attack");
-		if(att->HasFinished())
+		auto falling = AnimatorManager::GetSingleton().Get_by_Id("Link_falling");
+		auto j = AnimatorManager::GetSingleton().Get_by_Id("link.jump");
+		if(att->HasFinished() && falling->HasFinished() && j->HasFinished() )
 			AnimatorManager::GetSingleton().Get_by_Id("link.jump")->Start(GetSystemTime());
 	}
 	if (KeyPressed(SDLK_s) || KeyDown(SDLK_s)) {

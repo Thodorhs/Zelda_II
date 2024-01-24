@@ -15,8 +15,10 @@ void ScrollAnimator::Progress(timestamp_t currTime) {
 #include "../../Include/GameLoopFuncs/Input.h"
 
 void ScrollAction(Sprite* sprite, Animator* animator, const ScrollAnimation& anim) {
-	
-	InputKeys::GetSingleton().move_pixels_x(anim.GetDx());
+	if ( !sprite->GetWall()){
+		InputKeys::GetSingleton().move_pixels_x(anim.GetDx());
+	}
+	//InputKeys::GetSingleton().move_pixels_x(anim.GetDx());
 	animator->SetOnAction(
 		[sprite](Animator* animator, const Animation& anim) {
 			assert(dynamic_cast<const ScrollAnimation*>(&anim));

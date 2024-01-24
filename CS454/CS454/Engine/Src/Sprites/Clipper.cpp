@@ -10,16 +10,16 @@ template <class T> bool clip_rect(
 	*ch = T(std::min(wy + wh, y + h)) - (*cy = T(std::max(wy, y)));
 	return *cw > 0 && *ch > 0;
 }
-bool clip_rect(const SDL_Rect& r, const SDL_Rect& area, SDL_Rect* result) {
+bool clip_rect(const SDL_Rect& r, const SDL_Rect& area, SDL_Rect* result,int view_scale) {
 	return clip_rect(
 		r.x,
 		r.y,
 		r.w,
 		r.h,
-		area.x,
-		area.y,
-		area.w*2,
-		area.h*2,
+		area.x*view_scale,
+		area.y*view_scale,
+		area.w*view_scale,
+		area.h*view_scale,
 		&result->x,
 		&result->y,
 		&result->w,
@@ -31,7 +31,7 @@ bool clip_rect(const SDL_Rect& r, const SDL_Rect& area, SDL_Rect* result) {
 
 bool Clipper::Clip(const SDL_Rect& r, const SDL_Rect& dpyArea, SDL_Point* dpyPos, SDL_Rect* clippedBox,const Dim layer_scale) const {
 	SDL_Rect visibleArea;
-	if (!clip_rect(r, view(), &visibleArea))
+	if (!clip_rect(r, view(), &visibleArea,layer_scale))
 	{
 		clippedBox->w = clippedBox->h = 0; return false;
 	}

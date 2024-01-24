@@ -9,15 +9,17 @@ void elevator_action1(Sprite *s1,Sprite *s2) {
 	for (auto& it : crouch_films)
 	{
 		if (s1->GetFilm()->GetId() != it){
-			pr_info("starting action");
+			
+			s1->setCanMove(false);
 			s1->setGridIgnore(true);
-			s2->setGridIgnore(true);
+			//s2->setGridIgnore(true);
 			s1->GetGravityHandler().set_gravity_addicted(false);
 			
 			auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator.down");
 			auto l = AnimatorManager::GetSingleton().Get_by_Id("link.el");
 
 			if (l->HasFinished() && e->HasFinished()) {
+				pr_info("starting action");
 				l->Start(GetSystemTime());
 				e->Start(GetSystemTime());
 			}
@@ -29,8 +31,10 @@ void elevator_action1(Sprite *s1,Sprite *s2) {
 
 void init_elevators() {
 	auto names = get_elevator_names();
-	for (auto& it : names)
+	for (auto& it : names) {
 		SpriteManager::GetSingleton().Get_sprite_by_id(it)->GetGravityHandler().set_gravity_addicted(false);
+		SpriteManager::GetSingleton().Get_sprite_by_id(it)->setGridIgnore(true);
+	}
 }
 
 
@@ -58,7 +62,7 @@ void register_collisions(){
 	CollisionChecker& col = CollisionChecker::GetSingleton();
 	SpriteManager& manager = SpriteManager::GetSingleton();
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Guma"), [](Sprite *s1,Sprite *s2) {pr_error("collision"); });
-	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator1_up_down"), elevator_action1);
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator1_down"), elevator_action1);
 }
 
 void init_sprites(TileLayer* layer) {

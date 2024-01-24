@@ -17,7 +17,7 @@ private:
     bool is_running = false;
     std::map<SDL_Keycode, bool> pressed_keys;
     std::map<SDL_Keycode, bool> prevpressed_keys;
- 
+    
     bool CanJump = false;
     SDL_Rect ViewWin;
     Uint64 last=0;
@@ -48,6 +48,7 @@ public:
     void init_key_map();
     void InputRead();
     void update_press(SDL_Keycode code, bool state);
+    void layers_set(int x, int y);
     //void InputExecution(Link_Class& Link, TileLayer& ActionLayer, TileLayer& HorizonLayer, GridLayer& GameGrid, bool& mouse_down);
     //void MoveWindowWithLink(Link_Class& link, float Scrolldx, int& dx);
     //bool CanJumpCheck(Link_Class& Link, GridLayer& GameGrid);

@@ -30,6 +30,10 @@ public:
 		NotifyStarted();
 	}
 	auto generic_animator_action(Sprite* s) -> animator_action override;
+	void SetDx(const int dx)
+	{
+		anim->SetDx(dx);
+	}
 	std::string Get_ID() const override { return  id; }
 	MovingAnimator(void) = default;
 	MovingAnimator(const std::string& _id, MovingAnimation* _anim) : anim(_anim) { id = _id; }
