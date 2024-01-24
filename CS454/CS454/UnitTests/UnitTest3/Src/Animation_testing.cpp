@@ -91,7 +91,7 @@ void animators_testing(TileLayer *layer)
 	Sprite* Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 
 	//AnimatorManager& manager = AnimatorManager::GetSingleton();
-	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.frame.animation", 0, 4,1 , 0, 0, 150);
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.frame.animation", 0, 4,1 , 0, 0, 100);
 	FrameRangeAnimator* animator = new FrameRangeAnimator("Link",fr_animation);
 	Link_animators.push_back(animator);
 
