@@ -314,8 +314,8 @@
             "8": "Link.Crouch.left",
             "9": "Link.Crouch.right"
           },
-          "start_x": 180,
-          "start_y": 15
+          "start_x": 148,
+          "start_y": 100
         },
         "Guma": {
           "Films": {
@@ -324,19 +324,33 @@
           "start_x": 220,
           "start_y": 15
         },
-        "Elevator1_up_down": {
+        "Elevator1_down": {
           "Films": {
             "0": "Elevator_default"
           },
           "start_x": 576,
           "start_y": 200
         },
-        "Elevator1_up_up": {
+        "Elevator1_up": {
           "Films": {
             "0": "Elevator_default"
           },
           "start_x": 576,
           "start_y": 160
+        },
+        "Elevator2_down": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 2448,
+          "start_y": 192
+        },
+        "Elevator2_up": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 2448,
+          "start_y": 144
         }
       }
       }

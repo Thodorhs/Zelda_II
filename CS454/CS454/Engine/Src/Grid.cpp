@@ -175,7 +175,7 @@ void _Grid_::LayerFilterGridMotionLeft(const SDL_Rect& r, int* dx)const {
 			auto endRow = DIV_GRID_ELEMENT_HEIGHT(r.y + r.h - 1, power) / scale;
 			for (auto row = startRow; row <= endRow; ++row)
 				if (!LayerCanPassGridTile(newCol, row, GRID_RIGHT_SOLID_MASK)) {
-					pr_warning("can't move left");
+					//pr_warning("can't move left");
 					*dx = MUL_GRID_ELEMENT_WIDTH(currCol, power) - r.x / scale;
 					break;
 				}
@@ -188,9 +188,9 @@ void _Grid_::LayerFilterGridMotionRight( const SDL_Rect& r, int* dx)const {
 	Dim scale = grid_layer_scale;
 	auto x2 = (r.x + r.w - 1);
 	auto x2_next = x2 + *dx;
-	if (x2_next >= Engine_Consts.Map_width) {
+	if (x2_next >= Engine_Consts.Map_width*scale) {
 		*dx = (Engine_Consts.Map_width - 1) - x2;
-		pr_warning("can't move right");
+		//pr_warning("can't move right");
 	}
 	else {
 		auto newCol = DIV_GRID_ELEMENT_WIDTH(x2_next, power) / scale;
@@ -201,7 +201,7 @@ void _Grid_::LayerFilterGridMotionRight( const SDL_Rect& r, int* dx)const {
 			auto endRow = DIV_GRID_ELEMENT_HEIGHT(r.y + r.h - 1, power) / scale;
 			for (auto row = startRow; row <= endRow; ++row)
 				if (!LayerCanPassGridTile(newCol, row, GRID_LEFT_SOLID_MASK)) {
-					pr_warning("can't move right");
+					//pr_warning("can't move right");
 					*dx = (MUL_GRID_ELEMENT_WIDTH(newCol, power) - 1) - x2 / scale;
 					break;
 				}
@@ -215,7 +215,7 @@ void _Grid_::LayerFilterGridMotionUp(const SDL_Rect& r, int* dy) const{
 	auto y1_next = r.y + *dy;
 	if (y1_next < 0) {
 		*dy = -r.y;
-		pr_warning("can't move up");
+		//pr_warning("can't move up");
 	}
 	else {
 		auto newRow = DIV_GRID_ELEMENT_HEIGHT(y1_next, power) / scale;
@@ -226,7 +226,7 @@ void _Grid_::LayerFilterGridMotionUp(const SDL_Rect& r, int* dy) const{
 			auto endCol = DIV_GRID_ELEMENT_WIDTH(r.x + r.w - 1, power) / scale;
 			for (auto col = startCol; col <= endCol; ++col)
 				if (!LayerCanPassGridTile(col, newRow, GRID_BOTTOM_SOLID_MASK)) {
-					pr_warning("can't move up");
+					//pr_warning("can't move up");
 					*dy = MUL_GRID_ELEMENT_HEIGHT(currRow, power) - r.y / scale;
 					break;
 				}
@@ -239,8 +239,8 @@ void _Grid_::LayerFilterGridMotionDown(const SDL_Rect& r, int* dy) const{
 	Dim scale = grid_layer_scale;
 	auto y2 = r.y + r.h - 1;
 	auto y2_next = y2 + *dy;
-	if (y2_next >= Engine_Consts.Map_height) {
-		pr_warning("can't move down");
+	if (y2_next >= Engine_Consts.Map_height*scale) {
+		//pr_warning("can't move down");
 		*dy = (Engine_Consts.Map_height) - 1 - y2;
 	}
 	else {
@@ -252,7 +252,7 @@ void _Grid_::LayerFilterGridMotionDown(const SDL_Rect& r, int* dy) const{
 			auto endCol = DIV_GRID_ELEMENT_WIDTH(r.x + r.w - 1, power) / scale;
 			for (auto col = startCol; col <= endCol; ++col)
 				if (!LayerCanPassGridTile(col, newRow, GRID_TOP_SOLID_MASK)) {
-					pr_warning("can't move down");
+					//pr_warning("can't move down");
 					*dy = (MUL_GRID_ELEMENT_HEIGHT(newRow, power)) - 1 - y2 / scale;
 					break;
 				}
@@ -262,7 +262,7 @@ void _Grid_::LayerFilterGridMotionDown(const SDL_Rect& r, int* dy) const{
 
 void _Grid_::LayerFilterGridMotion(const SDL_Rect& r, int* dx, int* dy)const {
 	assert(
-		abs(*dx) <= Engine_Consts.Grid_el_sz && abs(*dy) <= Engine_Consts.Grid_el_sz
+		abs(*dx) <= Engine_Consts.Grid_el_sz*grid_layer_scale && abs(*dy) <= Engine_Consts.Grid_el_sz*grid_layer_scale
 	);
 	// try horizontal move
 	if (*dx < 0)
