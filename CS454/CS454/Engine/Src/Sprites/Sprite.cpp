@@ -18,6 +18,7 @@ void Sprite::Display(const SDL_Rect& dpyArea, const Clipper& clipper,SDL_Rendere
 		clippedBox.w,
 		clippedBox.h
 		};
+		
 		int offset = 0;
 		if (currFilm->GetId() == "Link.Attack.left")
 			offset = clippedBox.w  - prevFilm->GetFrameBox(prevframeNo).w;
