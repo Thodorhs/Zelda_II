@@ -32,6 +32,7 @@ add_executable(UnitTest3
 "../../Engine/Src/SystemClock/SystemClock.cpp"
 "../../Engine/Src/Sprites/GravityHandler.cpp"
 "../../Engine/Src/Animators/MovingAnimator.cpp"
+"../../Engine/Src/Animators/ScrollAnimator.cpp"
 "../../Engine/src/Input.cpp"
 "../../Engine/src/Sprites/CollisionChecker.cpp"
 "Src/SpriteHandling/SpriteHandlers.cpp"

@@ -3,6 +3,7 @@
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
 #include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
 #include "../../../Engine/Include/Animators/MovingAnimator.h"
+#include "../../../Engine/Include/Animators/ScrollingAnimator.h"
 #include "../../../Engine/Include/Util/SystemClock.h"
 
 
@@ -99,7 +100,7 @@ void animators_testing(TileLayer *layer)
 	FrameRangeAnimator* animator = new FrameRangeAnimator("Link",fr_animation);
 	Link_animators.push_back(animator);
 
-	MovingAnimation* jump = new MovingAnimation("link.jump", 1, 0, -10, 20);
+	MovingAnimation* jump = new MovingAnimation("link.jump", 2, 0, -16, 20);
 	MovingAnimator* jump_anim = new MovingAnimator("link.jump", jump);
 	Link_animators.push_back(jump_anim);
 
@@ -146,7 +147,7 @@ void animators_testing(TileLayer *layer)
 
 void generic_gravity_init(TileLayer* layer)
 {
-	MovingAnimation* falling = new MovingAnimation("falling", 0, 0, 5, 40);
+	MovingAnimation* falling = new MovingAnimation("falling", 0, 0, 16, 50);
 	SpriteManager& sprite_manager = SpriteManager::GetSingleton();
 	for(auto &it : sprite_manager.GetDisplayList())
 	{
@@ -157,7 +158,8 @@ void generic_gravity_init(TileLayer* layer)
 		PrepareSpriteGravityHandler(layer, it);
 		it->GetGravityHandler().SetOnStartFalling([animator,it]()
 			{
-				
+				animator->Start(GetSystemTime());
+				AnimatorManager::GetSingleton().Get_by_Id("Link")->Stop();
 				if(it->GetTypeId()=="Link")
 				{
 					AnimatorManager::GetSingleton().Get_by_Id("Link")->Stop();
@@ -166,7 +168,7 @@ void generic_gravity_init(TileLayer* layer)
 					else
 						it->ChangeFilm("Link.falling.right");
 				}
-				animator->Start(GetSystemTime());
+				
 			});
 
 		it->GetGravityHandler().SetOnStopFalling([animator,it]()
@@ -222,6 +224,22 @@ void init_elevator_animators()
 }
 
 
+void scroll_anim()
+{
+	ScrollAnimation* an = new ScrollAnimation("sc",8,0);
+	an->SetDx(1);
+	ScrollAnimator* scroll_animator = new ScrollAnimator("scroll_right",an);
+	
+
+	ScrollAnimation* an_l = new ScrollAnimation("sc", 8, 0);
+	an_l->SetDx(-1);
+
+	ScrollAnimator* scroll_animator_l = new ScrollAnimator("scroll_left", an_l);
+	animator_init(nullptr, scroll_animator, an, []() {}, []() {});
+	animator_init(nullptr, scroll_animator_l, an_l, []() {}, []() {});
+
+}
+
 void init_tests(SDL_Renderer* renderer,TileLayer* layer) {
 	pr_info("testing!!");
 	
@@ -229,6 +247,7 @@ void init_tests(SDL_Renderer* renderer,TileLayer* layer) {
 	animators_testing(layer);
 	generic_gravity_init(layer);
 	init_elevator_animators();
+	scroll_anim();
 	SpriteManager::GetSingleton().Get_sprite_by_id("Guma")->Move(0,1);
 	
 }

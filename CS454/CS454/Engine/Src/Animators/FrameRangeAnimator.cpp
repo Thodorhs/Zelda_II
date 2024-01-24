@@ -1,5 +1,7 @@
 #include "../../Include/Animators/FrameRangeAnimator.h"
 
+#include "../../Include/GameLoopFuncs/Input.h"
+
 void FrameRangeAnimator::Progress(timestamp_t currTime) {
 	while (currTime > lastTime && (currTime - lastTime) >= anim->GetDelay()) {
 		if (currFrame == anim->GetEndFrame()) {
@@ -24,6 +26,7 @@ void FrameRange_Action(Sprite* sprite, Animator* animator, const FrameRangeAnima
 	if (frameRangeAnimator->GetCurrFrame() != anim.GetStartFrame() ||
 		frameRangeAnimator->GetCurrRep())
 		sprite->Move(anim.GetDx(), anim.GetDy());
+	
 	sprite->SetFrame(frameRangeAnimator->GetCurrFrame());
 	animator->SetOnAction(
 		[sprite](Animator* animator, const Animation& anim) {
