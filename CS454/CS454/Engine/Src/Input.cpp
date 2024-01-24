@@ -54,46 +54,47 @@ void InputKeys::move_pixels_x(int pixels) {
 	Horizon_Layer->scroll_horizon(pixels);
 }
 
+Uint64 last_scrol_time;
 void InputKeys::move() {
 	SDL_Rect viewin = Action_Layer->GetViewWindow();
 	Dim scale = Action_Layer->get_scale();
 	Sprite* link = get_Link();
+	Uint64 curr = GetSystemTime();
+	auto sc = AnimatorManager::GetSingleton().Get_by_Id("scroll_right");
+	auto sc_l = AnimatorManager::GetSingleton().Get_by_Id("scroll_left");
 	if(KeyPressed(SDLK_a) || KeyDown(SDLK_a)){
-		
+		auto run = AnimatorManager::GetSingleton().Get_by_Id("Link");
 		if ((link->GetBox().x - viewin.x * scale) >= viewin.w/2 - LinkSpeed - 16 && (link->GetBox().x - viewin.x * scale) <= viewin.w / 2) {
-				move_Link(-LinkSpeed, 0);
-				move_pixels_x(-LinkSpeed);
+			if (move_Link(-LinkSpeed, 0)) {
+				if (sc_l->HasFinished()) {
+					sc_l->Start(GetSystemTime());
+				}
+			}else
+				sc_l->Stop();
 		}else{
-			move_Link(-LinkSpeed, 0);
+			
+				move_Link(-LinkSpeed, 0);
 		}
-
-		/*if ((link->GetBox().x - viewin.x * scale) >= viewin.w / 2)
-		{
-			if (move_Link(-LinkSpeed, 0))
-				move_pixels_x(-3);
-		} else
-		{
-			move_Link(-LinkSpeed, 0);
-		}*/
 		get_Link()->ChangeFilm("Link.Run.left");
 	}
+	if (KeyReleased(SDLK_d))
+		sc->Stop();
+	if (KeyReleased(SDLK_a))
+		sc_l->Stop();
+
 	if (KeyPressed(SDLK_d) || KeyDown(SDLK_d)) {
-		
-		/*if ((link->GetBox().x - viewin.x * scale) <= viewin.w / 2) {
-			
-			if(move_Link(LinkSpeed, 0))
-				move_pixels_x(3);
-		}else{
-			move_Link(LinkSpeed, 0);
-		}*/
 		if ((link->GetBox().x - viewin.x * scale) <= viewin.w / 2 + LinkSpeed + 16 && (link->GetBox().x - viewin.x * scale) >= viewin.w / 2) {
-			move_Link(LinkSpeed, 0);
-			move_pixels_x(LinkSpeed);
+			if (move_Link(LinkSpeed, 0)) {
+				if (sc->HasFinished()) {
+					sc->Start(GetSystemTime());
+				}
+			}
+			else
+				sc->Stop();
 		}
 		else {
 			move_Link(LinkSpeed, 0);
 		}
-		
 		get_Link()->ChangeFilm("Link.Run.right");
 	}
 	if (KeyPressed(SDLK_w) || KeyDown(SDLK_w)) {
