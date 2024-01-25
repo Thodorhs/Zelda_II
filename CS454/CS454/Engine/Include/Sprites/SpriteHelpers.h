@@ -19,3 +19,9 @@ SDL_Point get_sprite_start_pos_scaled(const std::string& sprite_name);
 std::vector<std::string> get_sprite_name_list();
 
 std::vector<std::string> get_elevator_names();
+
+size_t get_sprite_num(const std::string& id);
+
+std::vector<SDL_Point> get_pos_list(const std::string& id, const int scale);
+
+std::string get_sprite_type(const std::string& id);

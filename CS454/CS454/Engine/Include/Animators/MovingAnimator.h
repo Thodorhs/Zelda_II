@@ -34,6 +34,8 @@ public:
 	{
 		anim->SetDx(dx);
 	}
+
+	int GetDx() const { return anim->GetDx(); }
 	std::string Get_ID() const override { return  id; }
 	MovingAnimator(void) = default;
 	MovingAnimator(const std::string& _id, MovingAnimation* _anim) : anim(_anim) { id = _id; }

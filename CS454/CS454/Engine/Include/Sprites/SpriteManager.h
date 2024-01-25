@@ -19,11 +19,29 @@ public:
 			}
 		}
 	}
+	void AddforDisplay(Sprite *s)
+	{
+		assert(s);
+		if (Get_sprite_by_id(s->GetTypeId()))
+			return;
+		Add(s);
+	}
+
+	void AddforDisplay(const std::string & type,const std::string& id)
+	{
+		for(auto &it : GetTypeList(type))
+		{
+			if (it->GetTypeId() == id) {
+				Add(it);
+				break;
+			}
+		}
+	}
+
 
 	void AddtoMap(const std::string& type,Sprite* s)
 	{
-		auto list = GetTypeList(type);
-		list.push_back(s);
+		types[type].push_back(s);
 	}
 
 	auto GetDisplayList(void) -> const SpriteList&
