@@ -1,10 +1,10 @@
 #pragma once
 #include "../Include/GameLoopFuncs/Input.h"
-#include "../../UnitTests/UnitTest3/Include/Animation_testing.h"
+#include "../../UnitTests/UnitTest3/Include/initAnimationsSprites.h"
 #include "../Include/Animators/AnimatorManager.h"
 #include "../Include/Animators/MovingAnimator.h"
 
-#include "../Include/Sprites/SpriteManager.h"
+
 
 
 
@@ -75,6 +75,7 @@ void handle_animator_movement(int dx,Animator *scroll, Dim scale, SDL_Rect viewi
 			//prev_link_box = curr_link_box;
 		
 		}*/
+		
 		scroll->Start(GetSystemTime());
 
 		mv->SetDx(dx);
@@ -101,12 +102,13 @@ void InputKeys::move() {
 		return;
 	if(KeyPressed(SDLK_a) || KeyDown(SDLK_a)){
 		handle_animator_movement(-1, sc_l, scale, viewin, link);
-		get_Link()->ChangeFilm("Link.Run.left");
+		//get_Link()->ChangeFilm("Link.Run.left");
 	}
 	
 	if (KeyPressed(SDLK_d) || KeyDown(SDLK_d)) {
+
 		handle_animator_movement(1, sc, scale, viewin, link);
-		get_Link()->ChangeFilm("Link.Run.right");
+		//get_Link()->ChangeFilm("Link.Run.right");
 	}
 	if (KeyPressed(SDLK_w) ) {
 		//move_Link(0, -LinkSpeed);

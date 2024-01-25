@@ -42,3 +42,4 @@ public:
 	
 };
 void FrameRange_Action(Sprite* sprite, Animator* animator, const FrameRangeAnimation& anim);
+void FrameRange_Action_noSet(Sprite* sprite, Animator* animator, const FrameRangeAnimation& anim);

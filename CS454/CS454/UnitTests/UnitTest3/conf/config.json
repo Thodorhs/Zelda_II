@@ -63,18 +63,18 @@
     },
     "Films": {
       "Elevator": {
-        "Elevator_default" : {
-        "bmp": "Palace-Tileset.png",
-        "frames": [
-          {
-            "x": 32,
-            "y": 16,
-            "w": 32,
-            "h": 16
-          }
-        ]
+        "Elevator_default": {
+          "bmp": "Palace-Tileset.png",
+          "frames": [
+            {
+              "x": 32,
+              "y": 16,
+              "w": 32,
+              "h": 16
+            }
+          ]
         }
-       },
+      },
       "Link": {
         "Link.Run.left": {
           "bmp": "link-sprites.png",
@@ -177,8 +177,8 @@
           "bmp": "link-sprites.png",
           "frames": [
             {
-              "x": 46,
-              "y": 0,
+              "x": 47,
+              "y": 41,
               "w": 20,
               "h": 31
             }
@@ -190,7 +190,7 @@
           "frames": [
             {
               "x": 247,
-              "y": 0,
+              "y": 41,
               "w": 20,
               "h": 31
             }
@@ -249,7 +249,7 @@
             {
               "x": 47,
               "y": 41,
-              "w": 18,
+              "w": 20,
               "h": 31
             }
           ]
@@ -261,7 +261,7 @@
             {
               "x": 247,
               "y": 41,
-              "w": 18,
+              "w": 20,
               "h": 31
             }
           ]
@@ -272,28 +272,59 @@
           "bmp": "enemies-sprites-1.gif",
           "frames": [
             {
-              "x": 377,
-              "y": 821,
+              "x": 379,
+              "y": 823,
               "w": 16,
               "h": 32
             },
             {
-              "x": 403,
-              "y": 821,
-              "w": 18,
+              "x": 405,
+              "y": 822,
+              "w": 16,
               "h": 32
             },
             {
               "x": 431,
-              "y": 822,
-              "w": 21,
+              "y": 823,
+              "w": 20,
               "h": 32
             },
             {
-              "x": 460,
+              "x": 461,
               "y": 824,
-              "w": 22,
+              "w": 20,
               "h": 32
+            }
+          ]
+        }
+      },
+      "Guma_proj": {
+        "Guma_proj_default": {
+          "bmp": "enemies-sprites-1.gif",
+          "frames": [
+            {
+              "x": 496,
+              "y": 829,
+              "w": 8,
+              "h": 14
+            },
+            {
+              "x": 511,
+              "y": 829,
+              "w": 8,
+              "h": 14
+            },
+            {
+              "x": 529,
+              "y": 830,
+              "w": 8,
+              "h": 14
+            },
+            {
+              "x": 548,
+              "y": 831,
+              "w": 8,
+              "h": 14
             }
           ]
         }
@@ -315,42 +346,62 @@
             "9": "Link.Crouch.right"
           },
           "start_x": 148,
-          "start_y": 100
+          "start_y": 100,
+          "type": "Link"
         },
         "Guma": {
           "Films": {
             "0": "Guma_default"
           },
+          
           "start_x": 220,
-          "start_y": 15
+          "start_y": 15,
+         
+          "type" : "Guma"
         },
+
+        "Guma_proj" : {
+          "Films" : {
+            "0" : "Guma_proj_default"
+          },
+          "type" : "projectile"
+        },
+
         "Elevator1_down": {
           "Films": {
             "0": "Elevator_default"
           },
           "start_x": 576,
-          "start_y": 200
+          "start_y": 200,
+          "type": "Elevator"
+
         },
         "Elevator1_up": {
           "Films": {
             "0": "Elevator_default"
           },
           "start_x": 576,
-          "start_y": 160
+          "start_y": 160,
+          "type": "Elevator"
+
         },
         "Elevator2_down": {
           "Films": {
             "0": "Elevator_default"
           },
           "start_x": 2448,
-          "start_y": 192
+          "start_y": 192,
+          "type": "Elevator"
+
         },
         "Elevator2_up": {
           "Films": {
             "0": "Elevator_default"
           },
           "start_x": 2448,
-          "start_y": 144
+          "start_y": 144,
+          "type": "Elevator"
+
         }
       }
       }

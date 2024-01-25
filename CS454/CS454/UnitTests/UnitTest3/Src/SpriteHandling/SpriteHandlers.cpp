@@ -74,14 +74,21 @@ void create_and_register_sprites(TileLayer* layer)
 	auto s_list = get_sprite_name_list();
 	for (auto& it : s_list)
 	{
-		auto [x, y] = get_sprite_start_pos(it);
-		x *= layer->get_scale();
-		y *= layer->get_scale();
-		Sprite* sprite = new Sprite(x, y, const_cast<AnimationFilm*>(holder.GetFilm(get_sprite_initial_film(it))), it);
-		auto f = sprite->MakeSpriteGridLayerMover(layer, sprite);
-		sprite->SetMover(f);
-
-		manager.Add(sprite);
+		int id_pref = 0;
+		if (get_sprite_type(it) == "projectile")
+			continue;
+		auto list = get_pos_list(it,layer->get_scale());
+		
+		for (auto& pos : list) {
+			std::string id =  id_pref == 0 ? it :  it + std::to_string(id_pref);
+			Sprite* sprite = new Sprite(pos.x, pos.y, const_cast<AnimationFilm*>(holder.GetFilm(get_sprite_initial_film(it))), id);
+			auto f = sprite->MakeSpriteGridLayerMover(layer, sprite);
+			sprite->SetMover(f);
+			manager.Add(sprite);
+			manager.AddtoMap(get_sprite_type(it), sprite);
+			id_pref++;
+		}
+		
 	}
 	init_elevators();
 

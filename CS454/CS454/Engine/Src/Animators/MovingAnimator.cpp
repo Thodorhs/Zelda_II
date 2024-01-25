@@ -13,7 +13,7 @@ void MovingAnimator::Progress(timestamp_t currTime) {
 	}
 }
 void Sprite_MoveAction(Sprite* sprite,Animator* animator ,const MovingAnimation& anim) {
-	
+
 	sprite->Move(anim.GetDx(), anim.GetDy());
 	
 

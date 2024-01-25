@@ -8,7 +8,7 @@
 #include "../../../Engine/Include/Grid/GridMotion.h"
 #include "../../../Engine/Include/Grid/GridCompute.h"
 #include <filesystem>
-#include "../Include/Animation_testing.h"
+#include "../Include/initAnimationsSprites.h"
 #include "../../../Engine/Include/KeyFrameAnimation/AnimationFilmHolder.h"
 #include "../../../Engine/Include/KeyFrameAnimation/FilmParser.h"
 #include "../../../Engine/Include/Util/SystemClock.h"
@@ -25,6 +25,7 @@ TileLayer* Horizon_Layer;
 TileLayer* Backround_Layer;
 Engine_Consts_t Engine_Consts;
 InputKeys InputKeys::singleton;
+DestructionManager DestructionManager::singleton;
 
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
 void animation_handler() {
@@ -68,6 +69,14 @@ void collision_checking()
 {
 	CollisionChecker::GetSingleton().Check();
 }
+
+
+
+void destructions()
+{
+	DestructionManager::Get().Commit();
+}
+
 
 void myRender() {
 	SDL_RenderClear(global_render_vars->myrenderer);
@@ -247,8 +256,9 @@ void ZeldaApp::Initialise(void) {
 	game.SetInputUpdate(update_input);
 	game.SetAnim(animation_handler);
 	game.SetCollisionChecking(collision_checking);
+	game.Set_destr(destructions);
 	init_films();
-	init_tests(global_render_vars->myrenderer,Action_Layer);
+	init_animations_sprites(global_render_vars->myrenderer,Action_Layer);
 	InputKeys::GetSingleton().set_is_running(true);
 	pr_info("Done!");
 }

@@ -34,11 +34,19 @@ void FrameRange_Action(Sprite* sprite, Animator* animator, const FrameRangeAnima
 		});
 }
 
+void FrameRange_Action_noSet(Sprite* sprite, Animator* animator, const FrameRangeAnimation& anim) {
+	auto* frameRangeAnimator = (FrameRangeAnimator*)animator;
+	if (frameRangeAnimator->GetCurrFrame() != anim.GetStartFrame() ||
+		frameRangeAnimator->GetCurrRep())
+		sprite->Move(anim.GetDx(), anim.GetDy());
+	sprite->SetFrame(frameRangeAnimator->GetCurrFrame());
+}
+
 
 auto FrameRangeAnimator::generic_animator_action(Sprite* s) -> animator_action
 {
-	return ([s](Animator* animator, const Animation& anim)
+	return ([s](Animator* animator, const Animation& _anim)
 		{
-			FrameRange_Action(s, animator, (const FrameRangeAnimation&)anim);
+			FrameRange_Action(s, animator, (const FrameRangeAnimation&)_anim);
 		});
 };
