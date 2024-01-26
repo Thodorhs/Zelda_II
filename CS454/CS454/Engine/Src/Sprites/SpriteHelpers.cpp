@@ -1,7 +1,6 @@
 #include "../../Include/Sprites/SpriteHelpers.h"
 #include "../../Include/Util/ConfigFuncs.h"
 
-
 std::vector<std::string> get_sprite_film_list(const std::string& sprite_name)
 {
 	std::vector<std::string> list;

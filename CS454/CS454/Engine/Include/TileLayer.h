@@ -39,7 +39,7 @@ class TileLayer {
 			this->Grid_layer = std::move(_grid);
 		}
 
-		const _Grid_& get_grid_layer()const { return *Grid_layer; }
+		_Grid_& get_grid_layer()const { return *Grid_layer; }
 
 		SDL_Rect& GetViewWindow(void) { return viewWin; }
 		

@@ -15,8 +15,10 @@
 #include "../../../Engine/Include/GameLoopFuncs/Input.h"
 #include "../../../Engine/Include/Sprites/CollisionChecker.h"
 #include "../Include/StatPrinting/StatPrinting.h"
-
+//#include "../Include/Link/Link.h"
 //std::unique_ptr<_Grid_> grid_class;
+
+//Link Link::singleton;
 size_t layer_num;
 Layer_container Layers;
 Render* global_render_vars;

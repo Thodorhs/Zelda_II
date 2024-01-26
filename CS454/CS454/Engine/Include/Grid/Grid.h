@@ -81,6 +81,7 @@ public:
 			LayerFilterGridMotionDown(r, &dy);
 			return dy == 0;
 		}
+		void setGridTile( Dim col, Dim row, GridIndex index);
 };
 
 inline int grid_block_columns();
@@ -88,8 +89,8 @@ inline int grid_block_rows();
 inline int grid_max_height();
 inline int grid_max_width();
 inline int grid_elements_per_tile();
+void SetGridTile(GridMapOld *m,Dim col, Dim row, GridIndex index);
 bool IsTileIndexAssumedEmpty(_Grid_ &grid,Index index);
-void SetGridTile(GridMapOld* m, Dim col, Dim row, GridIndex index);
 grid_block GetGridTile(const GridMap* m, Dim col, Dim row);
 void DisplayGridOld(SDL_Rect& viewWin, SDL_Renderer* myrenderer, std::unique_ptr<_Grid_>& grid_cl);
 void DisplayGrid(const SDL_Rect& viewWin, SDL_Renderer* myrenderer,const _Grid_& grid_cl,const int scale);

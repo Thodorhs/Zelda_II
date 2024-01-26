@@ -2,7 +2,8 @@
 #include "../../../../Engine/Include/Sprites/CollisionChecker.h"
 #include "../../../../Engine/Include/Animators/AnimatorManager.h"
 #include "../../../../Engine/Include/GameLoopFuncs/Input.h"
-
+#include "../../Include/Link/Link.h"
+Link Link::singleton;
 std::string crouch_films[] = { "Link.Crouch.left","Link.Crouch.right" };
 std::string jump_films[] = { "Link.jump.left", "Link.jump.right" };
 
@@ -128,10 +129,25 @@ void elevator_action7(Sprite* s1, Sprite* s2) {
 		}
 	}
 }
-void door_action(Sprite* s1, Sprite* s2){
-	auto e = AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId());
-	if (e->HasFinished()) {
-		e->Start(GetSystemTime());
+CollisionChecker::Action door_action(TileLayer* layer){
+
+	return([layer](Sprite* s1,Sprite* s2) {
+		auto e = AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId());
+		if (e->HasFinished() && Link::GetSingleton().haskey()) {
+			Link::GetSingleton().removekey();
+			e->Start(GetSystemTime());
+			if (s2->GetTypeId() == "door1") {
+				layer->get_grid_layer().setGridTile(10, 195, 0);
+				layer->get_grid_layer().setGridTile(11, 195, 0);
+				layer->get_grid_layer().setGridTile(12, 195, 0);
+			}	
+		}
+		});
+}
+void key_action(Sprite* s1, Sprite* s2) {
+	if (InputKeys::GetSingleton().KeyPressed(SDLK_b)) {
+		s2->Destroy();
+		Link::GetSingleton().addKey(1);
 	}
 }
 void init_elevators() {
@@ -170,7 +186,7 @@ void create_and_register_sprites(TileLayer* layer)
 	init_elevators();
 
 }
-void register_collisions() {
+void register_collisions(TileLayer* layer) {
 	CollisionChecker& col = CollisionChecker::GetSingleton();
 	SpriteManager& manager = SpriteManager::GetSingleton();
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Guma"), [](Sprite* s1, Sprite* s2) {pr_error("collision"); });
@@ -182,11 +198,14 @@ void register_collisions() {
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator6_down"), elevator_action6);
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator7_down"), elevator_action7);
 	for(auto i=1;i<5;i++){
-		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("door"+std::to_string(i)), door_action);
+		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("door"+std::to_string(i)),door_action(layer));
+	}
+	for (auto i = 1; i < 5; i++) {
+		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("key" + std::to_string(i)), key_action);
 	}
 }
 
 void init_sprites(TileLayer* layer) {
 	create_and_register_sprites(layer);
-	register_collisions();
+	register_collisions(layer);
 }

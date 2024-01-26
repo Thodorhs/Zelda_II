@@ -9,7 +9,8 @@ bool IsTileIndexAssumedEmpty(std::unique_ptr<_Grid_>& grid_cl, Index index) {
 	return grid_cl->empty_tiles[index];
 }
 
-void SetGridTile(GridMapOld* m, Dim col, Dim row, GridIndex index) { (*m)[row][col] = index; }
+void _Grid_::setGridTile(Dim row, Dim col, GridIndex index) { grid[row][col].flags=index; }
+void SetGridTile(GridMapOld* m, Dim row, Dim col, GridIndex index) { }
 
 grid_block GetGridTile(const GridMap* m, Dim col, Dim row) { return (*m)[row][col]; }
 
