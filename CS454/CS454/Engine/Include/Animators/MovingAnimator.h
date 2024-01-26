@@ -35,7 +35,14 @@ public:
 		anim->SetDx(dx);
 	}
 
+	void SetDy(const int dy)
+	{
+		anim->SetDy(dy);
+	}
+
 	int GetDx() const { return anim->GetDx(); }
+	void SetDelay(int delay) { anim->SetDelay(delay); }
+
 	std::string Get_ID() const override { return  id; }
 	MovingAnimator(void) = default;
 	MovingAnimator(const std::string& _id, MovingAnimation* _anim) : anim(_anim) { id = _id; }

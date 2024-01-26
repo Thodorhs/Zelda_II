@@ -1,18 +1,5 @@
-#include "../../Include/SpriteHandling/SpriteHandlers.h"
-#include "../../../Engine/Include/Animators/AnimatorManager.h"
-#include "../../../Engine/Include/Animators/FrameRangeAnimator.h"
-#include "../../../Engine/Include/Animators/MovingAnimator.h"
-#include "../../../Engine/Include/Animators/ScrollingAnimator.h"
-#include "../../../Engine/Include/GameLoopFuncs/Input.h"
-#include "../../../Engine/Include/Util/SystemClock.h"
 
-void generic_start(Animator* animator) {
-	AnimatorManager::GetSingleton().MarkAsRunning(animator);
-}
-
-void generic_stop(Animator* animator) {
-	AnimatorManager::GetSingleton().MarkAsSuspended(animator);
-}
+#include "../../Include/initAnimationsSprites.h"
 
 Animator::OnStart proj_start(FrameRangeAnimator* animator, Sprite* s) {
 
@@ -26,11 +13,13 @@ Animator::OnStart proj_start(FrameRangeAnimator* animator, Sprite* s) {
 
 Animator::OnFinish proj_finish(FrameRangeAnimator* animator, Sprite* s) {
 
-	return ([s](Animator* anim) {
+	return ([s,animator](Animator* anim) {
 		
 		s->Destroy();
 		anim->Stop();
 		generic_stop(anim);
+		
+		animator->Destroy();
 		});
 }
 

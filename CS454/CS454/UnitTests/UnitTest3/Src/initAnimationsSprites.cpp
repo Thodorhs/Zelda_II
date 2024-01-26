@@ -38,15 +38,13 @@ void render_sprite(SDL_Renderer* renderer, TileLayer* layer)
 }
 
 
-
-
-
 void generic_gravity_init(TileLayer* layer)
 {
-	MovingAnimation* falling = new MovingAnimation("falling", 0, 0, 8, 40);
+	
 	SpriteManager& sprite_manager = SpriteManager::GetSingleton();
 	for(auto &it : sprite_manager.GetDisplayList())
 	{
+		MovingAnimation* falling = new MovingAnimation("falling", 0, 0, 8, 40);
 		MovingAnimator* animator = new MovingAnimator(it->GetTypeId() + "_falling", falling);
 		animator_init(it, animator, falling,[](){},[](){});
 		PrepareSpriteGravityHandler(layer, it);
@@ -74,5 +72,7 @@ void init_animations_sprites(SDL_Renderer* renderer,TileLayer* layer) {
 	init_elevators(layer);
 	init_link(layer);
 	init_guma(layer);
+	init_bot(layer);
+	init_doors();
 
 }

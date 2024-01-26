@@ -24,6 +24,7 @@ add_executable(UnitTest3
 "../../Engine/Src/AnimationFilmHolder.cpp" 
 	"Src/initAnimationsSprites.cpp"
 	"Src/init_sprites/init_elevators.cpp"
+	"Src/init_sprites/init_doors.cpp"
 	"Src/init_sprites/init_guma.cpp"
 	"Src/init_sprites/init_guma_proj.cpp"
 	"Src/init_sprites/init_link.cpp"
@@ -41,7 +42,7 @@ add_executable(UnitTest3
 "../../Engine/src/Input.cpp"
 "../../Engine/src/Sprites/CollisionChecker.cpp"
 "Src/SpriteHandling/SpriteHandlers.cpp"
-"Src/StatPrinting/StatPrinting.cpp"  )
+"Src/StatPrinting/StatPrinting.cpp"   "Src/init_sprites/init_bot.cpp" "Src/Characters/initCharacters.cpp")
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf)
 
