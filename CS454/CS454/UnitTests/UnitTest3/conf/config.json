@@ -18,9 +18,9 @@
     },
     "map": {
       "properties": {
-        "pixel_width": 28128,
+        "pixel_width": 28800,
         "pixel_height": 512,
-        "map_columns": 880,
+        "map_columns": 1800,
         "map_rows": 32,
         "Layer_num": 3
       },
@@ -274,13 +274,13 @@
             {
               "x": 379,
               "y": 823,
-              "w": 16,
+              "w": 20,
               "h": 32
             },
             {
               "x": 405,
               "y": 822,
-              "w": 16,
+              "w": 20,
               "h": 32
             },
             {
@@ -328,6 +328,147 @@
             }
           ]
         }
+      },
+      "Palace_bot": {
+        "Palace_bot_default": {
+          "bmp": "enemies-sprites-1.gif",
+          "frames": [
+            {
+              "x": 206,
+              "y": 696,
+              "w": 16,
+              "h": 13
+            },
+            {
+              "x": 225,
+              "y": 695,
+              "w": 16,
+              "h": 13
+            }
+
+          ]
+        }
+      },
+      "door": {
+        "door_default": {
+          "bmp": "items-objects-sprites.png",
+          "frames": [
+            {
+              "x": 183,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 192,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 201,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 210,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 219,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 228,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 237,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 246,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 255,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 264,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 273,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 282,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 291,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 300,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 309,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 318,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 327,
+              "y": 42,
+              "w": 8,
+              "h": 48
+            },
+            {
+              "x": 104,
+              "y": 88,
+              "w": 7,
+              "h": 20
+            },
+            {
+              "x": 122,
+              "y": 88,
+              "w": 8,
+              "h": 20
+            }
+          ]
+        }
       }
     },
     "Sprites" : {
@@ -353,18 +494,25 @@
           "Films": {
             "0": "Guma_default"
           },
-          
+
           "start_x": 148,
           "start_y": 100,
-         
-          "type" : "Guma"
-        },
 
-        "Guma_proj" : {
-          "Films" : {
-            "0" : "Guma_proj_default"
+          "type": "Guma"
+        },
+        "Palace_bot": {
+          "Films": {
+            "0": "Palace_bot_default"
           },
-          "type" : "projectile"
+          "start_x": 170,
+          "start_y": 150,
+          "type": "Palace_bot"
+        },
+        "Guma_proj": {
+          "Films": {
+            "0": "Guma_proj_default"
+          },
+          "type": "projectile"
         },
 
         "Elevator1_down": {
@@ -401,6 +549,132 @@
           "start_x": 2448,
           "start_y": 144,
           "type": "Elevator"
+
+        },
+        "Elevator3_down": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 4544,
+          "start_y": 184,
+          "type": "Elevator"
+
+        },
+        "Elevator3_up": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 4544,
+          "start_y": 144,
+          "type": "Elevator"
+
+        },
+        "Elevator4_down": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 8816,
+          "start_y": 200,
+          "type": "Elevator"
+
+        },
+        "Elevator4_up": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 8816,
+          "start_y": 144,
+          "type": "Elevator"
+
+        },
+        "Elevator5_down": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 5568,
+          "start_y": 184,
+          "type": "Elevator"
+
+        },
+        "Elevator5_up": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 5568,
+          "start_y": 144,
+          "type": "Elevator"
+
+        },
+        "Elevator6_down": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 9152,
+          "start_y": 200,
+          "type": "Elevator"
+
+        },
+        "Elevator6_up": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 9152,
+          "start_y": 160,
+          "type": "Elevator"
+
+        },
+        "Elevator7_down": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 11024,
+          "start_y": 216,
+          "type": "Elevator"
+
+        },
+        "Elevator7_up": {
+          "Films": {
+            "0": "Elevator_default"
+          },
+          "start_x": 11024,
+          "start_y": 160,
+          "type": "Elevator"
+
+        },
+        "door1": {
+          "Films": {
+            "0": "door_default"
+          },
+          "start_x": 3120,
+          "start_y": 160,
+          "type": "Doors"
+
+        },
+        "door2": {
+          "Films": {
+            "0": "door_default"
+          },
+          "start_x": 6312,
+          "start_y": 160,
+          "type": "Doors"
+
+        },
+        "door3": {
+          "Films": {
+            "0": "door_default"
+          },
+          "start_x": 12272,
+          "start_y": 176,
+          "type": "Doors"
+
+        },
+        "door4": {
+          "Films": {
+            "0": "door_default"
+          },
+          "start_x": 13600,
+          "start_y": 176,
+          "type": "Doors"
 
         }
       }

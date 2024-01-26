@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
-
-class Animation {
+#include "../Util/DestructionManager.h"
+class Animation : public LatelyDestroyable {
 protected:
 	std::string id;
 public:

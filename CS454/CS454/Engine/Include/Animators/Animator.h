@@ -3,11 +3,13 @@
 #include "../Sprites/Sprite.h"
 #include <functional>
 
+
+
 typedef uint64_t timestamp_t;
 enum animatorstate_t {
 	ANIMATOR_FINISHED = 0, ANIMATOR_RUNNING = 1, ANIMATOR_STOPPED = 2
 };
-class Animator {
+class Animator  : public LatelyDestroyable{
 public:
 	using animator_action = std::function<void(Animator*, const Animation&)>;
 	using OnFinish = std::function<void(Animator*)>;

@@ -14,6 +14,11 @@ void move_Link(void);
 extern void init_elevators(TileLayer* layer);
 extern void init_link(TileLayer* layer);
 extern void init_guma(TileLayer* layer);
+extern void init_bot(TileLayer* layer);
+extern void init_doors();
+extern void init_characters();
+
+
 bool Link_animators_Notfinished();
 template<typename s_Action, typename f_Action>
 void animator_init(Sprite* sprite, Animator* animator, Animation* fr_animation, s_Action s, f_Action f)
@@ -33,5 +38,11 @@ void animator_init(Sprite* sprite, Animator* animator, Animation* fr_animation, 
 			f();
 		});
 }
+inline void generic_start(Animator* animator) {
+	AnimatorManager::GetSingleton().MarkAsRunning(animator);
+}
 
+inline void generic_stop(Animator* animator) {
+	AnimatorManager::GetSingleton().MarkAsSuspended(animator);
+}
 

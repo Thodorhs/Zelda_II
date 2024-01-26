@@ -1,9 +1,15 @@
 #include "Character.h"
 #include <vector>
 #include <assert.h>
+#include <map>
+
 class CharacterManager {
+	using Char_list = std::vector<Character*>;
+	using Type_List = std::map<std::string, Char_list>;
 private:
-	std::vector<Character*> Characters;
+	Char_list Characters;
+	Type_List Character_map;
+
 	CharacterManager(void) = default;
 	CharacterManager(const CharacterManager&) = delete;
 	CharacterManager(CharacterManager&&) = delete;
@@ -13,6 +19,16 @@ public:
 	void Register(Character* character) {
 		assert(character);
 		Characters.push_back(character);
+	}
+
+	void Register(Character* character,const std::string &id) {
+		assert(character);
+		Character_map[id].push_back(character);
+	}
+
+	auto GetTypeList(const std::string& typeId) -> const Char_list&
+	{
+		return Character_map[typeId];
 	}
 
 	Character* Get_by_Id(const std::string &id) {
