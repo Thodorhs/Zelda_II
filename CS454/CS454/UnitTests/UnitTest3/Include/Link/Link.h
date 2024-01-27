@@ -18,7 +18,7 @@ class Link {
 		
 		void setPoints(int newPoints) { points = newPoints; }
 		void setLifes(unsigned int newLifes) { lifes = newLifes; }
-		void addKey(int newkey) { keys += newkey; }
+		void addKey(int newkey) { keys = newkey; }
 		void setMagic(int newMagic) { magic = newMagic; }
 		void removekey() { keys--; }
 		bool haskey() { return keys > 0; }

@@ -15,7 +15,7 @@ extern void init_elevators(TileLayer* layer);
 extern void init_link(TileLayer* layer);
 extern void init_guma(TileLayer* layer);
 extern void init_bot(TileLayer* layer);
-extern void init_doors();
+extern void init_doors(TileLayer* layer);
 extern void init_characters();
 
 

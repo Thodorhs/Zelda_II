@@ -23,7 +23,8 @@ public:
 	void Cancel(Animator* a)
 	{
 		assert(a);
-		assert(a->HasFinished()); suspended.erase(a);
+		assert(a->HasFinished()); 
+		suspended.erase(a);
 	}
 	void MarkAsRunning(Animator* a)
 	{

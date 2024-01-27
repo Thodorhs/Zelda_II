@@ -667,7 +667,7 @@
           "Films": {
             "0": "door_default"
           },
-          "start_x": 6312,
+          "start_x": 6314,
           "start_y": 160,
           "type": "Doors"
 
@@ -676,7 +676,7 @@
           "Films": {
             "0": "door_default"
           },
-          "start_x": 12272,
+          "start_x": 12270,
           "start_y": 176,
           "type": "Doors"
 
@@ -685,7 +685,7 @@
           "Films": {
             "0": "door_default"
           },
-          "start_x": 13600,
+          "start_x": 13598,
           "start_y": 176,
           "type": "Doors"
 

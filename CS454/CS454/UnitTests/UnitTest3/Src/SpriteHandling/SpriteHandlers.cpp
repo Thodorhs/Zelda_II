@@ -134,20 +134,25 @@ CollisionChecker::Action door_action(TileLayer* layer){
 	return([layer](Sprite* s1,Sprite* s2) {
 		auto e = AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId());
 		if (e->HasFinished() && Link::GetSingleton().haskey()) {
-			Link::GetSingleton().removekey();
+			pr_info("why");
+			Link::GetSingleton().removekey();	
 			e->Start(GetSystemTime());
-			if (s2->GetTypeId() == "door1") {
-				layer->get_grid_layer().setGridTile(10, 195, 0);
-				layer->get_grid_layer().setGridTile(11, 195, 0);
-				layer->get_grid_layer().setGridTile(12, 195, 0);
-			}	
+			CollisionChecker& col = CollisionChecker::GetSingleton();
+			//col.Cancel(s1, s2);
 		}
+			
 		});
 }
 void key_action(Sprite* s1, Sprite* s2) {
 	if (InputKeys::GetSingleton().KeyPressed(SDLK_b)) {
-		s2->Destroy();
-		Link::GetSingleton().addKey(1);
+		if (!Link::GetSingleton().haskey()) {
+			s2->Destroy();
+			Link::GetSingleton().addKey(1);
+		}
+		else {
+			pr_info("Already have a key");
+		}
+		
 	}
 }
 void init_elevators() {

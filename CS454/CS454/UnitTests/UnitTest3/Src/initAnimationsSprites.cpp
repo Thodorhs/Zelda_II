@@ -73,6 +73,6 @@ void init_animations_sprites(SDL_Renderer* renderer,TileLayer* layer) {
 	init_link(layer);
 	init_guma(layer);
 	init_bot(layer);
-	init_doors();
+	init_doors(layer);
 
 }
