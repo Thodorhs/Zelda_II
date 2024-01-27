@@ -1,5 +1,6 @@
-#include "SDL.h"
 #pragma once
+#include "SDL.h"
+
 
 #include "../Include/SpriteHandling/SpriteHandlers.h"
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
@@ -16,6 +17,8 @@ extern void init_link(TileLayer* layer);
 extern void init_guma(TileLayer* layer);
 extern void init_bot(TileLayer* layer);
 extern void init_doors(TileLayer* layer);
+extern void init_wosus(TileLayer* layer);
+extern void init_staflos(TileLayer* layer);
 extern void init_characters();
 
 

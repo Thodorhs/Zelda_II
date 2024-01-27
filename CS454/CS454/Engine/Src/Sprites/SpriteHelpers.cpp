@@ -87,7 +87,7 @@ SDL_Point entry_to_point(const conf_map& entry,int scale)
 {
 	int x = std::any_cast<int>(entry.at("x"));
 	int y = std::any_cast<int>(entry.at("y"));
-	return { x,y };
+	return { x*scale,y*scale};
 }
 
 

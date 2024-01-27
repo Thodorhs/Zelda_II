@@ -1,3 +1,4 @@
+#pragma once
 #include "Character.h"
 #include <vector>
 #include <assert.h>
@@ -41,7 +42,7 @@ public:
 
 	bool isAlive(const std::string& id) {
 		auto c = Get_by_Id(id);
-		if (c && c->get_health() > 0)
+		if (c && c->is_Alive())
 			return true;
 		return false;
 	}
