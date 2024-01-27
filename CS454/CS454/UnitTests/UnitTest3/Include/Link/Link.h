@@ -10,7 +10,8 @@ class Link {
 	protected:
 		int points=0;
 		unsigned int lifes=3;
-		int keys = 0;
+		//int keys = 0;
+		bool keys[4];
 		int magic;
 
 	public:
@@ -18,10 +19,10 @@ class Link {
 		
 		void setPoints(int newPoints) { points = newPoints; }
 		void setLifes(unsigned int newLifes) { lifes = newLifes; }
-		void addKey(int newkey) { keys = newkey; }
+		void addKey(int i) { keys[i] = true; }
 		void setMagic(int newMagic) { magic = newMagic; }
-		void removekey() { keys--; }
-		bool haskey() { return keys > 0; }
+		void removekey(int i) { keys[i]=false; }
+		bool haskey(int i) { return keys[i]; }
 		/*get*/
 		int getPoints() const { return points; }
 		unsigned int getLifes() const { return lifes; }

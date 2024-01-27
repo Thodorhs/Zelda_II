@@ -129,30 +129,46 @@ void elevator_action7(Sprite* s1, Sprite* s2) {
 		}
 	}
 }
-CollisionChecker::Action door_action(TileLayer* layer){
-
-	return([layer](Sprite* s1,Sprite* s2) {
-		auto e = AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId());
-		if (e->HasFinished() && Link::GetSingleton().haskey()) {
-			pr_info("why");
-			Link::GetSingleton().removekey();	
+void door_action(Sprite* s1, Sprite* s2){
+	auto e = AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId());
+	if (e->HasFinished()) {
+		if (s2->GetTypeId() == "door1"&& Link::GetSingleton().haskey(0)) {
+			Link::GetSingleton().removekey(0);
 			e->Start(GetSystemTime());
-			CollisionChecker& col = CollisionChecker::GetSingleton();
-			//col.Cancel(s1, s2);
+			pr_info("rm key1");
+		}
+		else if (s2->GetTypeId() == "door1" && Link::GetSingleton().haskey(1)) {
+			pr_info("rm key2");
+			Link::GetSingleton().removekey(1);
+			e->Start(GetSystemTime());
+		}
+		else if (s2->GetTypeId() == "door3" && Link::GetSingleton().haskey(2)) {
+			pr_info("rm key3");
+			Link::GetSingleton().removekey(2);
+			e->Start(GetSystemTime());
+		}
+		else if (s2->GetTypeId() == "door4" && Link::GetSingleton().haskey(3)) {
+			pr_info("rm key4");
+			Link::GetSingleton().removekey(3);
+			e->Start(GetSystemTime());
 		}
 			
-		});
+	}	
 }
 void key_action(Sprite* s1, Sprite* s2) {
 	if (InputKeys::GetSingleton().KeyPressed(SDLK_b)) {
-		if (!Link::GetSingleton().haskey()) {
-			s2->Destroy();
+		s2->Destroy();
+		if (s2->GetTypeId() == "key1") {
+			Link::GetSingleton().addKey(0);
+		}else if (s2->GetTypeId() == "key2") {
 			Link::GetSingleton().addKey(1);
 		}
-		else {
-			pr_info("Already have a key");
+		else if (s2->GetTypeId() == "key3") {
+			Link::GetSingleton().addKey(2);
 		}
-		
+		else if (s2->GetTypeId() == "key4") {
+			Link::GetSingleton().addKey(3);
+		}
 	}
 }
 void init_elevators() {
@@ -203,7 +219,7 @@ void register_collisions(TileLayer* layer) {
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator6_down"), elevator_action6);
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator7_down"), elevator_action7);
 	for(auto i=1;i<5;i++){
-		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("door"+std::to_string(i)),door_action(layer));
+		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("door"+std::to_string(i)),door_action);
 	}
 	for (auto i = 1; i < 5; i++) {
 		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("key" + std::to_string(i)), key_action);
