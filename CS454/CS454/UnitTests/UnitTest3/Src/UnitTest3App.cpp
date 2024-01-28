@@ -15,6 +15,7 @@
 #include "../../../Engine/Include/GameLoopFuncs/Input.h"
 #include "../../../Engine/Include/Sprites/CollisionChecker.h"
 #include "../Include/StatPrinting/StatPrinting.h"
+#include "../Include/AI/AI.h"
 //#include "../Include/Link/Link.h"
 //std::unique_ptr<_Grid_> grid_class;
 
@@ -77,6 +78,10 @@ void collision_checking()
 void destructions()
 {
 	DestructionManager::Get().Commit();
+}
+void AI()
+{
+	progress_ai(Action_Layer);
 }
 
 
@@ -259,6 +264,7 @@ void ZeldaApp::Initialise(void) {
 	game.SetAnim(animation_handler);
 	game.SetCollisionChecking(collision_checking);
 	game.Set_destr(destructions);
+    game.Set_AI(AI);
 	init_films();
 	init_animations_sprites(global_render_vars->myrenderer,Action_Layer);
 	InputKeys::GetSingleton().set_is_running(true);

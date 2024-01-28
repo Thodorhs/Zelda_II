@@ -41,6 +41,7 @@ public:
 	}
 
 	int GetDx() const { return anim->GetDx(); }
+	int GetDy() const { return anim->GetDy(); }
 	void SetDelay(int delay) { anim->SetDelay(delay); }
 
 	std::string Get_ID() const override { return  id; }

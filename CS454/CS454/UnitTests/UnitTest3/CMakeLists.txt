@@ -22,12 +22,12 @@ add_executable(UnitTest3
 "../../Engine/Src/FilmParser.cpp"
 "../../Engine/Src/DestructionManager/DestructionManager.cpp"
 "../../Engine/Src/AnimationFilmHolder.cpp" 
-	"Src/initAnimationsSprites.cpp"
-	"Src/init_sprites/init_elevators.cpp"
-	"Src/init_sprites/init_doors.cpp"
-	"Src/init_sprites/init_guma.cpp"
-	"Src/init_sprites/init_guma_proj.cpp"
-	"Src/init_sprites/init_link.cpp"
+"Src/initAnimationsSprites.cpp"
+"Src/init_sprites/init_elevators.cpp"
+"Src/init_sprites/init_doors.cpp"
+"Src/init_sprites/init_guma.cpp"
+"Src/init_sprites/init_guma_proj.cpp"
+"Src/init_sprites/init_link.cpp"
 "../../Engine/Src/Sprites/Sprite.cpp"
 "../../Engine/Src/Sprites/Clipper.cpp"
 "../../Engine/Src/Sprites/MotionQuantizer.cpp"
@@ -42,7 +42,13 @@ add_executable(UnitTest3
 "../../Engine/src/Input.cpp"
 "../../Engine/src/Sprites/CollisionChecker.cpp"
 "Src/SpriteHandling/SpriteHandlers.cpp"
-"Src/StatPrinting/StatPrinting.cpp"   "Src/init_sprites/init_bot.cpp" "Src/Characters/initCharacters.cpp")
+"Src/StatPrinting/StatPrinting.cpp"
+"Src/init_sprites/init_bot.cpp"
+"Src/Characters/initCharacters.cpp"
+"Include/Characters/Guma.h"
+"Src/Characters/Character.cpp"
+"Src/AI/AI.cpp"
+ "Src/init_sprites/init_staflos.cpp" "Src/init_sprites/init_wosu.cpp" "Include/Characters/PalaceBot.h")
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf)
 

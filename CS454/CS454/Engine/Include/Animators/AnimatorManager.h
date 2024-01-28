@@ -64,7 +64,7 @@ public:
 		auto sus = Get_by_Id_sus(id);
 		auto run = Get_by_Id_run(id);
 		if (sus && run)
-			assert(0);
+			return run;
 		if (sus)
 			return sus;
 		if (run)

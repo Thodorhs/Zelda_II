@@ -73,7 +73,7 @@ bool Sprite::CollisionCheck(const Sprite* s) const{
 	
 	SDL_Rect s1 = this->GetBox();
 	SDL_Rect s2 = s->GetBox();
-	int offset = (GetBox().w - prevFilm->GetFrameBox(prevframeNo).w) * layer_scale ;
+	int offset = (GetBox().w - prevFilm->GetFrameBox(prevframeNo).w) * layer_scale;
 	s1.x = s1.x - layer_viewWin.x * layer_scale - offset;
 	s1.w *= layer_scale;
 	s2.w *= layer_scale;

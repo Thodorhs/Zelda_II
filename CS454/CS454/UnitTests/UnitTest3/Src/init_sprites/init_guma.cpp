@@ -1,7 +1,7 @@
 
 #include "../../Include/initAnimationsSprites.h"
 
-Animator::OnStart proj_start(FrameRangeAnimator* animator, Sprite* s) {
+Animator::OnStart proj_start( Sprite* s) {
 
 	return ([s](Animator* anim) {
 
@@ -11,15 +11,18 @@ Animator::OnStart proj_start(FrameRangeAnimator* animator, Sprite* s) {
 
 }
 
-Animator::OnFinish proj_finish(FrameRangeAnimator* animator, Sprite* s) {
+Animator::OnFinish proj_finish( Sprite* s) {
 
-	return ([s,animator](Animator* anim) {
-		
+	return ([s](Animator* anim) {
+
+		//generic_stop(anim);
 		s->Destroy();
 		anim->Stop();
 		generic_stop(anim);
-		
-		animator->Destroy();
+		//animator->Stop();
+		//const_cast<FrameRangeAnimation&>(animator->GetAnimation()).Destroy();
+		anim->Destroy();
+
 		});
 }
 
@@ -27,8 +30,8 @@ Animator::OnFinish proj_finish(FrameRangeAnimator* animator, Sprite* s) {
 void init_projectile(Sprite* proj, FrameRangeAnimator* animator) {
 
 	animator->SetOnAction(animator->generic_animator_action(proj));
-	animator->SetOnStart(proj_start(animator, proj));
-	animator->SetOnFinish(proj_finish(animator, proj));
+	animator->SetOnStart(proj_start( proj));
+	animator->SetOnFinish(proj_finish(proj));
 
 }
 
@@ -64,7 +67,7 @@ Animator::OnAction guma_action(FrameRangeAnimation* proj_anim, Sprite* g, TileLa
 		{
 			FrameRangeAnimator* proj_an = new FrameRangeAnimator(g->GetTypeId() + "_proj", proj_anim);
 			Sprite* sp_proj = create_proj_sprite(g, AnimationFilmHolder::getInstance());
-		
+			
 
 			sp_proj->SetHasDirectMotion(true);
 			sp_proj->SetMover(sp_proj->MakeSpriteGridLayerMover(layer, sp_proj));
@@ -80,18 +83,21 @@ Animator::OnAction guma_action(FrameRangeAnimation* proj_anim, Sprite* g, TileLa
 
 void init_guma_animators(TileLayer* layer) {
 	auto Gumas = SpriteManager::GetSingleton().GetTypeList("Guma");
-	FrameRangeAnimation* fr_guma = new FrameRangeAnimation("guma", 0, 3, 0, 5, 0, 150);
-	FrameRangeAnimation* proj = new FrameRangeAnimation("proj", 0, 3, 10, 5, 0, 100);
+	FrameRangeAnimation* fr_guma = new FrameRangeAnimation("guma", 0, 3, 0, 5, 0, 80);
+	FrameRangeAnimation* proj = new FrameRangeAnimation("proj", 0, 3, 15, 5, 0, 65);
 
 	for (auto& g : Gumas) {
 		
 
-		FrameRangeAnimator* mv = new FrameRangeAnimator(g->GetTypeId()+"_move", fr_guma);
-		mv->SetOnAction(guma_action(proj,g,layer));
+		FrameRangeAnimator* mv = new FrameRangeAnimator(g->GetTypeId()+"_move", (FrameRangeAnimation*)fr_guma->Clone());
+		mv->SetOnAction(guma_action((FrameRangeAnimation*)proj->Clone(),g,layer));
 		mv->SetOnStart(generic_start);
 		mv->SetOnFinish(generic_stop);
 	}
-	AnimatorManager::GetSingleton().Get_by_Id("Guma_move")->Start(GetSystemTime());
+	
+	fr_guma->Destroy();
+	proj->Destroy();
+	//AnimatorManager::GetSingleton().Get_by_Id("Guma_move")->Start(GetSystemTime());
 }
 
 void init_guma(TileLayer* layer){

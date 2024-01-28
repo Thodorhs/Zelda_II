@@ -32,6 +32,17 @@ public:
 		NotifyStarted();
 		NotifyAction(*anim);
 	}
+
+	void SetDx(const int dx)
+	{
+		anim->SetDx(dx);
+	}
+
+	void SetDy(const int dy)
+	{
+		anim->SetDy(dy);
+	}
+
 	auto generic_animator_action(Sprite* s) -> animator_action override;
 	std::string Get_ID() const override { return  id; }
 	FrameRangeAnimator(void) = default;
