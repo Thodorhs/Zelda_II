@@ -1,11 +1,25 @@
 #include "../../../Engine/Include/Sprites/Sprite.h"
 
+#include <algorithm>
+
 #include "../../../Engine/Include/Grid/GridMotion.h"
 #include "../../Include/GameLoopFuncs/Input.h"
+
 
 void Sprite::Blit(SDL_Renderer* renderer,const SDL_Rect& src_rect,const SDL_Rect& dest_rect, SDL_Texture* film_bitmap)
 {
 	SDL_RenderCopy(renderer,film_bitmap, &src_rect, &dest_rect);
+}
+
+bool is_left_attack(std::string id)
+{
+	std::ranges::transform(id.begin(), id.end(), id.begin(), ::tolower);
+
+	if((id.find("attack") != std::string::npos) && (id.find("left") != std::string::npos)) {
+		return true;
+	}
+	return false;
+
 }
 
 void Sprite::Display(const SDL_Rect& dpyArea, const Clipper& clipper,SDL_Renderer* renderer, const SDL_Rect& view) const {
@@ -20,7 +34,7 @@ void Sprite::Display(const SDL_Rect& dpyArea, const Clipper& clipper,SDL_Rendere
 		};
 		
 		int offset = 0;
-		if (currFilm->GetId() == "Link.Attack.left")
+		if (is_left_attack(currFilm->GetId()))
 			offset = clippedBox.w  - prevFilm->GetFrameBox(prevframeNo).w;
 		SDL_Rect dpyTest = { dpyPos.x- offset*layer_scale, dpyPos.y, clippedBox.w*layer_scale , clippedBox.h*layer_scale  };
 

@@ -78,6 +78,11 @@ void handle_animator_movement(int dx,Animator *scroll, Dim scale, SDL_Rect viewi
 	}
 }
 
+bool isCrouched(Sprite *s)
+{
+	std::string id = s->GetFilm()->GetId();
+	return id == "Link.Crouch.left" || id == "Link.Crouch.right" || id== "Link.Attack.Crouch.right" || id=="Link.Attack.Crouch.left";
+}
 
 Uint64 last_scrol_time;
 void InputKeys::move() {
@@ -93,12 +98,15 @@ void InputKeys::move() {
 	if (!SpriteManager::GetSingleton().Get_sprite_by_id("Link")->CanMove())
 		return;
 	if(KeyPressed(SDLK_a) || KeyDown(SDLK_a)){
+		if (isCrouched(link))
+			link->SetPos(link->GetBox().x, link->GetBox().y - 4*scale);
 		handle_animator_movement(-1, sc_l, scale, viewin, link);
 		//get_Link()->ChangeFilm("Link.Run.left");
 	}
 	
 	if (KeyPressed(SDLK_d) || KeyDown(SDLK_d)) {
-
+		if (isCrouched(link))
+			link->SetPos(link->GetBox().x, link->GetBox().y - 8);
 		handle_animator_movement(1, sc, scale, viewin, link);
 		//get_Link()->ChangeFilm("Link.Run.right");
 	}
@@ -108,25 +116,50 @@ void InputKeys::move() {
 		auto att = AnimatorManager::GetSingleton().Get_by_Id("Link.Attack");
 		auto falling = AnimatorManager::GetSingleton().Get_by_Id("Link_falling");
 		auto j = AnimatorManager::GetSingleton().Get_by_Id("link.jump");
-		if(att->HasFinished() && falling->HasFinished() && j->HasFinished() )
+		if(att->HasFinished() && falling->HasFinished() && j->HasFinished() && !isCrouched(link))
 			AnimatorManager::GetSingleton().Get_by_Id("link.jump")->Start(GetSystemTime());
 	}
 	if (KeyPressed(SDLK_s) || KeyDown(SDLK_s)) {
-		
+		auto falling = AnimatorManager::GetSingleton().Get_by_Id("Link_falling");
+		if (falling->HasFinished()) {
+
+
+
+			std::string id = link->GetFilm()->GetId();
+			if (id == "Link.Run.left") {
+				link->ChangeFilm("Link.Crouch.left");
+				link->SetPos(link->GetBox().x, link->GetBox().y + 4 * scale);
+			}
+			else if (id == "Link.Run.right") {
+				link->ChangeFilm("Link.Crouch.right");
+				link->SetPos(link->GetBox().x, link->GetBox().y + 4*scale);
+			}
+		}
+
 	}
 	if (KeyPressed(SDLK_b) || KeyDown(SDLK_b)) {
 		auto anim = AnimatorManager::GetSingleton().Get_by_Id("Link.Attack");
+		auto anim_cr = AnimatorManager::GetSingleton().Get_by_Id("Link.Attack.Crouch");
 		auto j = AnimatorManager::GetSingleton().Get_by_Id("link.jump");
 		auto fall = AnimatorManager::GetSingleton().Get_by_Id("Link_falling");
 
-		if(anim->HasFinished() && j->HasFinished() && fall->HasFinished())
+		if(anim->HasFinished() && j->HasFinished() && fall->HasFinished() && anim_cr->HasFinished())
 		{
-			anim->Start(GetSystemTime());
+			if (isCrouched(link))
+				anim_cr->Start(GetSystemTime());
+			else
+				anim->Start(GetSystemTime());
 		}
 	}
 	if (KeyPressed(SDLK_LEFT) || KeyDown(SDLK_LEFT)) {
 		move_pixels_x(-1);
 	}
+
+	if (KeyPressed(SDLK_f)) {
+		AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
+	}
+
+
 	if (KeyPressed(SDLK_RIGHT) || KeyDown(SDLK_RIGHT)) {
 		move_pixels_x(1);
 	}
