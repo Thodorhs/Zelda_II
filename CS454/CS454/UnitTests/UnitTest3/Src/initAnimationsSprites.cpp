@@ -75,6 +75,7 @@ void init_animations_sprites(SDL_Renderer* renderer,TileLayer* layer) {
 	init_bot(layer);
 	init_doors(layer);
 	init_staflos(layer);
+	init_wosus(layer);
 	init_characters();
 
 }

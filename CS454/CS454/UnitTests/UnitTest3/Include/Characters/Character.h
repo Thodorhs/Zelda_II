@@ -24,6 +24,7 @@ protected:
 	void NotifyStopped(void);
 	void NotifyAction(void);
 	SDL_Point start_pos;
+	bool isHit = false;
 public:
 	virtual void progress_character() = 0;
 
@@ -31,7 +32,8 @@ public:
 	const bool is_Running() { return isRunning; }
 	const bool is_Alive() { return health > 0; }
 	void setActive(const bool val) { isActive = val; }
-
+	const bool is_Hit()const { return isHit; }
+	void setHit(const bool val) { isHit = val; }
 
 	const std::string get_id() { return Id; }
 	const std::string get_type() { return type; }

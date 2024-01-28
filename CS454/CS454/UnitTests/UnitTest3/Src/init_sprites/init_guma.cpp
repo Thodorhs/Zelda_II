@@ -1,5 +1,6 @@
 
 #include "../../Include/initAnimationsSprites.h"
+#include "../../Include/Characters/CharacterManager.h"
 
 Animator::OnStart proj_start( Sprite* s) {
 
@@ -16,6 +17,7 @@ Animator::OnFinish proj_finish( Sprite* s) {
 	return ([s](Animator* anim) {
 
 		//generic_stop(anim);
+		CollisionChecker::GetSingleton().Cancel(SpriteManager::GetSingleton().Get_sprite_by_id("Link"), s);
 		s->Destroy();
 		anim->Stop();
 		generic_stop(anim);
@@ -62,22 +64,63 @@ Animator::OnFinish guma_finish(Animator *animator,FrameRangeAnimation *proj_anim
 	);
 }
 
+void proj_collission(Sprite *s1,Sprite *s2)
+{
+	pr_info("proj colli");
+}
+
 Animator::OnAction guma_action(FrameRangeAnimation* proj_anim, Sprite* g, TileLayer* layer) {
 	return ([proj_anim, layer, g](Animator* animator, const Animation& anim)
 		{
 			FrameRangeAnimator* proj_an = new FrameRangeAnimator(g->GetTypeId() + "_proj", proj_anim);
 			Sprite* sp_proj = create_proj_sprite(g, AnimationFilmHolder::getInstance());
 			
-
+			
 			sp_proj->SetHasDirectMotion(true);
 			sp_proj->SetMover(sp_proj->MakeSpriteGridLayerMover(layer, sp_proj));
 			SpriteManager::GetSingleton().AddtoMap("projectile", sp_proj);
 			init_projectile(sp_proj, proj_an);
 			proj_an->Start(GetSystemTime());
+			CollisionChecker::GetSingleton().Register(SpriteManager::GetSingleton().Get_sprite_by_id("Link"), sp_proj, proj_collission);
 			FrameRange_Action_noSet(g, animator, (const FrameRangeAnimation&)anim);
 		}
 	);
 }
+
+
+
+Animator::OnStart guma_damage_start( Sprite* g,FrameRangeAnimator *mv) {
+
+	return ([g,mv](Animator* anim)
+		{
+			mv->Stop();
+			CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(),"Guma")->setHit(true);
+			auto film = g->GetFilm()->GetId();
+			if (film == "Guma_left")
+				((MovingAnimator*)anim)->SetDx(10);
+			else
+				((MovingAnimator*)anim)->SetDx(-10);
+			
+			generic_start(anim);
+		}
+	);
+}
+
+Animator::OnFinish guma_damage_finish( Sprite* g) {
+	return ([g](Animator* anim)
+		{
+			
+			auto c = CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(), "Guma");
+			
+			generic_stop(anim);
+			if (c->is_Hit()) {
+				c->setHit(false);
+				AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_move")->Start(GetSystemTime());
+			}
+		}
+	);
+}
+
 
 
 
@@ -86,13 +129,20 @@ void init_guma_animators(TileLayer* layer) {
 	FrameRangeAnimation* fr_guma = new FrameRangeAnimation("guma", 0, 3, 0, 5, 0, 80);
 	FrameRangeAnimation* proj = new FrameRangeAnimation("proj", 0, 3, 15, 5, 0, 65);
 
+	MovingAnimation* damage_an = new MovingAnimation("guma.dmg", 2, 5, 0, 100);
+
 	for (auto& g : Gumas) {
 		
-
+		MovingAnimator* damage_animator = new MovingAnimator(g->GetTypeId() + "_damage", (MovingAnimation*)damage_an->Clone());
 		FrameRangeAnimator* mv = new FrameRangeAnimator(g->GetTypeId()+"_move", (FrameRangeAnimation*)fr_guma->Clone());
 		mv->SetOnAction(guma_action((FrameRangeAnimation*)proj->Clone(),g,layer));
 		mv->SetOnStart(generic_start);
 		mv->SetOnFinish(generic_stop);
+
+		damage_animator->SetOnAction(damage_animator->generic_animator_action(g));
+		damage_animator->SetOnStart(guma_damage_start(g,mv));
+		damage_animator->SetOnFinish(guma_damage_finish(g));
+
 	}
 	
 	fr_guma->Destroy();

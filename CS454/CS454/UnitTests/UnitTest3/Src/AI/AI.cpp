@@ -47,7 +47,7 @@ void staflos(TileLayer* layer)
 {
 	auto staflos = m.GetTypeList("Staflos");
 	SDL_Rect v = layer->GetViewWindow();
-	v = { v.x * layer->get_scale(), v.y * layer->get_scale(), v.w, v.h };
+	v = { (v.x+100) * layer->get_scale(), v.y * layer->get_scale(), (v.w-180* layer->get_scale()), v.h };
 
 	for (auto& g : staflos) {
 		if (!g->is_Active()) {
@@ -61,8 +61,29 @@ void staflos(TileLayer* layer)
 	}
 }
 
+
+void wosu(TileLayer* layer)
+{
+	auto wosus = m.GetTypeList("Wosu");
+	SDL_Rect v = layer->GetViewWindow();
+	v = { v.x * layer->get_scale(), v.y * layer->get_scale(), v.w, v.h };
+
+	for (auto& g : wosus) {
+		if (!g->is_Active()) {
+			if (hasIntersection(g, v)) {
+				g->Start();
+			}
+		}
+		else {
+			g->progress_character();
+		}
+	}
+}
+
+
 void progress_ai(TileLayer *layer){
 	guma(layer);
 	bots(layer);
 	staflos(layer);
+	wosu(layer);
 }

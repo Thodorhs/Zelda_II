@@ -38,6 +38,11 @@ public:
 		anim->SetDx(dx);
 	}
 
+	int GetDx()
+	{
+		return anim->GetDx();
+	}
+
 	void SetDy(const int dy)
 	{
 		anim->SetDy(dy);
