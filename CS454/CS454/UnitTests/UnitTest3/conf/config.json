@@ -184,7 +184,54 @@
             }
           ]
         },
+        "Link.damage.right": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 168,
+              "y": 361,
+              "w": 20,
+              "h": 31
+            },
+            {
+              "x": 208,
+              "y": 361,
+              "w": 20,
+              "h": 31
+            },
+            {
+              "x": 248,
+              "y": 361,
+              "w": 20,
+              "h": 31
+            }
 
+          ]
+        },
+        "Link.damage.left": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 128,
+              "y": 361,
+              "w": 20,
+              "h": 31
+            },
+            {
+              "x": 88,
+              "y": 361,
+              "w": 20,
+              "h": 31
+            },
+            {
+              "x": 48,
+              "y": 361,
+              "w": 20,
+              "h": 31
+            }
+
+          ]
+        },
         "Link.falling.right": {
           "bmp": "link-sprites.png",
           "frames": [
@@ -239,7 +286,7 @@
               "x": 199,
               "y": 40,
               "w": 34,
-              "h": 31
+              "h": 26
             }
           ]
         },
@@ -247,10 +294,10 @@
           "bmp": "link-sprites.png",
           "frames": [
             {
-              "x": 47,
-              "y": 41,
+              "x": 48,
+              "y": 42,
               "w": 20,
-              "h": 31
+              "h": 27
             }
           ]
         },
@@ -259,13 +306,50 @@
           "bmp": "link-sprites.png",
           "frames": [
             {
-              "x": 247,
-              "y": 41,
+              "x": 248,
+              "y": 42,
               "w": 20,
-              "h": 31
+              "h": 27
             }
           ]
+        },
+        "Link.Crouch.Attack.right": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 280,
+              "y": 43,
+              "w": 32,
+              "h": 27
+            },
+            {
+              "x": 248,
+              "y": 42,
+              "w": 20,
+              "h": 27
+            }
+
+          ]
+        },
+        "Link.Crouch.Attack.left": {
+          "bmp": "link-sprites.png",
+          "frames": [
+            {
+              "x": 0,
+              "y": 43,
+              "w": 32,
+              "h": 27
+            },
+            {
+              "x": 48,
+              "y": 42,
+              "w": 20,
+              "h": 27
+            }
+
+          ]
         }
+
       },
       "Guma": {
         "Guma_right": {
