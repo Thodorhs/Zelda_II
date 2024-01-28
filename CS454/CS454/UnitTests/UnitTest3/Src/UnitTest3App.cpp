@@ -88,7 +88,6 @@ void AI()
 void myRender() {
 	SDL_RenderClear(global_render_vars->myrenderer);
 	#ifndef _LAYERS_
-	
 	Horizon_Layer->Display(nullptr, false,global_render_vars->Tileset, global_render_vars->myrenderer);
 	Backround_Layer->Display(Horizon_Layer->get_bitmap(), false, global_render_vars->Tileset,global_render_vars->myrenderer);
 	Action_Layer->Display(Backround_Layer->get_bitmap(), true, global_render_vars->Tileset,global_render_vars->myrenderer);
@@ -96,6 +95,8 @@ void myRender() {
 
 	render_sprite(global_render_vars->myrenderer, Action_Layer);
 	render_stats(global_render_vars->myrenderer, Action_Layer);
+	//SDL_RenderClear(global_render_vars->myrenderer);
+	
 	#else
 	render_layers();
 	#endif
@@ -216,6 +217,10 @@ void init_films() {
 
 void ZeldaApp::Initialise(void) {
 	assert(SDL_Init(SDL_INIT_EVERYTHING) == 0);
+	if(init_ttf()){
+		printf("Couldn't initialize SDL TTF: %s\n", SDL_GetError());
+		exit(1);
+	}
 	pr_start_msg();
 
 	pr_info("Initializing configurators..");
