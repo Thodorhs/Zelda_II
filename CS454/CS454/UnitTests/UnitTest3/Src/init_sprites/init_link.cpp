@@ -65,7 +65,7 @@ void init_link_animators(TileLayer* layer)
 	Sprite* Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 
 	//AnimatorManager& manager = AnimatorManager::GetSingleton();
-	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.frame.animation", 0, 4, 1, 0, 0, 100);
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.frame.animation", 0, 4, 1, 0, 0, 75);
 	FrameRangeAnimator* animator = new FrameRangeAnimator("Link", fr_animation);
 	Link_animators.push_back(animator);
 
@@ -73,7 +73,7 @@ void init_link_animators(TileLayer* layer)
 	MovingAnimator* jump_anim = new MovingAnimator("link.jump", jump);
 	Link_animators.push_back(jump_anim);
 
-	FrameRangeAnimation* link_attack_animation = new FrameRangeAnimation("link.attack", 0, 2, 1, 0, 0, 80);
+	FrameRangeAnimation* link_attack_animation = new FrameRangeAnimation("link.attack", 0, 2, 1, 0, 0, 105);
 	FrameRangeAnimator* link_attack_animator = new FrameRangeAnimator("Link.Attack", link_attack_animation);
 	Link_animators.push_back(link_attack_animator);
 

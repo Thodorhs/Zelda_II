@@ -65,25 +65,17 @@ void InputKeys::layers_set(int x,int y)
 SDL_Rect prev_link_box;
 void handle_animator_movement(int dx,Animator *scroll, Dim scale, SDL_Rect viewin, Sprite* link)
 {
-	SDL_Rect curr_link_box = link->GetBox();
-	MovingAnimator* mv = dynamic_cast<MovingAnimator*>(AnimatorManager::GetSingleton().Get_by_Id("link.move"));
-	if (scroll->HasFinished() && AnimatorManager::GetSingleton().Get_by_Id("link.move")->HasFinished()){
-		/*if ( ((link->GetBox().x - viewin.x * scale))  == (viewin.w / 2))
-		{
-
+	if (AnimatorManager::GetSingleton().Get_by_Id("Link.Attack")->HasFinished()) {
+		SDL_Rect curr_link_box = link->GetBox();
+		MovingAnimator* mv = dynamic_cast<MovingAnimator*>(AnimatorManager::GetSingleton().Get_by_Id("link.move"));
+		if (scroll->HasFinished() && AnimatorManager::GetSingleton().Get_by_Id("link.move")->HasFinished()){
 			scroll->Start(GetSystemTime());
-			//prev_link_box = curr_link_box;
-		
-		}*/
-		
-		scroll->Start(GetSystemTime());
 
-		mv->SetDx(dx);
-		AnimatorManager::GetSingleton().Get_by_Id("link.move")->Start(GetSystemTime());
-		move_Link();
-		
+			mv->SetDx(dx);
+			AnimatorManager::GetSingleton().Get_by_Id("link.move")->Start(GetSystemTime());
+			move_Link();
+		}
 	}
-	
 }
 
 
