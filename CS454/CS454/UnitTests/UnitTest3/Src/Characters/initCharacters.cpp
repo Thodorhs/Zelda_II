@@ -8,6 +8,7 @@
 #include "../../Include/Characters/Guma.h"
 #include "../../Include/Characters/PalaceBot.h"
 #include "../../Include/Characters/Staflos.h"
+#include "../../Include/Characters/Wosu.h"
 #include <string>
 
 
@@ -30,6 +31,8 @@ void guma_char_stop(Character *g)
 
 void guma_char_action(Character *g)
 {
+	if(g->is_Hit())
+		return;
 	Sprite* li = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 	Sprite* gu = SpriteManager::GetSingleton().Get_sprite_by_id(g->get_id());
 	int lx = li->GetBox().x;
@@ -104,7 +107,8 @@ void bot_char_action(Character* b)
 void staflos_char_start(Character* c)
 {
 	SpriteManager::GetSingleton().Get_sprite_by_id(c->get_id())->Move(0, 1);
-	//AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move")->Start(GetSystemTime());
+	SpriteManager::GetSingleton().Get_sprite_by_id(c->get_id())->SetVisibility(true);
+	
 }
 
 
@@ -120,15 +124,86 @@ void staflos_char_action(Character* c)
 	auto fall = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_falling");
 	auto mv = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move");
 	auto att = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_attack");
-	if(fall->HasFinished() && mv->HasFinished() && att->HasFinished())
+	Sprite* li = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+	Sprite* st = SpriteManager::GetSingleton().Get_sprite_by_id(c->get_id());
+	if(fall->HasFinished() && mv->HasFinished() && att->HasFinished() && !c->is_Hit()){
 		AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move")->Start(GetSystemTime());
+		FrameRangeAnimator* an = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move"));
+		FrameRangeAnimator* attack = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_attack"));
+		int lx = li->GetBox().x;
+		int sx = st->GetBox().x;
+
+		int dx = 5;
+		if (lx > sx) {
+		st->ChangeFilm("Staflos.walk.right");
+			if(lx-sx<80){
+				attack->SetDx(dx);
+				attack->Start(GetSystemTime());
+			}else{
+				an->SetDx(dx);
+			}
+		}
+		else if (lx < sx) {
+		st->ChangeFilm("Staflos.walk.left");
+			if (sx-lx<80) {
+				attack->SetDx(-dx);
+				attack->Start(GetSystemTime());
+			}else{
+				an->SetDx(-dx);
+			}
+		}
+	}
 }
 
 
 /********END STAFLOS******/
 
+/**********WOSU***********/
+
+void wosu_char_start(Character* g)
+{
+
+	AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_move")->Start(GetSystemTime());
+}
 
 
+void wosu_char_stop(Character* g)
+{
+	AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_move")->Destroy();
+	g->Destroy();
+}
+
+void wosu_char_action(Character* b)
+{
+	if (b->is_Hit())
+		return;
+	auto fr =AnimatorManager::GetSingleton().Get_by_Id(b->get_id() + "_framerange");
+	auto mv = AnimatorManager::GetSingleton().Get_by_Id(b->get_id() + "_move");
+	Sprite* li = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+	Sprite* wo = SpriteManager::GetSingleton().Get_sprite_by_id(b->get_id());
+	int lx = li->GetBox().x;
+	int wx = wo->GetBox().x;
+	MovingAnimator* an = dynamic_cast<MovingAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(b->get_id() + "_move"));
+	//pr_info(std::to_string(lx) + " " + std::to_string(bx));
+	int dx = 4;
+	if (lx > wx) {
+		wo->ChangeFilm("Wosu_right");
+		an->SetDx(dx);
+	}
+	else if (lx < wx) {
+		wo->ChangeFilm("Wosu_left");
+		an->SetDx(-dx);
+	}
+	if (mv->HasFinished()) {
+		mv->Start(GetSystemTime());
+	}
+	if (fr->HasFinished()) {
+		fr->Start(GetSystemTime());
+	}
+}
+
+
+/********ENDWOSU***********/
 
 void register_gumas(SList gumas) {
 	for (auto& it : gumas) {
@@ -167,14 +242,30 @@ void register_staflos(SList staflos)
 }
 
 
+void register_wosus(SList wosus)
+{
+	for (auto& it : wosus) {
+		Wosu* c = new Wosu(it->GetTypeId(), { it->GetBox().x,it->GetBox().y });
+		CharacterManager::GetSingleton().Register(c, c->get_type());
+		c->SetOnStart(wosu_char_start);
+		c->SetOnStop(wosu_char_stop);
+		c->SetOnAction(wosu_char_action);
+	}
+}
+
+
 void init_characters() {
 	auto gumas = SpriteManager::GetSingleton().GetTypeList("Guma");
 	auto link  = SpriteManager::GetSingleton().GetTypeList("Link").begin();
 	auto bots = SpriteManager::GetSingleton().GetTypeList("Palace_bot");
 	auto staflos = SpriteManager::GetSingleton().GetTypeList("Staflos");
+	auto wosus = SpriteManager::GetSingleton().GetTypeList("Wosu");
+
 	
 	register_Link(*link);
 	register_bots(bots);
 	register_gumas(gumas);
 	register_staflos(staflos);
+	register_wosus(wosus);
+	
 }

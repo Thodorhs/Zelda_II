@@ -14,10 +14,11 @@ protected:
 	bool keys[4];
 	int points = 0;
 	bool alive = true;
-
+	bool isHit = false;
 public:
 	/*set*/
-
+	void setHit(const bool val) { isHit = val; }
+	const bool is_Hit()const { return isHit; }
 	void setPoints(int newPoints) { points = newPoints; }
 	void setLifes(int newLifes) { lifes = newLifes; }
 	void addKey(int i) { keys[i] = true; }

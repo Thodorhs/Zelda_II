@@ -22,7 +22,7 @@ protected:
 	SDL_Rect frameBox; // inside the film
 	SDL_Rect layer_viewWin;
 	int x = 0, y = 0;
-	bool isVisible = false;
+	bool isVisible = true;
 	AnimationFilm* currFilm = nullptr;
 	AnimationFilm* prevFilm = nullptr;
 	bool canMove = true;

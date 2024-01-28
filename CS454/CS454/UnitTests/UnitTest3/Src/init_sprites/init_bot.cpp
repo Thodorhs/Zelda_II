@@ -56,8 +56,8 @@ void init_bot_animators(TileLayer* layer) {
 		mv->SetOnFinish(bot_move_stop(bot_jump_an));
 
 		MovingAnimator* fall = dynamic_cast<MovingAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(b->GetTypeId() + "_falling"));
-		fall->SetDelay(100);
-		fall->SetDx(5);
+		fall->SetDelay(80);
+		fall->SetDx(8);
 
 		bot_jump_an->SetOnAction(bot_jump_an->generic_animator_action(b));
 		bot_jump_an->SetOnStart(bot_jump_start(b,fall,mv,layer->get_scale()));

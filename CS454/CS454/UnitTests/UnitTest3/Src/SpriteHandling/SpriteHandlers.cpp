@@ -3,9 +3,12 @@
 #include "../../../../Engine/Include/Animators/AnimatorManager.h"
 #include "../../../../Engine/Include/GameLoopFuncs/Input.h"
 #include "../../Include/Link/Link.h"
+#include "../../Include/Characters/CharacterManager.h"
 Link Link::singleton;
 std::string crouch_films[] = { "Link.Crouch.left","Link.Crouch.right" };
 std::string jump_films[] = { "Link.jump.left", "Link.jump.right" };
+
+CharacterManager &cman = CharacterManager::GetSingleton();
 
 void elevator_action1(Sprite* s1, Sprite* s2) {
 	if (InputKeys::GetSingleton().KeyPressed(SDLK_s)) {
@@ -207,10 +210,119 @@ void create_and_register_sprites(TileLayer* layer)
 	init_elevators();
 
 }
+
+
+void Guma_collission(Sprite* s1,Sprite *s2)
+{
+	
+	pr_info("guma colision");
+	if( !cman.Get_by_Id(s2->GetTypeId(),"Guma")->is_Hit() ){
+		if((s1->GetFilm()->GetId() == "Link.Attack.left"||s1->GetFilm()->GetId() == "Link.Crouch.Attack.left")&&(s2->GetBox().x <= s1->GetBox().x)){
+			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			//cman.Get_by_Id(s2->GetTypeId())->
+			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+		}
+		else if ((s1->GetFilm()->GetId() == "Link.Attack.right"||s1->GetFilm()->GetId() == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
+			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+		}
+	}
+}
+
+void Bot_collission(Sprite* s1, Sprite* s2)
+{
+	if (!cman.Get_by_Id(s2->GetTypeId(), "Bot")->is_Hit()) {
+		if ((s1->GetFilm()->GetId() == "Link.Attack.left" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
+			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			//cman.Get_by_Id(s2->GetTypeId())->
+			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+		}
+		else if ((s1->GetFilm()->GetId() == "Link.Attack.right" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
+			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+		}
+	}
+	pr_info("bot colision");
+}
+void Wosu_collission(Sprite* s1, Sprite* s2)
+{
+	if (!cman.Get_by_Id(s2->GetTypeId(), "Wosu")->is_Hit()) {
+		if ((s1->GetFilm()->GetId() == "Link.Attack.left" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
+			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			//cman.Get_by_Id(s2->GetTypeId())->
+			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+		}
+		else if ((s1->GetFilm()->GetId() == "Link.Attack.right" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
+			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+		}else if(!Link::GetSingleton().is_Hit()){
+			
+			Link::GetSingleton().damage(8);
+			AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
+		}
+	}
+	
+	pr_info("col with wosu");
+}
+void Staflos_collission(Sprite* s1, Sprite* s2)
+{
+	pr_info("Coll with staflos");
+}
+
+
+
+void register_guma_collisions(TileLayer *layer)
+{
+	CollisionChecker& col = CollisionChecker::GetSingleton();
+	auto Gumas = SpriteManager::GetSingleton().GetTypeList("Guma");
+	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+	for(auto& it : Gumas)
+	{
+		col.Register(link, it, Guma_collission);
+	}
+}
+
+void register_staflos_collisions(TileLayer* layer)
+{
+	CollisionChecker& col = CollisionChecker::GetSingleton();
+	auto Staflos = SpriteManager::GetSingleton().GetTypeList("Staflos");
+	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+	for (auto& it : Staflos)
+	{
+		col.Register(link, it, Staflos_collission);
+	}
+}
+
+
+void register_wosu_collisions(TileLayer* layer)
+{
+	CollisionChecker& col = CollisionChecker::GetSingleton();
+	auto wosus = SpriteManager::GetSingleton().GetTypeList("Wosu");
+	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+	for (auto& it : wosus)
+	{
+		col.Register(link, it, Wosu_collission);
+	}
+}
+
+
+
+void register_bot_collisions(TileLayer* layer)
+{
+	CollisionChecker& col = CollisionChecker::GetSingleton();
+	auto Bots = SpriteManager::GetSingleton().GetTypeList("Palace_bot");
+	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+	for (auto& it : Bots)
+	{
+		col.Register(link, it,Bot_collission);
+	}
+}
+
+
 void register_collisions(TileLayer* layer) {
 	CollisionChecker& col = CollisionChecker::GetSingleton();
 	SpriteManager& manager = SpriteManager::GetSingleton();
-	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Guma"), [](Sprite* s1, Sprite* s2) {pr_error("collision"); });
+	//col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Guma"), [](Sprite* s1, Sprite* s2) {pr_error("collision"); });
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator1_down"), elevator_action1);
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator2_down"), elevator_action2);
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Elevator3_down"), elevator_action3);
@@ -224,6 +336,10 @@ void register_collisions(TileLayer* layer) {
 	for (auto i = 1; i < 5; i++) {
 		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("key" + std::to_string(i)), key_action);
 	}
+	register_guma_collisions(layer);
+	register_staflos_collisions(layer);
+	register_wosu_collisions(layer);
+	register_bot_collisions(layer);
 }
 
 void init_sprites(TileLayer* layer) {

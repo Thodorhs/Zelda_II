@@ -25,6 +25,9 @@ bool is_left_attack(std::string id)
 void Sprite::Display(const SDL_Rect& dpyArea, const Clipper& clipper,SDL_Renderer* renderer, const SDL_Rect& view) const {
 	SDL_Rect clippedBox;
 	SDL_Point dpyPos;
+	if (!isVisible)
+		return;
+
 	if (clipper.Clip(GetBox(), dpyArea, &dpyPos, &clippedBox,layer_scale)) {
 		SDL_Rect clippedFrame{
 		frameBox.x + clippedBox.x,

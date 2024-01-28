@@ -1,6 +1,8 @@
 #include "../../Include/initAnimationsSprites.h"
-std::string left_films[] = { "Link.Attack.left","Link.Run.left","Link.jump.left","Link.falling.left" ,"Link.damage.left","Link.Crouch.left","Link.Crouch.Attack.left"};
-std::string right_films[] = { "Link.Attack.right","Link.Run.right","Link.jump.right","Link.falling.right","Link.damage.right" ,"Link.Crouch.right","Link.Crouch.Attack.left"};
+std::string left_films[] = { "Link.Attack.left","Link.Run.left","Link.jump.left","Link.falling.left" ,
+	"Link.damage.left","Link.Crouch.left","Link.Crouch.Attack.left"};
+std::string right_films[] = { "Link.Attack.right","Link.Run.right","Link.jump.right","Link.falling.right",
+	"Link.damage.right" ,"Link.Crouch.right","Link.Crouch.Attack.left"};
 std::vector<Animator*>Link_animators;
 
 bool is_left(const std::string& id)
@@ -100,7 +102,7 @@ void init_link_animators(TileLayer* layer)
 	MovingAnimator* jump_anim = new MovingAnimator("link.jump", jump);
 	Link_animators.push_back(jump_anim);
 
-	FrameRangeAnimation* link_attack_animation = new FrameRangeAnimation("link.attack", 0, 2, 1, 0, 0, 105);
+	FrameRangeAnimation* link_attack_animation = new FrameRangeAnimation("link.attack", 0, 2, 1, 0, 0, 150);
 	FrameRangeAnimator* link_attack_animator = new FrameRangeAnimator("Link.Attack", link_attack_animation);
 	Link_animators.push_back(link_attack_animator);
 
@@ -126,7 +128,8 @@ void init_link_animators(TileLayer* layer)
 			});
 	//animator_init(Link, animator, fr_animation, []()
 	//{
-	//}, []() {});
+	//}, []() {})
+
 
 
 	animator->SetOnAction(link_fr_action(Link));
@@ -189,9 +192,11 @@ void link_gravity(TileLayer* layer) {
 		});
 }
 
+#include "../../Include/Link/Link.h"
 
 void damage_start(Animator *animator)
 {
+	Link::GetSingleton().setHit(true);
 	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 	auto sc = AnimatorManager::GetSingleton().Get_by_Id("scroll_right");
 	auto sc_l = AnimatorManager::GetSingleton().Get_by_Id("scroll_left");
@@ -202,12 +207,12 @@ void damage_start(Animator *animator)
 
 	if (is_left(link->GetFilm()->GetId())) {
 		link->ChangeFilm("Link.damage.left");
-		((FrameRangeAnimator*)animator)->SetDx(5);
+		((FrameRangeAnimator*)animator)->SetDx(8);
 		sc->Start(GetSystemTime());
 	}
 	else {
 		link->ChangeFilm("Link.damage.right");
-		((FrameRangeAnimator*)animator)->SetDx(-5);
+		((FrameRangeAnimator*)animator)->SetDx(-8);
 		sc_l->Start(GetSystemTime());
 	}
 	generic_start(animator);
@@ -215,6 +220,7 @@ void damage_start(Animator *animator)
 
 void damage_stop(Animator *animator)
 {
+	Link::GetSingleton().setHit(false);
 	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 	generic_stop(animator);
 	if (is_left(link->GetFilm()->GetId())) {

@@ -4,8 +4,12 @@ Animator::OnStart staflos_attack_start(Sprite* s) {
 
 	return ([s](Animator* anim)
 		{
+			AnimatorManager::GetSingleton().Get_by_Id(s->GetTypeId() + "_move")->Stop();
 			generic_start(anim);
-			s->ChangeFilm("Staflos.attack.right");
+			if(s->GetFilm()->GetId() == "Staflos.walk.right")
+				s->ChangeFilm("Staflos.attack.right");
+			else
+				s->ChangeFilm("Staflos.attack.left");
 		}
 	);
 }
@@ -37,7 +41,8 @@ Animator::OnStart staflos_start(Sprite *s) {
 		{
 			
 			generic_start(anim);
-			s->ChangeFilm("Staflos.walk.right");
+			//s->SetVisibility(true);
+			//s->ChangeFilm("Staflos.walk.right");
 		}
 	);
 }
@@ -47,9 +52,9 @@ Animator::OnFinish staflos_finish(Sprite* g) {
 		{
 
 			generic_stop(anim);
-			auto att = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_attack");
-			if (att->HasFinished())
-				att->Start(GetSystemTime());
+			//auto att = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_attack");
+			//if (att->HasFinished())
+			//	att->Start(GetSystemTime());
 		}
 	);
 }
@@ -71,13 +76,13 @@ Animator::OnAction staflos_action( Sprite* g, TileLayer* layer) {
 
 void init_staflos_animators(TileLayer *layer) {
 	auto staflos = SpriteManager::GetSingleton().GetTypeList("Staflos");
-	FrameRangeAnimation* staflos_move = new FrameRangeAnimation("staflos", 0, 1, 5, -5, 0, 150);
-	FrameRangeAnimation* staflos_attack = new FrameRangeAnimation("staflos.attack", 0, 2, 3, 5, 0, 150);
+	FrameRangeAnimation* staflos_move = new FrameRangeAnimation("staflos", 0, 1, 5, 5, 0, 80);
+	FrameRangeAnimation* staflos_attack = new FrameRangeAnimation("staflos.attack", 0, 2, 3, 5, 0, 90);
 	for (auto& g :staflos) {
 
 		FrameRangeAnimator* mv = new FrameRangeAnimator(g->GetTypeId() + "_move", (FrameRangeAnimation*)staflos_move->Clone());
 		FrameRangeAnimator* att = new FrameRangeAnimator(g->GetTypeId() + "_attack",(FrameRangeAnimation*)staflos_attack->Clone());
-
+		g->SetVisibility(false);
 		mv->SetOnAction(staflos_action(g,layer));
 		mv->SetOnStart(staflos_start(g));
 		mv->SetOnFinish(staflos_finish(g));

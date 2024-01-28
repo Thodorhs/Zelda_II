@@ -8,7 +8,7 @@ class CharacterManager {
 	using Char_list = std::vector<Character*>;
 	using Type_List = std::map<std::string, Char_list>;
 private:
-	Char_list Characters;
+	
 	Type_List Character_map;
 
 	CharacterManager(void) = default;
@@ -17,10 +17,7 @@ private:
 	static CharacterManager singleton;
 
 public:
-	void Register(Character* character) {
-		assert(character);
-		Characters.push_back(character);
-	}
+	
 
 	void Register(Character* character,const std::string &id) {
 		assert(character);
@@ -32,16 +29,19 @@ public:
 		return Character_map[typeId];
 	}
 
-	Character* Get_by_Id(const std::string &id) {
-		for (auto& it : Characters) {
+	Character* Get_by_Id(const std::string &id,const std::string &type) {
+		auto list = GetTypeList(type);
+
+		for (auto& it : list) {
 			if (it->get_id() == id)
 				return it;
 		}
 		return nullptr;
 	}
 
-	bool isAlive(const std::string& id) {
-		auto c = Get_by_Id(id);
+	bool isAlive(const std::string& id,const std::string &type) {
+		
+		auto c = Get_by_Id(id,type);
 		if (c && c->is_Alive())
 			return true;
 		return false;
