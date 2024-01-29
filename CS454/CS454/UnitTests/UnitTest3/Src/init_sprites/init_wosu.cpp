@@ -86,17 +86,25 @@ void init_wosu_animators(TileLayer* layer) {
 	auto wosus = SpriteManager::GetSingleton().GetTypeList("Wosu");
 	FrameRangeAnimation* fr_w = new FrameRangeAnimation("wosu", 0, 1, 3, 0, 0, 100);
 	FrameRangeAnimation* fr_death = new FrameRangeAnimation("wosu.death", 0, 5, 1, 0, 0, 100);
-	MovingAnimation* mv_w = new MovingAnimation("wosu_mv",1,4,0,20);
+	MovingAnimation* mv_w = new MovingAnimation("wosu_mv",1,5,0,20);
 	
 	for (auto& g : wosus) {
 
 		FrameRangeAnimator* mv = new FrameRangeAnimator(g->GetTypeId() + "_framerange", (FrameRangeAnimation*)fr_w->Clone());
 		FrameRangeAnimator* death = new FrameRangeAnimator(g->GetTypeId() + "_damage", (FrameRangeAnimation*)fr_death->Clone());
 		MovingAnimator* mv_animator = new MovingAnimator(g->GetTypeId() + "_move", (MovingAnimation*)mv_w->Clone());
+		
 		mv_animator->SetOnAction(mv_animator->generic_animator_action(g));
 		mv_animator->SetOnStart(wosu_start(g));
 		mv_animator->SetOnFinish(generic_stop);
-
+		if (g->GetTypeId() == "Wosu" || g->GetTypeId() == "Wosu1") {
+			g->ChangeFilm("Wosu_right");
+			mv_animator->SetDx(4);
+		}
+		else {
+			g->ChangeFilm("Wosu_left");
+			mv_animator->SetDx(-4);
+		}
 		mv->SetOnStart(generic_start);
 		mv->SetOnFinish(wosu_finish_fr(g));
 		mv->SetOnAction(mv->generic_animator_action(g));

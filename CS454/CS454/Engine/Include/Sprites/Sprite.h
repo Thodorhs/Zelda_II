@@ -66,7 +66,7 @@ public:
 		quantizer.SetMover(mover = f);
 	}
 
-	
+	AnimationFilm* GetprevFilm() { return prevFilm; }
 	const SDL_Rect GetBox(void) const
 	{
 		return { x, y, frameBox.w, frameBox.h };

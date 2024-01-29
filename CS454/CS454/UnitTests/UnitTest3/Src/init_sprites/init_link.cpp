@@ -207,12 +207,14 @@ void damage_start(Animator *animator)
 
 	if (is_left(link->GetFilm()->GetId())) {
 		link->ChangeFilm("Link.damage.left");
-		((FrameRangeAnimator*)animator)->SetDx(8);
+		link->setCanMove(false);
+		((FrameRangeAnimator*)animator)->SetDx(1);
 		sc->Start(GetSystemTime());
 	}
 	else {
 		link->ChangeFilm("Link.damage.right");
-		((FrameRangeAnimator*)animator)->SetDx(-8);
+		link->setCanMove(false);
+		((FrameRangeAnimator*)animator)->SetDx(-1);
 		sc_l->Start(GetSystemTime());
 	}
 	generic_start(animator);
@@ -229,6 +231,7 @@ void damage_stop(Animator *animator)
 	else {
 		link->ChangeFilm("Link.Run.right");
 	}
+	link->setCanMove(true);
 }
 
 
@@ -291,7 +294,7 @@ void link_att_crouch()
 
 void link_damage(TileLayer *layer)
 {
-	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.damage", 0, 2, 1, 0, 0, 100);
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.damage", 0, 19, 1, 0, 0, 15);
 	FrameRangeAnimator* animator = new FrameRangeAnimator("Link_damage", fr_animation);
 
 	animator->SetOnAction(animator->generic_animator_action(SpriteManager::GetSingleton().Get_sprite_by_id("Link")));

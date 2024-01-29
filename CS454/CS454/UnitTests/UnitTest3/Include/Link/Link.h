@@ -49,7 +49,7 @@ public:
 		bool getKeys() const { return keys; }
 		int getMagic() const { return magic; }
 		
-		
+		void cant_hit(timestamp_t currTime, int ms);
 		static auto GetSingleton(void) -> Link& {
 			return singleton;
 		}

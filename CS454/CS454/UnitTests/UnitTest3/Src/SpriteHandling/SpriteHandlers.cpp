@@ -246,13 +246,15 @@ void Bot_collission(Sprite* s1, Sprite* s2)
 }
 void Wosu_collission(Sprite* s1, Sprite* s2)
 {
+	std::string film =s1->GetFilm()->GetId();
+	//std::string prevfilm = s1->GetprevFilm()->GetId();
 	if (!cman.Get_by_Id(s2->GetTypeId(), "Wosu")->is_Hit()) {
-		if ((s1->GetFilm()->GetId() == "Link.Attack.left" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
+		if ((film == "Link.Attack.left" || film == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			//cman.Get_by_Id(s2->GetTypeId())->
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}
-		else if ((s1->GetFilm()->GetId() == "Link.Attack.right" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
+		else if ((film == "Link.Attack.right" || film == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}else if(!Link::GetSingleton().is_Hit()){

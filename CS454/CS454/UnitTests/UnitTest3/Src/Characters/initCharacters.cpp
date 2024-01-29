@@ -179,21 +179,7 @@ void wosu_char_action(Character* b)
 		return;
 	auto fr =AnimatorManager::GetSingleton().Get_by_Id(b->get_id() + "_framerange");
 	auto mv = AnimatorManager::GetSingleton().Get_by_Id(b->get_id() + "_move");
-	Sprite* li = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
-	Sprite* wo = SpriteManager::GetSingleton().Get_sprite_by_id(b->get_id());
-	int lx = li->GetBox().x;
-	int wx = wo->GetBox().x;
-	MovingAnimator* an = dynamic_cast<MovingAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(b->get_id() + "_move"));
-	//pr_info(std::to_string(lx) + " " + std::to_string(bx));
-	int dx = 4;
-	if (lx > wx) {
-		wo->ChangeFilm("Wosu_right");
-		an->SetDx(dx);
-	}
-	else if (lx < wx) {
-		wo->ChangeFilm("Wosu_left");
-		an->SetDx(-dx);
-	}
+	
 	if (mv->HasFinished()) {
 		mv->Start(GetSystemTime());
 	}
