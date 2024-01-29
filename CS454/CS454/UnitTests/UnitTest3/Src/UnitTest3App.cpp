@@ -100,7 +100,7 @@ void myRender() {
 	#else
 	render_layers();
 	#endif
-
+	SDL_SetRenderDrawColor(global_render_vars->myrenderer, 100, 255, 0, 255);
 	if(InputKeys::GetSingleton().CanDpyGrid())
 		show_grid();
 	SDL_RenderPresent(global_render_vars->myrenderer);
