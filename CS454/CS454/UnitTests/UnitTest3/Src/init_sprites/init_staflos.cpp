@@ -76,8 +76,8 @@ Animator::OnAction staflos_action( Sprite* g, TileLayer* layer) {
 
 void init_staflos_animators(TileLayer *layer) {
 	auto staflos = SpriteManager::GetSingleton().GetTypeList("Staflos");
-	FrameRangeAnimation* staflos_move = new FrameRangeAnimation("staflos", 0, 1, 5, 5, 0, 80);
-	FrameRangeAnimation* staflos_attack = new FrameRangeAnimation("staflos.attack", 0, 2, 3, 5, 0, 90);
+	FrameRangeAnimation* staflos_move = new FrameRangeAnimation("staflos", 0, 1, 6, 5, 0, 80);
+	FrameRangeAnimation* staflos_attack = new FrameRangeAnimation("staflos.attack", 0, 2, 3, 5, 0, 100);
 	for (auto& g :staflos) {
 
 		FrameRangeAnimator* mv = new FrameRangeAnimator(g->GetTypeId() + "_move", (FrameRangeAnimation*)staflos_move->Clone());

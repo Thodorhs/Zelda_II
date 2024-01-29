@@ -48,7 +48,8 @@ add_executable(UnitTest3
 "Include/Characters/Guma.h"
 "Src/Characters/Character.cpp"
 "Src/AI/AI.cpp"
- "Src/init_sprites/init_staflos.cpp" "Src/init_sprites/init_wosu.cpp" "Include/Characters/PalaceBot.h" "Include/Characters/Staflos.h" "Include/Characters/Wosu.h")
+ "Src/init_sprites/init_staflos.cpp" "Src/init_sprites/init_wosu.cpp" "Include/Characters/PalaceBot.h" "Include/Characters/Staflos.h" "Include/Characters/Wosu.h"
+"../../Engine/Src/Animators/MovingPathAnimator.cpp")
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf)
 
