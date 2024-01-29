@@ -86,7 +86,7 @@ void init_wosu_animators(TileLayer* layer) {
 	auto wosus = SpriteManager::GetSingleton().GetTypeList("Wosu");
 	FrameRangeAnimation* fr_w = new FrameRangeAnimation("wosu", 0, 1, 3, 0, 0, 100);
 	FrameRangeAnimation* fr_death = new FrameRangeAnimation("wosu.death", 0, 5, 1, 0, 0, 100);
-	MovingAnimation* mv_w = new MovingAnimation("wosu_mv",1,5,0,20);
+	MovingAnimation* mv_w = new MovingAnimation("wosu_mv",1,5,0,17);
 	
 	for (auto& g : wosus) {
 

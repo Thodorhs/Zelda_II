@@ -140,8 +140,10 @@ void staflos_char_action(Character* c)
 		if (lx > sx) {
 		st->ChangeFilm("Staflos.walk.right");
 			if(lx-sx<80){
-				attack->SetDx(dx);
-				attack->Start(GetSystemTime());
+				if (rand() % 4 == 1) {
+					attack->SetDx(dx);
+					attack->Start(GetSystemTime());
+				}
 			}else{
 				an->SetDx(dx);
 			}
@@ -149,8 +151,10 @@ void staflos_char_action(Character* c)
 		else if (lx < sx) {
 		st->ChangeFilm("Staflos.walk.left");
 			if (sx-lx<80) {
-				attack->SetDx(-dx);
-				attack->Start(GetSystemTime());
+				if (rand() % 4 == 1) {
+					attack->SetDx(-dx);
+					attack->Start(GetSystemTime());
+				}
 			}else{
 				an->SetDx(-dx);
 			}

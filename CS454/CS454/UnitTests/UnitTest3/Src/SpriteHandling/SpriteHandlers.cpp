@@ -240,6 +240,9 @@ void Bot_collission(Sprite* s1, Sprite* s2)
 		else if ((s1->GetFilm()->GetId() == "Link.Attack.right" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+		}else if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
+			Link::GetSingleton().damage(8);
+			AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 		}
 	}
 	pr_info("bot colision");
@@ -268,6 +271,33 @@ void Wosu_collission(Sprite* s1, Sprite* s2)
 }
 void Staflos_collission(Sprite* s1, Sprite* s2)
 {
+	if (!cman.Get_by_Id(s2->GetTypeId(), "Staflos")->is_Hit()) {
+		if ((s1->GetFilm()->GetId() == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
+			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			//cman.Get_by_Id(s2->GetTypeId())->
+			pr_info("damage staflos");
+			//AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+		}
+		else if (( s1->GetFilm()->GetId() == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
+			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			pr_info("damage staflos");
+			//AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+		}
+		else if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
+			if (s1->GetFilm()->GetId() == "Link.Crouch.right"&&(s2->GetBox().x >= s1->GetBox().x)) {
+				pr_info("parry");
+				return;
+			}
+			else if (s1->GetFilm()->GetId() == "Link.Crouch.left" && (s2->GetBox().x <= s1->GetBox().x)) {
+				pr_info("parry"); 
+				return;
+			}
+			else if (s2->GetFilm()->GetId() == "Staflos.attack.right" || s2->GetFilm()->GetId() == "Staflos.attack.left" || s2->GetFilm()->GetId() == "Staflos.fall") {
+				Link::GetSingleton().damage(8);
+				AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
+			}	
+		}
+	}
 	pr_info("Coll with staflos");
 }
 
