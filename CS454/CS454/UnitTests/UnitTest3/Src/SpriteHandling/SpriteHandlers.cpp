@@ -135,22 +135,26 @@ void elevator_action7(Sprite* s1, Sprite* s2) {
 void door_action(Sprite* s1, Sprite* s2){
 	auto e = AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId());
 	if (e->HasFinished()) {
-		if (s2->GetTypeId() == "door1"&& Link::GetSingleton().haskey(0)) {
+		if (s2->GetTypeId() == "door1"&& Link::GetSingleton().haskey(0) ) {
+			//CollisionChecker::GetSingleton().Cancel(s1, s2);
 			Link::GetSingleton().removekey(0);
 			e->Start(GetSystemTime());
 			pr_info("rm key1");
 		}
-		else if (s2->GetTypeId() == "door1" && Link::GetSingleton().haskey(1)) {
+		else if (s2->GetTypeId() == "door2" && Link::GetSingleton().haskey(1) ) {
+			//CollisionChecker::GetSingleton().Cancel(s1, s2);
 			pr_info("rm key2");
 			Link::GetSingleton().removekey(1);
 			e->Start(GetSystemTime());
 		}
-		else if (s2->GetTypeId() == "door3" && Link::GetSingleton().haskey(2)) {
+		else if (s2->GetTypeId() == "door3" && Link::GetSingleton().haskey(2) ) {
+			//CollisionChecker::GetSingleton().Cancel(s1, s2);
 			pr_info("rm key3");
 			Link::GetSingleton().removekey(2);
 			e->Start(GetSystemTime());
 		}
-		else if (s2->GetTypeId() == "door4" && Link::GetSingleton().haskey(3)) {
+		else if (s2->GetTypeId() == "door4" && Link::GetSingleton().haskey(3) ) {
+			//CollisionChecker::GetSingleton().Cancel(s1, s2);
 			pr_info("rm key4");
 			Link::GetSingleton().removekey(3);
 			e->Start(GetSystemTime());
@@ -159,21 +163,53 @@ void door_action(Sprite* s1, Sprite* s2){
 	}	
 }
 void key_action(Sprite* s1, Sprite* s2) {
-	if (InputKeys::GetSingleton().KeyPressed(SDLK_b)) {
-		s2->Destroy();
+	if (InputKeys::GetSingleton().KeyPressed(SDLK_b)&&s2->IsVisible()) {
 		if (s2->GetTypeId() == "key1") {
+			s2->SetVisibility(false);
 			Link::GetSingleton().addKey(0);
 		}else if (s2->GetTypeId() == "key2") {
+			s2->SetVisibility(false);
 			Link::GetSingleton().addKey(1);
 		}
 		else if (s2->GetTypeId() == "key3") {
+			s2->SetVisibility(false);
 			Link::GetSingleton().addKey(2);
 		}
 		else if (s2->GetTypeId() == "key4") {
+			s2->SetVisibility(false);
 			Link::GetSingleton().addKey(3);
 		}
+		//s2->Destroy();
 	}
 }
+void doll_action(Sprite* s1, Sprite* s2) {
+	if (InputKeys::GetSingleton().KeyPressed(SDLK_b)&& s2->IsVisible()) {
+		s2->SetVisibility(false);
+		Link::GetSingleton().addLifes(1);
+	}
+}
+void point_action(Sprite* s1, Sprite* s2) {
+	if (InputKeys::GetSingleton().KeyPressed(SDLK_b)&& s2->IsVisible()) {
+		s2->SetVisibility(false);
+		Link::GetSingleton().addPoints(50);
+	}
+}
+void blue_pot_action(Sprite* s1, Sprite* s2) {
+	if (InputKeys::GetSingleton().KeyPressed(SDLK_b) && s2->IsVisible()) {
+		s2->SetVisibility(false);
+		Link::GetSingleton().addMagic(16);
+	}
+}
+void red_pot_action(Sprite* s1, Sprite* s2) {
+	if (InputKeys::GetSingleton().KeyPressed(SDLK_b) && s2->IsVisible()) {
+		s2->SetVisibility(false);
+		Link::GetSingleton().addMagic(128);
+	}
+}
+void end_key_action(Sprite* s1, Sprite* s2) {
+	return;
+}
+
 void init_elevators() {
 	auto names = get_elevator_names();
 	for (auto& it : names) {
@@ -181,7 +217,6 @@ void init_elevators() {
 		SpriteManager::GetSingleton().Get_sprite_by_id(it)->setGridIgnore(true);
 	}
 }
-
 
 void create_and_register_sprites(TileLayer* layer)
 {
@@ -241,7 +276,7 @@ void Bot_collission(Sprite* s1, Sprite* s2)
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}else if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
-			Link::GetSingleton().damage(8);
+			Link::GetSingleton().damage(Link::GetSingleton().getdif());
 			AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 		}
 	}
@@ -262,7 +297,7 @@ void Wosu_collission(Sprite* s1, Sprite* s2)
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}else if(Link::GetSingleton().can_hit(GetSystemTime(),1000) ){
 			
-			Link::GetSingleton().damage(8);
+			Link::GetSingleton().damage(Link::GetSingleton().getdif());
 			AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 		}
 	}
@@ -293,7 +328,7 @@ void Staflos_collission(Sprite* s1, Sprite* s2)
 				return;
 			}
 			else if (s2->GetFilm()->GetId() == "Staflos.attack.right" || s2->GetFilm()->GetId() == "Staflos.attack.left" || s2->GetFilm()->GetId() == "Staflos.fall") {
-				Link::GetSingleton().damage(8);
+				Link::GetSingleton().damage(Link::GetSingleton().getdif()+2);
 				AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 			}	
 		}
@@ -368,6 +403,13 @@ void register_collisions(TileLayer* layer) {
 	for (auto i = 1; i < 5; i++) {
 		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("key" + std::to_string(i)), key_action);
 	}
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("doll1"), doll_action);
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("points1"), point_action);
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("points2"), point_action);
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("blue_pot1"), blue_pot_action);
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("blue_pot2"), blue_pot_action);
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("red_pot1"), red_pot_action);
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("end_key"), end_key_action);
 	register_guma_collisions(layer);
 	register_staflos_collisions(layer);
 	register_wosu_collisions(layer);

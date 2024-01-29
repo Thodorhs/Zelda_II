@@ -8,9 +8,10 @@ private:
 	Link(Link&&) = delete;
 	static Link singleton;
 protected:
+	unsigned int difficulty = 8;
 	int health = 100;
 	int lifes = 3;
-	int magic = 100;
+	int magic = 200;
 	bool keys[4];
 	int points = 0;
 	bool alive = true;
@@ -21,10 +22,17 @@ public:
 	/*set*/
 	void setHit(const bool val) { isHit = val; }
 	const bool is_Hit()const { return isHit; }
-	void setPoints(int newPoints) { points = newPoints; }
-	void setLifes(int newLifes) { lifes = newLifes; }
+	void addPoints(int newPoints) { points += newPoints; }
+	void addLifes(int newLifes) { lifes += newLifes; }
 	void addKey(int i) { keys[i] = true; }
-	void setMagic(int newMagic) { magic = newMagic; }
+	void addMagic(int newMagic) { 
+		if (magic + newMagic <= 200) {
+			magic += newMagic;
+		}
+		else {
+			magic = 200;
+		}
+	}
 	void removekey(int i) { keys[i] = false; }
 	/*if it returns true it means that link needs to spawn at a checkpoint*/
 	bool damage(int d) {
@@ -43,6 +51,7 @@ public:
 		return false;
 	}
 	/*get*/
+		unsigned int getdif() { return difficulty; }
 		bool haskey(int i) { return keys[i]; }
 		bool isAlive() { return alive; }
 		int getHealth(){return health;}

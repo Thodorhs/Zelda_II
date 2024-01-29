@@ -93,10 +93,10 @@ bool Sprite::CollisionCheck(const Sprite* s) const{
 
 	int offset_s1 = 0;
 	int offset_s2 = 0;
-	if(is_left_attack(currFilm->GetId()))
+	if(s->GetPrevFilmConst() && is_left_attack(currFilm->GetId()))
 		offset_s1 = (GetBox().w - prevFilm->GetFrameBox(prevframeNo).w) * layer_scale;
-
-	if(is_left_attack(s->Get_film_id()))
+	
+	if(s->GetPrevFilmConst() && is_left_attack(s->Get_film_id()))
 		offset_s2= (s2.w - s->GetPrevFilmConst()->GetFrameBox(s->GetPrevFrameNoConst()).w) * layer_scale;
 
 	s1.x = s1.x - layer_viewWin.x * layer_scale - offset_s1;

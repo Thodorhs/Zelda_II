@@ -69,7 +69,7 @@ Animator::OnFinish guma_finish(Animator *animator,FrameRangeAnimation *proj_anim
 
 void proj_collission(Sprite *s1,Sprite *s2)
 {	if(Link::GetSingleton().can_hit(GetSystemTime(), 500)){
-		Link::GetSingleton().damage(6);
+		Link::GetSingleton().damage(Link::GetSingleton().getdif()-2);
 		AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 		pr_info("proj collission");
 	}

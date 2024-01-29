@@ -33,9 +33,10 @@ void init_door_animators(int i, FrameRangeAnimation* door_animation, TileLayer* 
 				layer->get_grid_layer().setGridTile(12, 850, 0);
 				layer->get_grid_layer().setGridTile(13, 850, 0);
 			}
-		dooranimator->Stop();
-        s->Destroy();
-        dooranimator->Destroy();
+		s->SetVisibility(false);
+		//dooranimator->Stop();
+        //s->Destroy();
+        //dooranimator->Destroy();
     });
 }
 
