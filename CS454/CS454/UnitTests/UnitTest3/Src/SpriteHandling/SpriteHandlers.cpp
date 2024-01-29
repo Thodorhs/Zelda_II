@@ -257,7 +257,7 @@ void Wosu_collission(Sprite* s1, Sprite* s2)
 		else if ((film == "Link.Attack.right" || film == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
-		}else if(!Link::GetSingleton().is_Hit()){
+		}else if(Link::GetSingleton().can_hit(GetSystemTime(),1000) ){
 			
 			Link::GetSingleton().damage(8);
 			AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());

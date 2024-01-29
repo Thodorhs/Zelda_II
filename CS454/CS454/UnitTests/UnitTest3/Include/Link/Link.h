@@ -1,6 +1,6 @@
 #pragma once
 #include "../Characters/Character.h"
-
+typedef uint64_t timestamp_t;
 class Link {
 private:
 	Link(void) = default;
@@ -15,6 +15,8 @@ protected:
 	int points = 0;
 	bool alive = true;
 	bool isHit = false;
+	int delay = 200;
+	uint64_t last_time;
 public:
 	/*set*/
 	void setHit(const bool val) { isHit = val; }
@@ -49,7 +51,15 @@ public:
 		bool getKeys() const { return keys; }
 		int getMagic() const { return magic; }
 		
-		void cant_hit(timestamp_t currTime, int ms);
+		bool can_hit(timestamp_t currTime, int ms)
+		{
+			if(!isHit && currTime > last_time+ms)
+			{
+				last_time = currTime;
+				return true;
+			}
+			return false;
+		}
 		static auto GetSingleton(void) -> Link& {
 			return singleton;
 		}

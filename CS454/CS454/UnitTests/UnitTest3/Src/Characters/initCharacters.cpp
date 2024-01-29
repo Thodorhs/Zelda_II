@@ -45,22 +45,26 @@ void guma_char_action(Character *g)
 		gu->ChangeFilm("Guma_right");
 		if(lx-gx>200){
 			an->SetDx(dx);
-			pr->SetDx(dx);
+			//if(pr->GetCurrRep() > 0)
+				//pr->SetDx(dx);
 		}
 		else{
 			an->SetDx(-dx);
-			pr->SetDx(dx);
+			//if (pr->GetCurrRep() > 0)
+				//pr->SetDx(dx);
 		}
 		
 	} else if (lx < gx) {
 		gu->ChangeFilm("Guma_left");
 		if (gx - lx > 200) {
 			an->SetDx(-dx);
-			pr->SetDx(-dx);
+			//if(pr->GetCurrRep()>0)
+				//pr->SetDx(-dx);
 		}
 		else {
 			an->SetDx(dx);
-			pr->SetDx(-dx);
+			//if(pr->GetCurrRep()>0)
+				//pr->SetDx(-dx);
 		}
 	}
 }
@@ -120,7 +124,6 @@ void staflos_char_stop(Character* c)
 
 void staflos_char_action(Character* c)
 {
-
 	auto fall = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_falling");
 	auto mv = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move");
 	auto att = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_attack");

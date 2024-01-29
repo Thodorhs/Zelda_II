@@ -102,7 +102,7 @@ void init_link_animators(TileLayer* layer)
 	MovingAnimator* jump_anim = new MovingAnimator("link.jump", jump);
 	Link_animators.push_back(jump_anim);
 
-	FrameRangeAnimation* link_attack_animation = new FrameRangeAnimation("link.attack", 0, 2, 1, 0, 0, 150);
+	FrameRangeAnimation* link_attack_animation = new FrameRangeAnimation("link.attack", 0, 3, 1, 0, 0, 120);
 	FrameRangeAnimator* link_attack_animator = new FrameRangeAnimator("Link.Attack", link_attack_animation);
 	Link_animators.push_back(link_attack_animator);
 

@@ -112,13 +112,8 @@ void init_wosu_animators(TileLayer* layer) {
 		death->SetOnAction(death->generic_animator_action(g));
 		death->SetOnStart(wosu_damage_start(g, mv, mv_animator));
 		death->SetOnFinish(wosu_damage_finish(g));
-
 	}
-
-
 }
-
-
 
 void init_wosus(TileLayer* layer) {
 	init_wosu_animators(layer);

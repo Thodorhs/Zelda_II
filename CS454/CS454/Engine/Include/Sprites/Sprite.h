@@ -67,6 +67,11 @@ public:
 	}
 
 	AnimationFilm* GetprevFilm() { return prevFilm; }
+
+	const byte GetPrevFrameNoConst() const{ return prevframeNo; }
+
+	const AnimationFilm* GetPrevFilmConst()const { return prevFilm; }
+
 	const SDL_Rect GetBox(void) const
 	{
 		return { x, y, frameBox.w, frameBox.h };
@@ -101,6 +106,8 @@ public:
 		}
 	}
 	byte GetFrame(void) const { return frameNo; }
+
+	const std::string Get_film_id(void)const { return currFilm->GetId(); }
 	
 	auto GetTypeId(void) -> const std::string& { return typeId; }
 
