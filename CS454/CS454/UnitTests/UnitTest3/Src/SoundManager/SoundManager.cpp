@@ -50,5 +50,5 @@ void SoundManager::resume_music() {
 }
 
 void SoundManager::play_sfx(std::string name, int loops, int channel) {
-	Mix_PlayChannel(channel,get_sfx(name), loops);
+	Mix_PlayChannel(-1,get_sfx(name), loops);
 }
