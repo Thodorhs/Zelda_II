@@ -116,7 +116,7 @@ void render_stats(SDL_Renderer* renderer, TileLayer* layer) {
 		}
     }else{
         str = "Game Over";
-        render_str(renderer, layer, str, { 320,200 });
+        render_str(renderer, layer, str, { 240,180 });
 	}
 	
 }

@@ -268,7 +268,9 @@ void create_and_register_sprites(TileLayer* layer)
 
 void Guma_collission(Sprite* s1,Sprite *s2)
 {
-	
+	if (!Link::GetSingleton().isAlive()) {
+		return;
+	}
 	pr_info("guma colision");
 	if(cman.Get_by_Id(s2->GetTypeId(), "Guma") && !cman.Get_by_Id(s2->GetTypeId(),"Guma")->is_Hit() && cman.Get_by_Id(s2->GetTypeId(), "Guma")->IsAlive()){
 		if((s1->GetFilm()->GetId() == "Link.Attack.left"||s1->GetFilm()->GetId() == "Link.Crouch.Attack.left")&&(s2->GetBox().x <= s1->GetBox().x)){
@@ -296,6 +298,9 @@ void Guma_collission(Sprite* s1,Sprite *s2)
 
 void Bot_collission(Sprite* s1, Sprite* s2)
 {
+	if (!Link::GetSingleton().isAlive()) {
+		return;
+	}
 	if (cman.Get_by_Id(s2->GetTypeId(), "Palace_bot")&& !cman.Get_by_Id(s2->GetTypeId(), "Palace_bot")->is_Hit() && cman.Get_by_Id(s2->GetTypeId(), "Palace_bot")->IsAlive()) {
 		if ((s1->GetFilm()->GetId() == "Link.Attack.left" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
@@ -341,6 +346,9 @@ void Bot_collission(Sprite* s1, Sprite* s2)
 }
 void Wosu_collission(Sprite* s1, Sprite* s2)
 {
+	if (!Link::GetSingleton().isAlive()) {
+		return;
+	}
 	std::string film =s1->GetFilm()->GetId();
 	//std::string prevfilm = s1->GetprevFilm()->GetId();
 	if (!cman.Get_by_Id(s2->GetTypeId(), "Wosu")->is_Hit()) {
@@ -390,6 +398,9 @@ void Wosu_collission(Sprite* s1, Sprite* s2)
 }
 void Staflos_collission(Sprite* s1, Sprite* s2)
 {
+	if (!Link::GetSingleton().isAlive()) {
+		return;
+	}
 	if (cman.Get_by_Id(s2->GetTypeId(), "Staflos") && !cman.Get_by_Id(s2->GetTypeId(), "Staflos")->is_Hit() && cman.Get_by_Id(s2->GetTypeId(), "Staflos")->IsAlive()) {
 		if ((s1->GetFilm()->GetId() == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);

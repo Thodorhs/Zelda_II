@@ -329,6 +329,7 @@ void link_shield(TileLayer* layer)
 }
 void game_over_start(Animator* animator) {
 	SoundManager::get_singleton().play_sfx("AOL_Die.wav",0,2);
+	Link::GetSingleton().setHit(true);
 	generic_start(animator);
 
 }

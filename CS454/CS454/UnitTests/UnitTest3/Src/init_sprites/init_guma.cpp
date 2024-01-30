@@ -75,7 +75,11 @@ Animator::OnFinish guma_finish(Animator *animator,FrameRangeAnimation *proj_anim
 }
 
 void proj_collission(Sprite *s1,Sprite *s2)
-{	if(Link::GetSingleton().can_hit(GetSystemTime(), 500)){
+{	
+	if (!Link::GetSingleton().isAlive()) {
+		return;
+	}
+	if(Link::GetSingleton().can_hit(GetSystemTime(), 500)){
 		if (s1->GetFilm()->GetId() == "Link.Crouch.right" && (s2->GetBox().x >= s1->GetBox().x)) {
 			SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 			pr_info("parry");
