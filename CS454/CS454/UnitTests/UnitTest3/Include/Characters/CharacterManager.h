@@ -66,7 +66,7 @@ public:
 	{
 		auto del = GetTypeListNoConst(type).erase(GetTypeListNoConst(type).begin() + delete_index(type, id));
 		//free(*del);
-		Register_to_Dead(*del);
+		//Register_to_Dead(*del);
 	}
 
 

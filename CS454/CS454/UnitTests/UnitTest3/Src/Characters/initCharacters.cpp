@@ -38,7 +38,7 @@ void guma_char_action(Character *g)
 	int lx = li->GetBox().x;
 	int gx = gu->GetBox().x;
 	FrameRangeAnimator* an=dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_move"));
-	FrameRangeAnimator* pr = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_proj"));
+	//FrameRangeAnimator* pr = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_proj"));
 	
 	int dx = 5;
 	if (lx > gx) {
@@ -87,6 +87,8 @@ void bot_char_stop(Character* g)
 
 void bot_char_action(Character* b)
 {
+	if(!b->is_Alive())
+		return;
 	Sprite* li = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 	Sprite* bo = SpriteManager::GetSingleton().Get_sprite_by_id(b->get_id());
 	int lx = li->GetBox().x;

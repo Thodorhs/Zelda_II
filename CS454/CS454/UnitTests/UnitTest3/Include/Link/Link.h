@@ -1,5 +1,8 @@
 #pragma once
 #include "../Characters/Character.h"
+#include "../../../Engine/Include/Util/Print.h"
+#include "../../../Engine/Include/Animators/AnimatorManager.h"
+#include "../../../Engine/Include/Util/SystemClock.h"
 typedef uint64_t timestamp_t;
 class Link {
 private:
@@ -8,9 +11,9 @@ private:
 	Link(Link&&) = delete;
 	static Link singleton;
 protected:
-	unsigned int difficulty = 8;
+	unsigned int difficulty = 13;
 	int health = 100;
-	int lifes = 3;
+	int lifes = 1;
 	int magic = 200;
 	bool keys[4];
 	int points = 0;
@@ -24,8 +27,11 @@ public:
 	/*set*/
 	void use_shield() { 
 		if (magic - 32 >= 0) {
+			pr_info("activating shield");
 			shield = true;
 			magic -= 32;
+		}else{
+			pr_info("Not enough magic");
 		}
 	}
 	void heal(){
@@ -60,6 +66,7 @@ public:
 		}
 		if (health - d < 0) {
 			if (lifes - 1 == 0) {
+				AnimatorManager::GetSingleton().Get_by_Id("game_over")->Start(GetSystemTime());
 				alive = false;
 				return false;
 			}

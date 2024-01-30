@@ -194,6 +194,12 @@ void point_action(Sprite* s1, Sprite* s2) {
 		Link::GetSingleton().addPoints(50);
 	}
 }
+void big_point_action(Sprite* s1, Sprite* s2) {
+	if (InputKeys::GetSingleton().KeyPressed(SDLK_b) && s2->IsVisible()) {
+		s2->SetVisibility(false);
+		Link::GetSingleton().addPoints(200);
+	}
+}
 void blue_pot_action(Sprite* s1, Sprite* s2) {
 	if (InputKeys::GetSingleton().KeyPressed(SDLK_b) && s2->IsVisible()) {
 		s2->SetVisibility(false);
@@ -299,6 +305,14 @@ void Bot_collission(Sprite* s1, Sprite* s2)
 			}
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}else if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
+			if (s1->GetFilm()->GetId() == "Link.Crouch.right" && (s2->GetBox().x >= s1->GetBox().x)) {
+				pr_info("parry");
+				return;
+			}
+			else if (s1->GetFilm()->GetId() == "Link.Crouch.left" && (s2->GetBox().x <= s1->GetBox().x)) {
+				pr_info("parry");
+				return;
+			}
 			Link::GetSingleton().damage(Link::GetSingleton().getdif());
 			if(s1->GetBox().x<=s2->GetBox().x){
 				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(-1);
@@ -336,6 +350,14 @@ void Wosu_collission(Sprite* s1, Sprite* s2)
 			}
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}else if(Link::GetSingleton().can_hit(GetSystemTime(),1000) ){
+			if (s1->GetFilm()->GetId() == "Link.Crouch.right" && (s2->GetBox().x >= s1->GetBox().x)) {
+				pr_info("parry");
+				return;
+			}
+			else if (s1->GetFilm()->GetId() == "Link.Crouch.left" && (s2->GetBox().x <= s1->GetBox().x)) {
+				pr_info("parry");
+				return;
+			}
 			if (s1->GetBox().x <= s2->GetBox().x) {
 				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(-1);
 			}
@@ -363,7 +385,7 @@ void Staflos_collission(Sprite* s1, Sprite* s2)
 			pr_info("damage staflos");
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}
-		else if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
+		if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
 			if (s1->GetFilm()->GetId() == "Link.Crouch.right"&&(s2->GetBox().x >= s1->GetBox().x)) {
 				pr_info("parry");
 				return;

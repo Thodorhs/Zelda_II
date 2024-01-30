@@ -1,7 +1,7 @@
 #include "../../Include/initAnimationsSprites.h"
-std::string left_films[] = { "Link.Attack.left","Link.Run.left","Link.jump.left","Link.falling.left" ,
+std::string left_films[] = { "Link.Attack.left","Link.Run.left","Link.jump.left","Link.falling.left","Link.shield.left" ,
 	"Link.damage.left","Link.Crouch.left","Link.Crouch.Attack.left"};
-std::string right_films[] = { "Link.Attack.right","Link.Run.right","Link.jump.right","Link.falling.right",
+std::string right_films[] = { "Link.Attack.right","Link.Run.right","Link.jump.right","Link.falling.right","Link.shield.right",
 	"Link.damage.right" ,"Link.Crouch.right","Link.Crouch.Attack.left"};
 std::vector<Animator*>Link_animators;
 
@@ -204,14 +204,19 @@ void damage_start(Animator *animator)
 		if(it->Get_ID()!="Link_damage")
 			it->Stop();
 	}
+	auto film = link->GetFilm()->GetId();
 
-	if (is_left(link->GetFilm()->GetId())) {
+	if (is_left(film)) {
+		if (film == "Link.Crouch.left" || film == "Link.Crouch.Attack.left" || "Link.shield.left")
+			link->SetPos(link->GetBox().x, link->GetBox().y - 4 * link->get_layer_scale());
 		link->ChangeFilm("Link.damage.left");
 		link->setCanMove(false);
 		//((FrameRangeAnimator*)animator)->SetDx(1);
 		sc->Start(GetSystemTime());
 	}
 	else {
+		if (film == "Link.Crouch.right" || film == "Link.Crouch.Attack.right" || film=="Link.shield.right")
+			link->SetPos(link->GetBox().x, link->GetBox().y - 4 * link->get_layer_scale());
 		link->ChangeFilm("Link.damage.right");
 		link->setCanMove(false);
 		//((FrameRangeAnimator*)animator)->SetDx(-1);
@@ -304,6 +309,7 @@ void link_damage(TileLayer *layer)
 }
 void shield_start(Animator *animator){
 	Link::GetSingleton().use_shield();
+	AnimatorManager::GetSingleton().Get_by_Id("Link_shield_animation")->Start(GetSystemTime()); 
 	generic_start(animator);
 	
 }
@@ -314,18 +320,75 @@ void shield_finish(Animator *animator) {
 
 void link_shield(TileLayer* layer)
 {
-	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.shield", 0, 1, 1, 0, 0, 10000);
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.shield", 0, 1, 1, 0, 0, 20000);
 	FrameRangeAnimator* animator = new FrameRangeAnimator("Link_shield", fr_animation);
 
 	animator->SetOnAction(animator->generic_animator_action(SpriteManager::GetSingleton().Get_sprite_by_id("Link")));
 	animator->SetOnStart(shield_start);
 	animator->SetOnFinish(shield_finish);
-	Link_animators.push_back(animator);
+	//Link_animators.push_back(animator);
+}
+void game_over_start(Animator* animator) {
+	
+	generic_start(animator);
+
+}
+void game_over_finish(Animator* animator) {
+	generic_stop(animator);
+	InputKeys::GetSingleton().set_is_running(false);
+}
+void game_over(TileLayer* layer)
+{
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("game.over", 0, 1, 1, 0, 0, 4000);
+	FrameRangeAnimator* animator = new FrameRangeAnimator("game_over", fr_animation);
+
+	animator->SetOnAction(animator->generic_animator_action(SpriteManager::GetSingleton().Get_sprite_by_id("Link")));
+	animator->SetOnStart(game_over_start);
+	animator->SetOnFinish(game_over_finish);
+	//Link_animators.push_back(animator);
+}
+
+
+void link_shield_animation_stop(Animator *animator)
+{
+	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+	link->setCanMove(true);
+	link->SetPos(link->GetBox().x, link->GetBox().y -4 * link->get_layer_scale());
+	generic_stop(animator);
+}
+
+void link_shield_animation_start(Animator* animator)
+{
+	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+
+	link->SetPos(link->GetBox().x, link->GetBox().y +4*link->get_layer_scale());
+	auto film = SpriteManager::GetSingleton().Get_sprite_by_id("Link")->GetFilm()->GetId();
+	
+	if(is_left(film))
+		link->ChangeFilm("Link.shield.left");
+	else
+		link->ChangeFilm("Link.shield.right");
+	link->setCanMove(false);
+	generic_start(animator);
+}
+
+void link_shield_animator(TileLayer *layer)
+{
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.shield", 0, 1, 1, 0, 0, 1000);
+	FrameRangeAnimator* animator = new FrameRangeAnimator("Link_shield_animation", fr_animation);
+	animator->SetOnAction(animator->generic_animator_action(SpriteManager::GetSingleton().Get_sprite_by_id("Link")));
+	animator->SetOnStart(link_shield_animation_start);
+	animator->SetOnFinish(link_shield_animation_stop);
+
+
 }
 
 void init_link(TileLayer* layer) {
 	init_link_animators(layer);
 	link_gravity(layer);
 	link_damage(layer);
+	link_shield(layer);
+	game_over(layer);
 	link_att_crouch();
+	link_shield_animator(layer);
 }

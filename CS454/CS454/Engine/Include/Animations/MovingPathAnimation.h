@@ -41,6 +41,11 @@ public:
 		return false;
 	}
 
+	void SetPathDx(int path_index,int val)
+	{
+		path[path_index].dx = val;
+	}
+
 
 	const Path& GetPath(void) const { return path; }
 	void SetPath(const Path& p) { path = p; }

@@ -1,7 +1,8 @@
+#pragma once
 #include "../../Include/initAnimationsSprites.h"
 #include "../../Include/Characters/CharacterManager.h"
 #include "../../Include/Link/Link.h"
-
+#include "../../Include/CreateSprite.h"
 Animator::OnStart staflos_attack_start(Sprite* s) {
 
 	return ([s](Animator* anim)
@@ -125,6 +126,7 @@ Animator::OnAction staflos_death_action( Sprite* g) {
 		{
 			
 			FrameRange_Action_noSet(g, animator, (const FrameRangeAnimation&)anim);
+
 		}
 	);
 }
@@ -151,9 +153,10 @@ Animator::OnStart staflos_death_start(Sprite* g) {
 		}
 	);
 }
-
-Animator::OnFinish staflos_death_finish(Sprite* g) {
-	return ([g](Animator* anim)
+int drops_staflos = 0;
+Animator::OnFinish staflos_death_finish(Sprite* g,TileLayer *layer) {
+	
+	return ([g,layer](Animator* anim)
 		{
 
 			//CharacterManager::GetSingleton().Erase(g->GetTypeId(), "Guma");
@@ -163,6 +166,27 @@ Animator::OnFinish staflos_death_finish(Sprite* g) {
 			auto mv = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_move");
 			auto dmg = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_damage");
 			auto att = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_attack");
+			CollisionChecker& col = CollisionChecker::GetSingleton();
+            SpriteManager& manager = SpriteManager::GetSingleton();
+            Sprite* sprite;
+            int r = rand() % 3;
+            if (r == 0) {
+                sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "blue_pot_default", &drops_staflos, layer);
+                col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_blue_pot_action);
+            }
+            else if (r == 1) {
+                sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "red_pot_default", &drops_staflos, layer);
+                col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_red_pot_action);
+            }
+            else {
+                sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "points_default", &drops_staflos, layer);
+                col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_big_point_action);
+            }
+            if (sprite != nullptr) {
+                SpriteManager::GetSingleton().AddtoMap("drops", sprite);
+				SpriteManager::GetSingleton().AddforDisplay("drops", sprite->GetTypeId());
+                sprite->Move(0, 1);
+            }
 			g->Destroy();
 			mv->Stop();
 			dmg->Stop();
@@ -209,7 +233,7 @@ void init_staflos_animators(TileLayer *layer) {
 
 		death->SetOnAction(staflos_death_action(g));
 		death->SetOnStart(staflos_death_start(g));
-		death->SetOnFinish(staflos_death_finish(g));
+		death->SetOnFinish(staflos_death_finish(g,layer));
 	}
 	
 }

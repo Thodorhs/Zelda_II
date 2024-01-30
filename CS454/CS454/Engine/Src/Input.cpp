@@ -158,7 +158,7 @@ void InputKeys::move() {
 	}
 
 	if (KeyPressed(SDLK_f)) {
-		AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
+		//AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 	}
 
 
@@ -181,7 +181,6 @@ void InputKeys::move() {
     }
     if (KeyPressed(SDLK_1)) {
         if(AnimatorManager::GetSingleton().Get_by_Id("Link_shield")->HasFinished()){
-			pr_info("activating shield");
 			AnimatorManager::GetSingleton().Get_by_Id("Link_shield")->Start(GetSystemTime());
 		}else{
 			pr_info("shield already in use");

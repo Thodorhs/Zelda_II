@@ -25,7 +25,22 @@ public:
 
 	unsigned get_index() { return currRep; }
 
-	
+	unsigned GetCurrRep()const { return currRep; }
+
+	void ChangeDxSign(int sign)
+	{
+		unsigned size = anim->GetReps();
+		for(unsigned int i = 0; i < size; i++)
+		{
+			auto val = anim->GetPathDx(i) * sign;
+			anim->SetPathDx(i, val);
+		}
+	}
+
+	void SetAnimationPath(const std::vector<PathEntry>& p )
+	{
+		anim->SetPath(p);
+	}
 
 
 	MovingPathAnimator(void) = default;
