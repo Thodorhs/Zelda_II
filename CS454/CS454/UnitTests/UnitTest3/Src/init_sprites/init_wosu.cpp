@@ -1,5 +1,7 @@
+#pragma once
 #include "../../Include/initAnimationsSprites.h"
 #include "../../Include/Characters/CharacterManager.h"
+#include "../../Include/CreateSprite.h"
 
 
 Animator::OnStart wosu_start(Sprite* g) {
@@ -38,17 +40,38 @@ Animator::OnFinish wosu_finish_fr(Sprite* g) {
 }
 
 
+int drops_wosu = 0;
+Animator::OnStart wosu_damage_finish(Sprite* g,TileLayer* layer) {
 
-
-
-Animator::OnStart wosu_damage_finish(Sprite* g) {
-
-	return ([g](Animator* anim)
+	return ([g, layer](Animator* anim)
 		{
 			generic_stop(anim);
 			anim->Destroy();
 			CollisionChecker::GetSingleton().Cancel(SpriteManager::GetSingleton().Get_sprite_by_id("Link"), g);
+			CollisionChecker& col = CollisionChecker::GetSingleton();
+            SpriteManager& manager = SpriteManager::GetSingleton();
+            Sprite* sprite;
+            int r = rand() % 3;
+            if (r == 0) {
+                sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "blue_pot_default", &drops_wosu, layer);
+                col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_blue_pot_action);
+            }
+            else if (r == 1) {
+                sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "red_pot_default", &drops_wosu, layer);
+                col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_red_pot_action);
+            }
+            else {
+                sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "points_default", &drops_wosu, layer);
+                col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_point_action);
+            }
+            if (sprite != nullptr) {
+                SpriteManager::GetSingleton().AddtoMap("drops", sprite);
+				SpriteManager::GetSingleton().AddforDisplay("drops", sprite->GetTypeId());
+                sprite->Move(0, 1);
+            }
 			g->Destroy();
+			CharacterManager::GetSingleton().Erase(g->GetTypeId(), "Wosu");
+			anim->Destroy();
 		}
 	);
 }
@@ -68,6 +91,7 @@ Animator::OnStart wosu_damage_start(Sprite* g, FrameRangeAnimator* fr, MovingAni
 	return ([g, mv, fr](Animator* anim)
 		{
 			CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(),"Wosu")->setHit(true);
+			CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(),"Wosu")->set_health(0);
 			mv->Stop();
 			fr->Stop();
 			mv->Destroy();
@@ -111,7 +135,7 @@ void init_wosu_animators(TileLayer* layer) {
 
 		death->SetOnAction(death->generic_animator_action(g));
 		death->SetOnStart(wosu_damage_start(g, mv, mv_animator));
-		death->SetOnFinish(wosu_damage_finish(g));
+		death->SetOnFinish(wosu_damage_finish(g,layer));
 	}
 }
 

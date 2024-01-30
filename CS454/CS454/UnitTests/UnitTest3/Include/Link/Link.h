@@ -1,5 +1,8 @@
 #pragma once
 #include "../Characters/Character.h"
+#include "../../../Engine/Include/Util/Print.h"
+#include "../../../Engine/Include/Animators/AnimatorManager.h"
+#include "../../../Engine/Include/Util/SystemClock.h"
 typedef uint64_t timestamp_t;
 class Link {
 private:
@@ -8,24 +11,46 @@ private:
 	Link(Link&&) = delete;
 	static Link singleton;
 protected:
-	unsigned int difficulty = 8;
+	unsigned int difficulty = 13;
 	int health = 100;
-	int lifes = 3;
+	int lifes = 1;
 	int magic = 200;
 	bool keys[4];
 	int points = 0;
 	bool alive = true;
 	bool isHit = false;
 	int delay = 200;
+	int dps = 8;
 	uint64_t last_time;
+	bool shield = false;
 public:
 	/*set*/
+	void use_shield() { 
+		if (magic - 32 >= 0) {
+			pr_info("activating shield");
+			shield = true;
+			magic -= 32;
+		}else{
+			pr_info("Not enough magic");
+		}
+	}
+	void heal(){
+		if (magic - 70 >= 0) {
+			magic -= 70;
+			if(health +75>=100){
+				health = 100;
+			}else{
+				health += 75;
+			}
+		}
+	}
+	void set_shield(bool s) { shield = s; }
 	void setHit(const bool val) { isHit = val; }
 	const bool is_Hit()const { return isHit; }
 	void addPoints(int newPoints) { points += newPoints; }
 	void addLifes(int newLifes) { lifes += newLifes; }
 	void addKey(int i) { keys[i] = true; }
-	void addMagic(int newMagic) { 
+	void addMagic(int newMagic) {
 		if (magic + newMagic <= 200) {
 			magic += newMagic;
 		}
@@ -36,8 +61,12 @@ public:
 	void removekey(int i) { keys[i] = false; }
 	/*if it returns true it means that link needs to spawn at a checkpoint*/
 	bool damage(int d) {
+		if(shield){
+			d = d / 2;
+		}
 		if (health - d < 0) {
 			if (lifes - 1 == 0) {
+				AnimatorManager::GetSingleton().Get_by_Id("game_over")->Start(GetSystemTime());
 				alive = false;
 				return false;
 			}
@@ -51,14 +80,17 @@ public:
 		return false;
 	}
 	/*get*/
-		unsigned int getdif() { return difficulty; }
-		bool haskey(int i) { return keys[i]; }
-		bool isAlive() { return alive; }
-		int getHealth(){return health;}
-		int getPoints() const { return points; }
-		int getLifes() const { return lifes; }
-		bool getKeys() const { return keys; }
-		int getMagic() const { return magic; }
+
+	int get_dps() { return dps; }
+	unsigned int getdif() { return difficulty; }
+	bool haskey(int i) { return keys[i]; }
+	bool isAlive() { return alive; }
+	int getHealth() { return health; }
+	int getPoints() const { return points; }
+	int getLifes() const { return lifes; }
+	bool getKeys() const { return keys; }
+	int getMagic() const { return magic; }
+	bool getshield() { return shield; }
 		
 		bool can_hit(timestamp_t currTime, int ms)
 		{
@@ -69,6 +101,15 @@ public:
 			}
 			return false;
 		}
+        /*void start_shield(timestamp_t currTime, int ms)
+        {
+            if (shield && currTime > last_time + ms)
+            {
+                last_time = currTime;
+                //return true;
+            }
+            //return false;
+        }*/
 		static auto GetSingleton(void) -> Link& {
 			return singleton;
 		}

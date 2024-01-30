@@ -216,7 +216,7 @@ void init_films() {
 }
 
 void ZeldaApp::Initialise(void) {
-	assert(SDL_Init(SDL_INIT_EVERYTHING) == 0);
+	assert(SDL_Init(SDL_INIT_TIMER || SDL_INIT_VIDEO || SDL_INIT_EVENTS) == 0);
 	if(init_ttf()){
 		printf("Couldn't initialize SDL TTF: %s\n", SDL_GetError());
 		exit(1);

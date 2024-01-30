@@ -3,6 +3,7 @@
 #include "../../UnitTests/UnitTest3/Include/initAnimationsSprites.h"
 #include "../Include/Animators/AnimatorManager.h"
 #include "../Include/Animators/MovingAnimator.h"
+#include "../../UnitTests/UnitTest3/Include/Link/Link.h"
 
 
 
@@ -26,7 +27,8 @@ void InputKeys::init_key_map() {
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_d, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_w, false));
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_b, false));
-
+    pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_h, false));
+    pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_1, false));
 	prevpressed_keys=pressed_keys;
 }
 
@@ -156,7 +158,7 @@ void InputKeys::move() {
 	}
 
 	if (KeyPressed(SDLK_f)) {
-		AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
+		//AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 	}
 
 
@@ -174,6 +176,16 @@ void InputKeys::move() {
 		global_render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size(), Engine_Consts.power) - global_render_vars->ViewWindowR.w;
 		global_render_vars->ViewWindowR.y = MUL_TILE_HEIGHT(GetMapData()->size(), Engine_Consts.power) - global_render_vars->ViewWindowR.h;
 	}
+    if (KeyPressed(SDLK_h)) {
+		Link::GetSingleton().heal();
+    }
+    if (KeyPressed(SDLK_1)) {
+        if(AnimatorManager::GetSingleton().Get_by_Id("Link_shield")->HasFinished()){
+			AnimatorManager::GetSingleton().Get_by_Id("Link_shield")->Start(GetSystemTime());
+		}else{
+			pr_info("shield already in use");
+		}
+    }
 }
 void InputKeys::move_horizon() {
 	//Horizon_Layer->set_dpy_changed();

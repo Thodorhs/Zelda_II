@@ -25,7 +25,7 @@ public:
 		type = "Staflos";
 		Id = id;
 		start_pos = _start_pos;
-		health = 64;
+		health = 32;
 	}
 	
 

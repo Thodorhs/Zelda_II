@@ -12,7 +12,7 @@ bool hasIntersection(Character *c,SDL_Rect v)
 }
 
 void bots(TileLayer* layer){
-	auto bots = m.GetTypeList("Bot");
+	auto bots = m.GetTypeList("Palace_bot");
 	SDL_Rect v = layer->GetViewWindow();
 	v = { v.x * layer->get_scale(), v.y * layer->get_scale(), v.w, v.h };
 	for(auto &g : bots){
@@ -80,10 +80,18 @@ void wosu(TileLayer* layer)
 	}
 }
 
+void destroy_dead()
+{
+	for (auto& it : CharacterManager::GetSingleton().Get_dead())
+		it->Destroy();
+}
+
 
 void progress_ai(TileLayer *layer){
 	guma(layer);
 	bots(layer);
 	staflos(layer);
 	wosu(layer);
+	//destroy_dead();//EXPLODE
+	
 }
