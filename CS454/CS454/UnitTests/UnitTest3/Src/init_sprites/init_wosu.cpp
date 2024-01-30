@@ -2,6 +2,7 @@
 #include "../../Include/initAnimationsSprites.h"
 #include "../../Include/Characters/CharacterManager.h"
 #include "../../Include/CreateSprite.h"
+#include "../../Include/SoundManager/SoundManager.h"
 
 
 Animator::OnStart wosu_start(Sprite* g) {
@@ -45,13 +46,14 @@ Animator::OnStart wosu_damage_finish(Sprite* g,TileLayer* layer) {
 
 	return ([g, layer](Animator* anim)
 		{
+			
 			generic_stop(anim);
 			anim->Destroy();
 			CollisionChecker::GetSingleton().Cancel(SpriteManager::GetSingleton().Get_sprite_by_id("Link"), g);
 			CollisionChecker& col = CollisionChecker::GetSingleton();
             SpriteManager& manager = SpriteManager::GetSingleton();
-            Sprite* sprite;
-            int r = rand() % 3;
+            Sprite* sprite=nullptr;
+            int r = rand() % 15;
             if (r == 0) {
                 sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "blue_pot_default", &drops_wosu, layer);
                 col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_blue_pot_action);
@@ -60,11 +62,12 @@ Animator::OnStart wosu_damage_finish(Sprite* g,TileLayer* layer) {
                 sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "red_pot_default", &drops_wosu, layer);
                 col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_red_pot_action);
             }
-            else {
+            else if (r == 2) {
                 sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "points_default", &drops_wosu, layer);
                 col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_point_action);
             }
             if (sprite != nullptr) {
+				SoundManager::get_singleton().play_sfx("AOL_Item_Drop.wav", 0, 2);
                 SpriteManager::GetSingleton().AddtoMap("drops", sprite);
 				SpriteManager::GetSingleton().AddforDisplay("drops", sprite->GetTypeId());
                 sprite->Move(0, 1);
@@ -90,6 +93,8 @@ Animator::OnStart wosu_damage_start(Sprite* g, FrameRangeAnimator* fr, MovingAni
 
 	return ([g, mv, fr](Animator* anim)
 		{
+			SoundManager::get_singleton().play_sfx("AOL_Sword_Hit.wav", 0, 2);
+			SoundManager::get_singleton().play_sfx("AOL_Kill.wav", 0, 2);
 			CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(),"Wosu")->setHit(true);
 			CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(),"Wosu")->set_health(0);
 			mv->Stop();

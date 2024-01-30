@@ -16,6 +16,7 @@
 #include "../../../Engine/Include/Sprites/CollisionChecker.h"
 #include "../Include/StatPrinting/StatPrinting.h"
 #include "../Include/AI/AI.h"
+#include "../Include/SoundManager/SoundManager.h"
 //#include "../Include/Link/Link.h"
 //std::unique_ptr<_Grid_> grid_class;
 
@@ -29,6 +30,7 @@ TileLayer* Backround_Layer;
 Engine_Consts_t Engine_Consts;
 InputKeys InputKeys::singleton;
 DestructionManager DestructionManager::singleton;
+SoundManager SoundManager::singleton;
 
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
 void animation_handler() {
@@ -216,11 +218,14 @@ void init_films() {
 }
 
 void ZeldaApp::Initialise(void) {
-	assert(SDL_Init(SDL_INIT_TIMER || SDL_INIT_VIDEO || SDL_INIT_EVENTS) == 0);
+	assert(SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) == 0);
+	//assert(Mix_Init() != 0);
+	
 	if(init_ttf()){
 		printf("Couldn't initialize SDL TTF: %s\n", SDL_GetError());
 		exit(1);
 	}
+
 	pr_start_msg();
 
 	pr_info("Initializing configurators..");
@@ -272,6 +277,8 @@ void ZeldaApp::Initialise(void) {
     game.Set_AI(AI);
 	init_films();
 	init_animations_sprites(global_render_vars->myrenderer,Action_Layer);
+	SoundManager::get_singleton().audio_init();
+	SoundManager::get_singleton().play_music("palace1.mp3", 3);
 	InputKeys::GetSingleton().set_is_running(true);
 	pr_info("Done!");
 }

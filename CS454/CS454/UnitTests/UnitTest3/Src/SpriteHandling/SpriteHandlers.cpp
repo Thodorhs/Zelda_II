@@ -4,6 +4,7 @@
 #include "../../../../Engine/Include/GameLoopFuncs/Input.h"
 #include "../../Include/Link/Link.h"
 #include "../../Include/Characters/CharacterManager.h"
+#include "../../Include/SoundManager/SoundManager.h"
 Link Link::singleton;
 std::string crouch_films[] = { "Link.Crouch.left","Link.Crouch.right" };
 std::string jump_films[] = { "Link.jump.left", "Link.jump.right" };
@@ -18,6 +19,7 @@ void elevator_action1(Sprite* s1, Sprite* s2) {
 		auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator1.down");
 		auto l = AnimatorManager::GetSingleton().Get_by_Id("link1.el");
 		if (l->HasFinished() && e->HasFinished()) {
+			SoundManager::get_singleton().play_sfx("AOL_Elevator.wav", 3, 2);
 			pr_info("starting action");
 			l->Start(GetSystemTime());
 			e->Start(GetSystemTime());
@@ -34,6 +36,7 @@ void elevator_action2(Sprite* s1, Sprite* s2) {
 		auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator2.down");
 		auto l = AnimatorManager::GetSingleton().Get_by_Id("link2.el");
 		if (l->HasFinished() && e->HasFinished()) {
+			SoundManager::get_singleton().play_sfx("AOL_Elevator.wav", 3, 2);
 			pr_info("starting action 2");
 			l->Start(GetSystemTime());
 			e->Start(GetSystemTime());
@@ -49,6 +52,7 @@ void elevator_action3(Sprite* s1, Sprite* s2) {
 		auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator3.down");
 		auto l = AnimatorManager::GetSingleton().Get_by_Id("link3.el");
 		if (l->HasFinished() && e->HasFinished()) {
+			SoundManager::get_singleton().play_sfx("AOL_Elevator.wav", 3, 2);
 			pr_info("starting action 3");
 			l->Start(GetSystemTime());
 			e->Start(GetSystemTime());
@@ -65,6 +69,7 @@ void elevator_action4(Sprite* s1, Sprite* s2) {
 		auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator4.down");
 		auto l = AnimatorManager::GetSingleton().Get_by_Id("link4.el");
 		if (l->HasFinished() && e->HasFinished()) {
+			SoundManager::get_singleton().play_sfx("AOL_Elevator.wav", 3, 2);
 			pr_info("starting action 4");
 			l->Start(GetSystemTime());
 			e->Start(GetSystemTime());
@@ -81,6 +86,7 @@ void elevator_action5(Sprite* s1, Sprite* s2) {
 		auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator5.down");
 		auto l = AnimatorManager::GetSingleton().Get_by_Id("link5.el");
 		if (l->HasFinished() && e->HasFinished()) {
+			SoundManager::get_singleton().play_sfx("AOL_Elevator.wav", 3, 2);
 			pr_info("starting action 6");
 			l->Start(GetSystemTime());
 			e->Start(GetSystemTime());
@@ -94,6 +100,7 @@ void elevator_action5(Sprite* s1, Sprite* s2) {
 		auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator5.down_down");
 		auto l = AnimatorManager::GetSingleton().Get_by_Id("link5.el_down");
 		if (l->HasFinished() && e->HasFinished()) {
+			SoundManager::get_singleton().play_sfx("AOL_Elevator.wav", 3, 2);
 			pr_info("starting action 6");
 			l->Start(GetSystemTime());
 			e->Start(GetSystemTime());
@@ -110,6 +117,7 @@ void elevator_action6(Sprite* s1, Sprite* s2) {
 		auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator6.down");
 		auto l = AnimatorManager::GetSingleton().Get_by_Id("link6.el");
 		if (l->HasFinished() && e->HasFinished()) {
+			SoundManager::get_singleton().play_sfx("AOL_Elevator.wav", 3, 2);
 			pr_info("starting action 6");
 			l->Start(GetSystemTime());
 			e->Start(GetSystemTime());
@@ -126,6 +134,7 @@ void elevator_action7(Sprite* s1, Sprite* s2) {
 		auto e = AnimatorManager::GetSingleton().Get_by_Id("elevator7.down");
 		auto l = AnimatorManager::GetSingleton().Get_by_Id("link7.el");
 		if (l->HasFinished() && e->HasFinished()) {
+			SoundManager::get_singleton().play_sfx("AOL_Elevator.wav", 3, 2);
 			pr_info("starting action 6");
 			l->Start(GetSystemTime());
 			e->Start(GetSystemTime());
@@ -138,24 +147,28 @@ void door_action(Sprite* s1, Sprite* s2){
 		if (s2->GetTypeId() == "door1"&& Link::GetSingleton().haskey(0) ) {
 			//CollisionChecker::GetSingleton().Cancel(s1, s2);
 			Link::GetSingleton().removekey(0);
+			SoundManager::get_singleton().play_sfx("AOL_Door.wav", 0, 2);
 			e->Start(GetSystemTime());
 			pr_info("rm key1");
 		}
 		else if (s2->GetTypeId() == "door2" && Link::GetSingleton().haskey(1) ) {
 			//CollisionChecker::GetSingleton().Cancel(s1, s2);
 			pr_info("rm key2");
+			SoundManager::get_singleton().play_sfx("AOL_Door.wav", 0, 2);
 			Link::GetSingleton().removekey(1);
 			e->Start(GetSystemTime());
 		}
 		else if (s2->GetTypeId() == "door3" && Link::GetSingleton().haskey(2) ) {
 			//CollisionChecker::GetSingleton().Cancel(s1, s2);
 			pr_info("rm key3");
+			SoundManager::get_singleton().play_sfx("AOL_Door.wav", 0, 2);
 			Link::GetSingleton().removekey(2);
 			e->Start(GetSystemTime());
 		}
 		else if (s2->GetTypeId() == "door4" && Link::GetSingleton().haskey(3) ) {
 			//CollisionChecker::GetSingleton().Cancel(s1, s2);
 			pr_info("rm key4");
+			SoundManager::get_singleton().play_sfx("AOL_Door.wav", 0, 2);
 			Link::GetSingleton().removekey(3);
 			e->Start(GetSystemTime());
 		}
@@ -306,10 +319,12 @@ void Bot_collission(Sprite* s1, Sprite* s2)
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}else if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
 			if (s1->GetFilm()->GetId() == "Link.Crouch.right" && (s2->GetBox().x >= s1->GetBox().x)) {
+				SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 				pr_info("parry");
 				return;
 			}
 			else if (s1->GetFilm()->GetId() == "Link.Crouch.left" && (s2->GetBox().x <= s1->GetBox().x)) {
+				SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 				pr_info("parry");
 				return;
 			}
@@ -351,10 +366,12 @@ void Wosu_collission(Sprite* s1, Sprite* s2)
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}else if(Link::GetSingleton().can_hit(GetSystemTime(),1000) ){
 			if (s1->GetFilm()->GetId() == "Link.Crouch.right" && (s2->GetBox().x >= s1->GetBox().x)) {
+				SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 				pr_info("parry");
 				return;
 			}
 			else if (s1->GetFilm()->GetId() == "Link.Crouch.left" && (s2->GetBox().x <= s1->GetBox().x)) {
+				SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 				pr_info("parry");
 				return;
 			}
@@ -387,10 +404,12 @@ void Staflos_collission(Sprite* s1, Sprite* s2)
 		}
 		if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
 			if (s1->GetFilm()->GetId() == "Link.Crouch.right"&&(s2->GetBox().x >= s1->GetBox().x)) {
+				SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 				pr_info("parry");
 				return;
 			}
 			else if (s1->GetFilm()->GetId() == "Link.Crouch.left" && (s2->GetBox().x <= s1->GetBox().x)) {
+				SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 				pr_info("parry"); 
 				return;
 			}
@@ -404,6 +423,9 @@ void Staflos_collission(Sprite* s1, Sprite* s2)
 				Link::GetSingleton().damage(Link::GetSingleton().getdif()+2);
 				AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 			}	
+		}
+		if (s1->GetFilm()->GetId() == "Link.Attack.right" || s1->GetFilm()->GetId() == "Link.Attack.left") {
+			SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 		}
 	}
 	pr_info("Coll with staflos");

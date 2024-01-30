@@ -47,10 +47,6 @@ Animator::OnAction link_fr_action(Sprite* s) {
 	);
 }
 
-
-
-
-
 void init_link_move_animator(TileLayer* layer)
 {
 	auto scale = layer->get_scale();
@@ -106,9 +102,10 @@ void init_link_animators(TileLayer* layer)
 	FrameRangeAnimator* link_attack_animator = new FrameRangeAnimator("Link.Attack", link_attack_animation);
 	Link_animators.push_back(link_attack_animator);
 
+	//SoundManager s = SoundManager::get_singleton();
 	animator_init(Link, link_attack_animator, link_attack_animation, [animator, Link, link_attack_animator]()
 		{
-
+			//SoundManager::get_singleton().play_sfx("AOL_Sword.wav", 0, 2);
 			animator->Stop();
 
 			if (is_left(Link->GetFilm()->GetId())) {
@@ -193,6 +190,7 @@ void link_gravity(TileLayer* layer) {
 }
 
 #include "../../Include/Link/Link.h"
+#include "../../Include/SoundManager/SoundManager.h"
 
 void damage_start(Animator *animator)
 {
@@ -243,6 +241,7 @@ void damage_stop(Animator *animator)
 
 void crouch_att_start(Animator *animator)
 {
+	SoundManager::get_singleton().play_sfx("AOL_Sword.wav", 0, 2);
 	AnimatorManager::GetSingleton().Get_by_Id("Link")->Stop();
 	auto Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 	auto id = Link->GetFilm()->GetId();
@@ -329,7 +328,7 @@ void link_shield(TileLayer* layer)
 	//Link_animators.push_back(animator);
 }
 void game_over_start(Animator* animator) {
-	
+	SoundManager::get_singleton().play_sfx("AOL_Die.wav",0,2);
 	generic_start(animator);
 
 }
@@ -359,6 +358,7 @@ void link_shield_animation_stop(Animator *animator)
 
 void link_shield_animation_start(Animator* animator)
 {
+	SoundManager::get_singleton().play_sfx("AOL_Spell.wav", 0, 2);
 	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 
 	link->SetPos(link->GetBox().x, link->GetBox().y +4*link->get_layer_scale());

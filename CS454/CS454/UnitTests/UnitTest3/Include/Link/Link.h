@@ -3,6 +3,7 @@
 #include "../../../Engine/Include/Util/Print.h"
 #include "../../../Engine/Include/Animators/AnimatorManager.h"
 #include "../../../Engine/Include/Util/SystemClock.h"
+#include "../SoundManager/SoundManager.h"
 typedef uint64_t timestamp_t;
 class Link {
 private:
@@ -35,6 +36,7 @@ public:
 		}
 	}
 	void heal(){
+		SoundManager::get_singleton().play_sfx("AOL_Spell.wav", 0, 2);
 		if (magic - 70 >= 0) {
 			magic -= 70;
 			if(health +75>=100){
@@ -77,6 +79,13 @@ public:
 			}
 		}
 		health = health - d;
+		if (health <= 25) {
+			SoundManager::get_singleton().play_sfx("AOL_LowHealth.wav", 0, 2);
+		}
+		else {
+			SoundManager::get_singleton().play_sfx("AOL_Hurt.wav", 0, 2);
+		}
+
 		return false;
 	}
 	/*get*/

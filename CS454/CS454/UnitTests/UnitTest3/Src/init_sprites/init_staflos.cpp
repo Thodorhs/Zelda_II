@@ -80,6 +80,7 @@ Animator::OnStart staflos_damage_start(Sprite* g, FrameRangeAnimator* mv) {
 
 	return ([g, mv](Animator* anim)
 		{
+			SoundManager::get_singleton().play_sfx("AOL_Sword_Hit.wav", 0, 2);
 			mv->Stop();
 			auto c = CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(), "Staflos");
 			c->setHit(true);
@@ -138,6 +139,7 @@ Animator::OnStart staflos_death_start(Sprite* g) {
 
 	return ([g](Animator* anim)
 		{
+			SoundManager::get_singleton().play_sfx("AOL_Kill.wav", 0, 2);
 			CollisionChecker::GetSingleton().Cancel(SpriteManager::GetSingleton().Get_sprite_by_id("Link"), g);
 			Link::GetSingleton().addPoints(30);
 			auto mv = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_move");
@@ -168,8 +170,8 @@ Animator::OnFinish staflos_death_finish(Sprite* g,TileLayer *layer) {
 			auto att = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_attack");
 			CollisionChecker& col = CollisionChecker::GetSingleton();
             SpriteManager& manager = SpriteManager::GetSingleton();
-            Sprite* sprite;
-            int r = rand() % 3;
+			Sprite* sprite = nullptr;
+            int r = rand() % 15;
             if (r == 0) {
                 sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "blue_pot_default", &drops_staflos, layer);
                 col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_blue_pot_action);
@@ -178,11 +180,12 @@ Animator::OnFinish staflos_death_finish(Sprite* g,TileLayer *layer) {
                 sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "red_pot_default", &drops_staflos, layer);
                 col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_red_pot_action);
             }
-            else {
+            else if (r == 2) {
                 sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "points_default", &drops_staflos, layer);
                 col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_big_point_action);
             }
             if (sprite != nullptr) {
+				SoundManager::get_singleton().play_sfx("AOL_Item_Drop.wav", 0, 2);
                 SpriteManager::GetSingleton().AddtoMap("drops", sprite);
 				SpriteManager::GetSingleton().AddforDisplay("drops", sprite->GetTypeId());
                 sprite->Move(0, 1);

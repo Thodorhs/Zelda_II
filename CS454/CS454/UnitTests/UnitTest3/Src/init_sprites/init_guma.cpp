@@ -6,6 +6,7 @@
 #include "../../Include/Characters/Guma.h"
 #include "../../Include/Link/Link.h"
 #include "../../Include/CreateSprite.h"
+#include "../../Include/SoundManager/SoundManager.h"
 
 std::vector<PathEntry> left_path;
 std::vector<PathEntry> right_path;
@@ -76,10 +77,12 @@ Animator::OnFinish guma_finish(Animator *animator,FrameRangeAnimation *proj_anim
 void proj_collission(Sprite *s1,Sprite *s2)
 {	if(Link::GetSingleton().can_hit(GetSystemTime(), 500)){
 		if (s1->GetFilm()->GetId() == "Link.Crouch.right" && (s2->GetBox().x >= s1->GetBox().x)) {
+			SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 			pr_info("parry");
 			return;
 		}
 		else if (s1->GetFilm()->GetId() == "Link.Crouch.left" && (s2->GetBox().x <= s1->GetBox().x)) {
+			SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
 			pr_info("parry");
 			return;
 		}
@@ -138,6 +141,7 @@ Animator::OnStart guma_damage_start( Sprite* g,FrameRangeAnimator *mv) {
 
 	return ([g,mv](Animator* anim)
 		{
+			SoundManager::get_singleton().play_sfx("AOL_Sword_Hit.wav", 0, 2);
 			mv->Stop();
 			auto c = CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(), "Guma");
 			c->setHit(true);
@@ -184,6 +188,7 @@ Animator::OnStart guma_death_start(Sprite* g,TileLayer *layer) {
 
 	return ([g,layer](Animator* anim)
 		{
+			SoundManager::get_singleton().play_sfx("AOL_Kill.wav", 0, 2);
 			Link::GetSingleton().addPoints(50);
 			auto mv = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_move");
 			auto dmg = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_damage");
@@ -212,8 +217,8 @@ Animator::OnFinish guma_death_finish(Sprite* g,TileLayer *layer) {
 			auto dmg = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_damage");
 			CollisionChecker& col = CollisionChecker::GetSingleton();
 			SpriteManager& manager = SpriteManager::GetSingleton();
-			Sprite* sprite;
-			int r = rand() % 3;
+			Sprite* sprite = nullptr;
+			int r = rand() % 15;
 			if (r == 0) {
 				sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "blue_pot_default", &drops_guma, layer);
 				col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_blue_pot_action);
@@ -222,7 +227,7 @@ Animator::OnFinish guma_death_finish(Sprite* g,TileLayer *layer) {
 				sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "red_pot_default", &drops_guma, layer);
 				col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_red_pot_action);
 			}
-			else {
+			else if (r == 2) {
 				sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "points_default", &drops_guma, layer);
 				col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_big_point_action);
 			}

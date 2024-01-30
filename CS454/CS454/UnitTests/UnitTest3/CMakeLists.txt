@@ -5,6 +5,7 @@ cmake_minimum_required (VERSION 3.8)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_image REQUIRED)
 find_package(SDL2_ttf REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 #Add source to this project's executable.
 set(SDL2_TTF_INCLUDE_DIR "../../${CMAKE_CURRENT_SOURCE_DIR}/SDL2_ttf-2.22.0/include")
 
@@ -54,9 +55,9 @@ add_executable(UnitTest3
  "Include/Characters/Staflos.h"
  "Include/Characters/Wosu.h"
 "../../Engine/Src/Animators/MovingPathAnimator.cpp"
-"Src/CreateSprite.cpp")
+"Src/CreateSprite.cpp" "Src/SoundManager/SoundManager.cpp")
 
-target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf)
+target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SDL2_mixer::SDL2_mixer)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET UnitTest3  PROPERTY CXX_STANDARD 20)
