@@ -218,16 +218,16 @@ Animator::OnFinish guma_death_finish(Sprite* g,TileLayer *layer) {
 			CollisionChecker& col = CollisionChecker::GetSingleton();
 			SpriteManager& manager = SpriteManager::GetSingleton();
 			Sprite* sprite = nullptr;
-			int r = rand() % 15;
+			int r = rand() % 23;
 			if (r == 0) {
 				sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "blue_pot_default", &drops_guma, layer);
 				col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_blue_pot_action);
 			}
-			else if (r == 1) {
+			else if (r == 12) {
 				sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "red_pot_default", &drops_guma, layer);
 				col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_red_pot_action);
 			}
-			else if (r == 2) {
+			else if (r == 18) {
 				sprite = create_drop_sprite(g, AnimationFilmHolder::getInstance(), "points_default", &drops_guma, layer);
 				col.Register(manager.Get_sprite_by_id("Link"), sprite, drop_big_point_action);
 			}

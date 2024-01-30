@@ -147,10 +147,14 @@ void InputKeys::move() {
 
 		if(anim->HasFinished() && j->HasFinished() && fall->HasFinished() && anim_cr->HasFinished())
 		{
-			if (isCrouched(link))
+			if (isCrouched(link)) {
 				anim_cr->Start(GetSystemTime());
-			else
+			}
+			else {
+				SoundManager::get_singleton().play_sfx("AOL_Sword.wav", 0, 2);
 				anim->Start(GetSystemTime());
+			}
+				
 		}
 	}
 	if (KeyPressed(SDLK_LEFT) || KeyDown(SDLK_LEFT)) {
