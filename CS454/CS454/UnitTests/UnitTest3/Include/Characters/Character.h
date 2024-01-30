@@ -31,6 +31,9 @@ public:
 	const bool is_Active() { return isActive; }
 	const bool is_Running() { return isRunning; }
 	const bool is_Alive() { return health > 0; }
+
+
+
 	void setActive(const bool val) { isActive = val; }
 	const bool is_Hit()const { return isHit; }
 	void setHit(const bool val) { isHit = val; }
@@ -38,6 +41,7 @@ public:
 	const std::string get_id() { return Id; }
 	const std::string get_type() { return type; }
 	const int get_health() { return health; }
+	void set_health(int val) { health=val; }
 	SDL_Point get_start_pos() { return start_pos; }
 
 
@@ -50,6 +54,7 @@ public:
 	Character(void) = default;
 	Character(std::string id) : Id(std::move(id)){}
 	Character(std::string id,std::string type) : Id(std::move(id)), type(std::move(type)){}
+
 	
 	Character(const Character&) = delete;
 	Character(Character&&) = delete;

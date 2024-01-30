@@ -208,13 +208,13 @@ void damage_start(Animator *animator)
 	if (is_left(link->GetFilm()->GetId())) {
 		link->ChangeFilm("Link.damage.left");
 		link->setCanMove(false);
-		((FrameRangeAnimator*)animator)->SetDx(1);
+		//((FrameRangeAnimator*)animator)->SetDx(1);
 		sc->Start(GetSystemTime());
 	}
 	else {
 		link->ChangeFilm("Link.damage.right");
 		link->setCanMove(false);
-		((FrameRangeAnimator*)animator)->SetDx(-1);
+		//((FrameRangeAnimator*)animator)->SetDx(-1);
 		sc_l->Start(GetSystemTime());
 	}
 	generic_start(animator);
@@ -279,7 +279,7 @@ Animator::OnAction link_crattack_action(Sprite* s) {
 
 void link_att_crouch()
 {
-	FrameRangeAnimation* link_attack_animation = new FrameRangeAnimation("link.attack", 0, 1, 1, 0, 0, 105);
+	FrameRangeAnimation* link_attack_animation = new FrameRangeAnimation("link.attack", 0, 3, 1, 0, 0, 90);
 	FrameRangeAnimator* link_attack_animator = new FrameRangeAnimator("Link.Attack.Crouch", link_attack_animation);
 	Link_animators.push_back(link_attack_animator);
 	auto Link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
@@ -302,7 +302,26 @@ void link_damage(TileLayer *layer)
 	animator->SetOnFinish(damage_stop);
 	Link_animators.push_back(animator);
 }
+void shield_start(Animator *animator){
+	Link::GetSingleton().use_shield();
+	generic_start(animator);
+	
+}
+void shield_finish(Animator *animator) {
+	Link::GetSingleton().set_shield(false);
+	generic_stop(animator);
+}
 
+void link_shield(TileLayer* layer)
+{
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("link.shield", 0, 1, 1, 0, 0, 10000);
+	FrameRangeAnimator* animator = new FrameRangeAnimator("Link_shield", fr_animation);
+
+	animator->SetOnAction(animator->generic_animator_action(SpriteManager::GetSingleton().Get_sprite_by_id("Link")));
+	animator->SetOnStart(shield_start);
+	animator->SetOnFinish(shield_finish);
+	Link_animators.push_back(animator);
+}
 
 void init_link(TileLayer* layer) {
 	init_link_animators(layer);

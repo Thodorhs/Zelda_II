@@ -52,7 +52,9 @@ Animator::OnStart guma_start(Animator *animator,FrameRangeAnimation *proj_anim,S
 
 	return ([proj_anim,g,layer](Animator *anim)
 		{
-		
+
+			if (!CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(), "Guma")->is_Alive())
+				return;
 			generic_start(anim);
 		}
 	);
@@ -114,14 +116,22 @@ Animator::OnStart guma_damage_start( Sprite* g,FrameRangeAnimator *mv) {
 	return ([g,mv](Animator* anim)
 		{
 			mv->Stop();
-			CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(),"Guma")->setHit(true);
+			auto c = CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(), "Guma");
+			c->setHit(true);
 			auto film = g->GetFilm()->GetId();
-			if (film == "Guma_left")
-				((MovingAnimator*)anim)->SetDx(10);
-			else
-				((MovingAnimator*)anim)->SetDx(-10);
-			
-			generic_start(anim);
+			auto health = c->get_health() - Link::GetSingleton().get_dps();
+			c->set_health(health);
+			if (health <= 0) {
+				AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_death")->Start(GetSystemTime());
+			}
+			else {
+				if (film == "Guma_left")
+					((MovingAnimator*)anim)->SetDx(10);
+				else
+					((MovingAnimator*)anim)->SetDx(-10);
+
+				generic_start(anim);
+			}
 		}
 	);
 }
@@ -133,13 +143,62 @@ Animator::OnFinish guma_damage_finish( Sprite* g) {
 			auto c = CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(), "Guma");
 			
 			generic_stop(anim);
-			if (c->is_Hit()) {
+			if (!c->is_Alive())
+				return;
+			if (c->is_Hit() ) {
 				c->setHit(false);
 				AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_move")->Start(GetSystemTime());
 			}
 		}
 	);
 }
+
+
+
+
+
+Animator::OnStart guma_death_start(Sprite* g) {
+
+	return ([g](Animator* anim)
+		{
+			Link::GetSingleton().addPoints(50);
+			auto mv = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_move");
+			auto dmg = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_damage");
+			g->ChangeFilm("death_default");
+			g->GetGravityHandler().set_gravity_addicted(false);
+			mv->Stop();
+			dmg->Stop();
+			//mv->Destroy();
+			//dmg->Destroy();
+			generic_start(anim);
+		}
+	);
+}
+
+Animator::OnFinish guma_death_finish(Sprite* g) {
+	return ([g](Animator* anim)
+		{
+
+			CharacterManager::GetSingleton().Erase(g->GetTypeId(), "Guma");
+			CollisionChecker::GetSingleton().Cancel(SpriteManager::GetSingleton().Get_sprite_by_id("Link"), g);
+			generic_stop(anim);
+			anim->Destroy();
+			auto mv = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_move");
+			auto dmg = AnimatorManager::GetSingleton().Get_by_Id(g->GetTypeId() + "_damage");
+			g->Destroy();
+			mv->Stop();
+			dmg->Stop();
+			mv->Destroy();
+			dmg->Destroy();
+		
+		}
+	);
+}
+
+
+
+
+
 
 
 
@@ -175,12 +234,16 @@ void init_guma_animators(TileLayer* layer) {
 
 	MovingPathAnimation *path = new MovingPathAnimation("path", my_path, my_path.size());
 
-
+	FrameRangeAnimation* fr_death = new FrameRangeAnimation("guma.death", 0, 5, 1, 0, 0, 100);
 
 	for (auto& g : Gumas) {
 		
 		MovingAnimator* damage_animator = new MovingAnimator(g->GetTypeId() + "_damage", (MovingAnimation*)damage_an->Clone());
-		FrameRangeAnimator* mv = new FrameRangeAnimator(g->GetTypeId()+"_move", (FrameRangeAnimation*)fr_guma->Clone());
+		
+		FrameRangeAnimator* death = new FrameRangeAnimator(g->GetTypeId() + "_death", (FrameRangeAnimation*)fr_death->Clone());
+
+		FrameRangeAnimator* mv = new FrameRangeAnimator(g->GetTypeId() + "_move", (FrameRangeAnimation*)fr_guma->Clone());
+
 		mv->SetOnAction(guma_action((MovingPathAnimation*)path->Clone(),g,layer));
 		mv->SetOnStart(generic_start);
 		mv->SetOnFinish(generic_stop);
@@ -188,6 +251,10 @@ void init_guma_animators(TileLayer* layer) {
 		damage_animator->SetOnAction(damage_animator->generic_animator_action(g));
 		damage_animator->SetOnStart(guma_damage_start(g,mv));
 		damage_animator->SetOnFinish(guma_damage_finish(g));
+
+		death->SetOnAction(death->generic_animator_action(g));
+		death->SetOnStart(guma_death_start(g));
+		death->SetOnFinish(guma_death_finish(g));
 
 	}
 	

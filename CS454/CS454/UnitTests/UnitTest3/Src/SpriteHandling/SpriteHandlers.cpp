@@ -251,14 +251,25 @@ void Guma_collission(Sprite* s1,Sprite *s2)
 {
 	
 	pr_info("guma colision");
-	if( !cman.Get_by_Id(s2->GetTypeId(),"Guma")->is_Hit() ){
+	if(cman.Get_by_Id(s2->GetTypeId(), "Guma") && !cman.Get_by_Id(s2->GetTypeId(),"Guma")->is_Hit() && cman.Get_by_Id(s2->GetTypeId(), "Guma")->IsAlive()){
 		if((s1->GetFilm()->GetId() == "Link.Attack.left"||s1->GetFilm()->GetId() == "Link.Crouch.Attack.left")&&(s2->GetBox().x <= s1->GetBox().x)){
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			//cman.Get_by_Id(s2->GetTypeId())->
+			if(s1->GetBox().x<=s2->GetBox().x){
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(1);
+			} else {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(-1);
+			}
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}
 		else if ((s1->GetFilm()->GetId() == "Link.Attack.right"||s1->GetFilm()->GetId() == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			if (s1->GetBox().x <= s2->GetBox().x) {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(1);
+			}
+			else {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(-1);
+			}
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}
 	}
@@ -266,17 +277,34 @@ void Guma_collission(Sprite* s1,Sprite *s2)
 
 void Bot_collission(Sprite* s1, Sprite* s2)
 {
-	if (!cman.Get_by_Id(s2->GetTypeId(), "Bot")->is_Hit()) {
+	if (cman.Get_by_Id(s2->GetTypeId(), "Palace_bot")&& !cman.Get_by_Id(s2->GetTypeId(), "Palace_bot")->is_Hit() && cman.Get_by_Id(s2->GetTypeId(), "Palace_bot")->IsAlive()) {
 		if ((s1->GetFilm()->GetId() == "Link.Attack.left" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			//cman.Get_by_Id(s2->GetTypeId())->
+			if (s1->GetBox().x <= s2->GetBox().x) {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(1);
+			}
+			else {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(-1);
+			}
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}
 		else if ((s1->GetFilm()->GetId() == "Link.Attack.right" || s1->GetFilm()->GetId() == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			if (s1->GetBox().x <= s2->GetBox().x) {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(1);
+			}
+			else {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(-1);
+			}
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}else if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
 			Link::GetSingleton().damage(Link::GetSingleton().getdif());
+			if(s1->GetBox().x<=s2->GetBox().x){
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(-1);
+			} else {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(1);
+			}
 			AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 		}
 	}
@@ -290,13 +318,30 @@ void Wosu_collission(Sprite* s1, Sprite* s2)
 		if ((film == "Link.Attack.left" || film == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			//cman.Get_by_Id(s2->GetTypeId())->
+			if (s1->GetBox().x <= s2->GetBox().x) {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(1);
+			}
+			else {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(-1);
+			}
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}
 		else if ((film == "Link.Attack.right" || film == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
+			if (s1->GetBox().x <= s2->GetBox().x) {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(1);
+			}
+			else {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage"))->SetDx(-1);
+			}
 			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}else if(Link::GetSingleton().can_hit(GetSystemTime(),1000) ){
-			
+			if (s1->GetBox().x <= s2->GetBox().x) {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(-1);
+			}
+			else {
+				((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(1);
+			}
 			Link::GetSingleton().damage(Link::GetSingleton().getdif());
 			AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 		}
@@ -306,17 +351,17 @@ void Wosu_collission(Sprite* s1, Sprite* s2)
 }
 void Staflos_collission(Sprite* s1, Sprite* s2)
 {
-	if (!cman.Get_by_Id(s2->GetTypeId(), "Staflos")->is_Hit()) {
+	if (cman.Get_by_Id(s2->GetTypeId(), "Staflos") && !cman.Get_by_Id(s2->GetTypeId(), "Staflos")->is_Hit() && cman.Get_by_Id(s2->GetTypeId(), "Staflos")->IsAlive()) {
 		if ((s1->GetFilm()->GetId() == "Link.Crouch.Attack.left") && (s2->GetBox().x <= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			//cman.Get_by_Id(s2->GetTypeId())->
 			pr_info("damage staflos");
-			//AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}
 		else if (( s1->GetFilm()->GetId() == "Link.Crouch.Attack.right") && (s2->GetBox().x >= s1->GetBox().x)) {
 			//cman.Get_by_Id(s2->GetTypeId())->setHit(true);
 			pr_info("damage staflos");
-			//AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+			AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
 		}
 		else if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
 			if (s1->GetFilm()->GetId() == "Link.Crouch.right"&&(s2->GetBox().x >= s1->GetBox().x)) {
@@ -328,6 +373,12 @@ void Staflos_collission(Sprite* s1, Sprite* s2)
 				return;
 			}
 			else if (s2->GetFilm()->GetId() == "Staflos.attack.right" || s2->GetFilm()->GetId() == "Staflos.attack.left" || s2->GetFilm()->GetId() == "Staflos.fall") {
+				if (s1->GetBox().x <= s2->GetBox().x) {
+					((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(-1);
+				}
+				else {
+					((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(1);
+				}
 				Link::GetSingleton().damage(Link::GetSingleton().getdif()+2);
 				AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 			}	

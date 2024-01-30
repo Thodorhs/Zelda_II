@@ -10,8 +10,8 @@ public:
 	static CollisionChecker singleton;
 protected:
 	using Entry = std::tuple<Sprite*, Sprite*, Action>;
-	std::list<Entry> entries;
-	auto Find(Sprite* s1, Sprite* s2) -> std::list<Entry>::iterator;
+	std::vector<Entry> entries;
+	auto Find(Sprite* s1, Sprite* s2) -> std::vector<Entry>::iterator;
 public:
 	void Register(Sprite* s1, Sprite* s2, const Action& f)
 	{

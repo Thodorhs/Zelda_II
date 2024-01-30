@@ -22,9 +22,9 @@ public:
 
 	PalaceBot(const std::string& id, const SDL_Point _start_pos)
 	{
-		type = "Bot";
+		type = "Palace_bot";
 		Id = id;
 		start_pos = _start_pos;
-		health = 64;
+		health = 16;
 	}
 };

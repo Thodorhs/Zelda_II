@@ -49,6 +49,9 @@ Animator::OnStart wosu_damage_finish(Sprite* g) {
 			anim->Destroy();
 			CollisionChecker::GetSingleton().Cancel(SpriteManager::GetSingleton().Get_sprite_by_id("Link"), g);
 			g->Destroy();
+
+			CharacterManager::GetSingleton().Erase(g->GetTypeId(), "Wosu");
+			anim->Destroy();
 		}
 	);
 }
@@ -68,6 +71,7 @@ Animator::OnStart wosu_damage_start(Sprite* g, FrameRangeAnimator* fr, MovingAni
 	return ([g, mv, fr](Animator* anim)
 		{
 			CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(),"Wosu")->setHit(true);
+			CharacterManager::GetSingleton().Get_by_Id(g->GetTypeId(),"Wosu")->set_health(0);
 			mv->Stop();
 			fr->Stop();
 			mv->Destroy();

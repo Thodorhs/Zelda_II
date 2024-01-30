@@ -26,12 +26,12 @@ void guma_char_start(Character *g)
 void guma_char_stop(Character *g)
 {
 	AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_move")->Destroy();
-	g->Destroy();
+	//g->Destroy();
 }
 
 void guma_char_action(Character *g)
 {
-	if(g->is_Hit())
+	if(g->is_Hit() || !g->is_Alive())
 		return;
 	Sprite* li = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 	Sprite* gu = SpriteManager::GetSingleton().Get_sprite_by_id(g->get_id());
@@ -82,7 +82,7 @@ void bot_char_start(Character* g)
 void bot_char_stop(Character* g)
 {
 	AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_move")->Destroy();
-	g->Destroy();
+	//g->Destroy();
 }
 
 void bot_char_action(Character* b)
@@ -119,17 +119,19 @@ void staflos_char_start(Character* c)
 void staflos_char_stop(Character* c)
 {
 	AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move")->Destroy();
-	c->Destroy();
+	//c->Destroy();
 }
 
 void staflos_char_action(Character* c)
 {
+	if(!c->is_Alive())
+		return;
 	auto fall = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_falling");
 	auto mv = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move");
 	auto att = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_attack");
 	Sprite* li = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 	Sprite* st = SpriteManager::GetSingleton().Get_sprite_by_id(c->get_id());
-	if(fall->HasFinished() && mv->HasFinished() && att->HasFinished() && !c->is_Hit()){
+	if(fall->HasFinished() && mv->HasFinished() && att->HasFinished() && !c->is_Hit() ){
 		AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move")->Start(GetSystemTime());
 		FrameRangeAnimator* an = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move"));
 		FrameRangeAnimator* attack = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_attack"));
@@ -140,7 +142,7 @@ void staflos_char_action(Character* c)
 		if (lx > sx) {
 		st->ChangeFilm("Staflos.walk.right");
 			if(lx-sx<80){
-				if (rand() % 4 == 1) {
+				if (rand() % 2 == 1) {
 					attack->SetDx(dx);
 					attack->Start(GetSystemTime());
 				}
@@ -151,7 +153,7 @@ void staflos_char_action(Character* c)
 		else if (lx < sx) {
 		st->ChangeFilm("Staflos.walk.left");
 			if (sx-lx<80) {
-				if (rand() % 4 == 1) {
+				if (rand() % 2 == 1) {
 					attack->SetDx(-dx);
 					attack->Start(GetSystemTime());
 				}
@@ -177,7 +179,7 @@ void wosu_char_start(Character* g)
 void wosu_char_stop(Character* g)
 {
 	AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_move")->Destroy();
-	g->Destroy();
+	//g->Destroy();
 }
 
 void wosu_char_action(Character* b)

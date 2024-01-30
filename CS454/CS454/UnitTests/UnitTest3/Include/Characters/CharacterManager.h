@@ -10,6 +10,7 @@ class CharacterManager {
 private:
 	
 	Type_List Character_map;
+	Char_list dead_chars;
 
 	CharacterManager(void) = default;
 	CharacterManager(const CharacterManager&) = delete;
@@ -17,7 +18,12 @@ private:
 	static CharacterManager singleton;
 
 public:
-	
+	void Register_to_Dead(Character *c)
+	{
+		dead_chars.push_back(c);
+	}
+
+	Char_list Get_dead() { return dead_chars; }
 
 	void Register(Character* character,const std::string &id) {
 		assert(character);
@@ -25,6 +31,11 @@ public:
 	}
 
 	auto GetTypeList(const std::string& typeId) -> const Char_list&
+	{
+		return Character_map[typeId];
+	}
+
+	auto GetTypeListNoConst(const std::string& typeId) ->  Char_list&
 	{
 		return Character_map[typeId];
 	}
@@ -38,6 +49,26 @@ public:
 		}
 		return nullptr;
 	}
+
+	int delete_index(const std::string& type,const std::string &id)
+	{
+		auto list = GetTypeList(type);
+		for (int i = 0; i < list.size(); i++)
+		{
+			if (list[i]->get_id() == id)
+				return i;
+			
+		}
+	}
+	
+
+	void Erase(const std::string &id,const std::string& type)
+	{
+		auto del = GetTypeListNoConst(type).erase(GetTypeListNoConst(type).begin() + delete_index(type, id));
+		//free(*del);
+		Register_to_Dead(*del);
+	}
+
 
 	bool isAlive(const std::string& id,const std::string &type) {
 		
