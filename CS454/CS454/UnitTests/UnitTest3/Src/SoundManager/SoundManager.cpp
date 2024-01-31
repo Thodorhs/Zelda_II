@@ -32,7 +32,7 @@ Mix_Chunk* SoundManager::get_sfx(std::string name) {
 void SoundManager::audio_init() {
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0)
 		pr_info("error initializing audio");
-	Mix_VolumeMusic(53);
+	Mix_VolumeMusic(3);
 }
 
 void SoundManager::play_music(std::string name, int loops) {

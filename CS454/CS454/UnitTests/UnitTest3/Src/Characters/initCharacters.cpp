@@ -9,6 +9,7 @@
 #include "../../Include/Characters/PalaceBot.h"
 #include "../../Include/Characters/Staflos.h"
 #include "../../Include/Characters/Wosu.h"
+#include "../../Include/Characters/Mazura.h"
 #include <string>
 
 
@@ -202,6 +203,98 @@ void wosu_char_action(Character* b)
 
 /********ENDWOSU***********/
 
+
+
+/*******MAZURA************/
+
+
+
+void mazura_char_start(Character* g)
+{
+
+	AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_move")->Start(GetSystemTime());
+}
+
+
+void mazura_char_stop(Character* g)
+{
+	AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_move")->Destroy();
+	//g->Destroy();
+}
+
+void mazura_char_action(Character* c)
+{
+	auto mv = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move");
+	auto att = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_attack");
+	auto cha = AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_charge");
+	Sprite* li = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
+	Sprite* st = SpriteManager::GetSingleton().Get_sprite_by_id(c->get_id());
+	if (mv->HasFinished() && att->HasFinished() && cha->HasFinished() && !c->is_Hit()) {
+		AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move")->Start(GetSystemTime());
+		FrameRangeAnimator* an = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_move"));
+		FrameRangeAnimator* attack = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_attack"));
+		FrameRangeAnimator* charge = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(c->get_id() + "_charge"));
+		int lx = li->GetBox().x;
+		int sx = st->GetBox().x;
+		int r;
+		int dx = 5;
+		if (lx > sx) {
+			st->ChangeFilm("Mazura_walk_right");
+			if (lx - sx < 80) {
+				r = rand() % 3;
+				if (r == 1|| r==2) {
+					attack->SetDx(dx);
+					attack->Start(GetSystemTime());
+				}else{
+					an->SetDx(-dx-5);
+				}
+			}
+			else {
+				r = rand() % 3;
+				if(lx-sx>200 && r==1){
+					charge->SetDx(24);
+					charge->Start(GetSystemTime());
+				}else{
+					an->SetDx(dx);
+				}
+			}
+		}
+		else if (lx < sx) {
+			st->ChangeFilm("Mazura_walk_left");
+			if (sx - lx < 80) {
+				r = rand() % 3;
+				if (r == 1 || r == 2) {
+					attack->SetDx(-dx);
+					attack->Start(GetSystemTime());
+					
+				}else{
+					an->SetDx(dx+5);
+				}
+			}
+			else {
+				r = rand() % 3;
+				if (sx - lx > 200 && r == 1) {
+					charge->SetDx(-24);
+					charge->Start(GetSystemTime());
+				}
+				else {
+					an->SetDx(-dx);
+				}
+			}
+		}
+	}
+}
+
+
+
+/*****ENDMAZURA***********/
+
+
+
+
+
+
+
 void register_gumas(SList gumas) {
 	for (auto& it : gumas) {
 		Guma* c = new Guma(it->GetTypeId(), { it->GetBox().x,it->GetBox().y });
@@ -251,12 +344,22 @@ void register_wosus(SList wosus)
 }
 
 
+void register_mazura(Sprite* mazura)
+{
+	Mazura* c = new Mazura(mazura->GetTypeId(), { mazura->GetBox().x,mazura->GetBox().y });
+	CharacterManager::GetSingleton().Register(c, c->get_type());
+	c->SetOnStart(mazura_char_start);
+	c->SetOnStop(mazura_char_stop);
+	c->SetOnAction(mazura_char_action);
+}
+
 void init_characters() {
 	auto gumas = SpriteManager::GetSingleton().GetTypeList("Guma");
 	auto link  = SpriteManager::GetSingleton().GetTypeList("Link").begin();
 	auto bots = SpriteManager::GetSingleton().GetTypeList("Palace_bot");
 	auto staflos = SpriteManager::GetSingleton().GetTypeList("Staflos");
 	auto wosus = SpriteManager::GetSingleton().GetTypeList("Wosu");
+	auto mazura = SpriteManager::GetSingleton().GetTypeList("Mazura").begin();
 
 	
 	register_Link(*link);
@@ -264,5 +367,6 @@ void init_characters() {
 	register_gumas(gumas);
 	register_staflos(staflos);
 	register_wosus(wosus);
+	register_mazura(*mazura);
 	
 }

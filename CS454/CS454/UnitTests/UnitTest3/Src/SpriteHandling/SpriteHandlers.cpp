@@ -444,6 +444,12 @@ void Staflos_collission(Sprite* s1, Sprite* s2)
 
 
 
+void Mazura_collission(Sprite *s1,Sprite *s2)
+{
+	pr_info("mazura_col");
+}
+
+
 void register_guma_collisions(TileLayer *layer)
 {
 	CollisionChecker& col = CollisionChecker::GetSingleton();
@@ -492,6 +498,7 @@ void register_bot_collisions(TileLayer* layer)
 }
 
 
+
 void register_collisions(TileLayer* layer) {
 	CollisionChecker& col = CollisionChecker::GetSingleton();
 	SpriteManager& manager = SpriteManager::GetSingleton();
@@ -516,6 +523,7 @@ void register_collisions(TileLayer* layer) {
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("blue_pot2"), blue_pot_action);
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("red_pot1"), red_pot_action);
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("end_key"), end_key_action);
+	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("Mazura"), Mazura_collission);
 	register_guma_collisions(layer);
 	register_staflos_collisions(layer);
 	register_wosu_collisions(layer);

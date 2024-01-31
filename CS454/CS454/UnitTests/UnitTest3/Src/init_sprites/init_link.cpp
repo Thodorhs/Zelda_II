@@ -205,7 +205,7 @@ void damage_start(Animator *animator)
 	auto film = link->GetFilm()->GetId();
 
 	if (is_left(film)) {
-		if (film == "Link.Crouch.left" || film == "Link.Crouch.Attack.left" || "Link.shield.left")
+		if (film == "Link.Crouch.left" || film == "Link.Crouch.Attack.left" || film == "Link.shield.left")
 			link->SetPos(link->GetBox().x, link->GetBox().y - 4 * link->get_layer_scale());
 		link->ChangeFilm("Link.damage.left");
 		link->setCanMove(false);

@@ -97,7 +97,7 @@ void InputKeys::move() {
 	auto sc = AnimatorManager::GetSingleton().Get_by_Id("scroll_right");
 	auto sc_l = AnimatorManager::GetSingleton().Get_by_Id("scroll_left");
 
-	if (!SpriteManager::GetSingleton().Get_sprite_by_id("Link")->CanMove())
+	if (!SpriteManager::GetSingleton().Get_sprite_by_id("Link")->CanMove() || !AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->HasFinished())
 		return;
 	if(KeyPressed(SDLK_a) || KeyDown(SDLK_a)){
 		if (isCrouched(link))

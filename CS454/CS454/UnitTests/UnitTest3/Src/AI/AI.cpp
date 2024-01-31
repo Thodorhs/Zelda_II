@@ -80,6 +80,24 @@ void wosu(TileLayer* layer)
 	}
 }
 
+
+
+void mazura(TileLayer *layer)
+{
+	auto mazura = m.GetTypeList("Mazura")[0];
+	SDL_Rect v = layer->GetViewWindow();
+	v = { (v.x+150) * layer->get_scale(), v.y * layer->get_scale(), (v.w-280* layer->get_scale()), v.h };
+	if (!mazura->is_Active()) {
+		if (hasIntersection(mazura, v))
+				mazura->Start();
+	}
+	else 
+		mazura->progress_character();
+	
+	
+}
+
+
 void destroy_dead()
 {
 	for (auto& it : CharacterManager::GetSingleton().Get_dead())
@@ -92,6 +110,7 @@ void progress_ai(TileLayer *layer){
 	bots(layer);
 	staflos(layer);
 	wosu(layer);
+	mazura(layer);
 	//destroy_dead();//EXPLODE
 	
 }
