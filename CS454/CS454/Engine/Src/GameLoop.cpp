@@ -1,10 +1,12 @@
 #include "../Include/App.h"
+#include "../Include/GameLoopFuncs/Input.h"
 #include "../Include/Util/SystemClock.h"
 SystemClock& s_clock = SystemClock::Get();
 
 void app::Game::MainLoop(void) {
 	while (!IsFinished()) MainLoopIteration();
 }
+
 
 void app::Game::MainLoopIteration(void) {
 	clock_t beginFrame = clock();
@@ -13,7 +15,7 @@ void app::Game::MainLoopIteration(void) {
 	if (s_clock.GetDeltaTime() >= (1.0f / 60)) {
 		s_clock.Reset();
 		inputexec();
-		if (!IsPaused()) {
+		if (!InputKeys::GetSingleton().isPaused()) {
 			ProgressAnimations();
 			AI();
 			Physics();

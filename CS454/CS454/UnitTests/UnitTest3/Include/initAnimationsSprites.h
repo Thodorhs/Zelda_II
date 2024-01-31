@@ -19,6 +19,7 @@ extern void init_bot(TileLayer* layer);
 extern void init_doors(TileLayer* layer);
 extern void init_wosus(TileLayer* layer);
 extern void init_staflos(TileLayer* layer);
+extern void init_mazura(TileLayer* layer);
 extern void init_characters();
 
 

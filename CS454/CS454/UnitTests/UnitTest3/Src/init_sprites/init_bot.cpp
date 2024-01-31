@@ -167,15 +167,15 @@ Animator::OnFinish bot_death_finish(Sprite* g, TileLayer* layer) {
 				SpriteManager::GetSingleton().AddforDisplay("drops", sprite->GetTypeId());
 				sprite->Move(0, 1);
 
-				g->Destroy();
-				mv->Stop();
-				dmg->Stop();
-				jmp->Stop();
-				mv->Destroy();
-				dmg->Destroy();
-				jmp->Destroy();
+				
 			}
-
+			g->Destroy();
+			mv->Stop();
+			dmg->Stop();
+			jmp->Stop();
+			mv->Destroy();
+			dmg->Destroy();
+			jmp->Destroy();
 		});
 }
 

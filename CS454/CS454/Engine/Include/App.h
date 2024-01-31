@@ -31,7 +31,7 @@ namespace app {
 			{ return isPaused; }
 			uint64_t GetPauseTime (void) const
 			{ return pauseTime; }
-
+			void set_pause(bool val) { isPaused = val; }
 			void SetRender(const Action& f) { render = f; }
 			void SetInput(const Action& f) { input = f; }
 			void SetInputExec(const Action& f) { inputexec = f; }

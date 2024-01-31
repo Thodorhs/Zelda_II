@@ -14,7 +14,7 @@ private:
 protected:
 	unsigned int difficulty = 13;
 	int health = 100;
-	int lifes = 1;
+	int lifes = 100;
 	int magic = 200;
 	bool keys[4];
 	int points = 0;
@@ -24,7 +24,12 @@ protected:
 	int dps = 8;
 	uint64_t last_time;
 	bool shield = false;
+	bool isOnBoss = false;
 public:
+
+	void setOnBoss(bool val) { isOnBoss = val; }
+	bool inBoss() { return isOnBoss; }
+
 	/*set*/
 	void use_shield() { 
 		if (magic - 32 >= 0) {

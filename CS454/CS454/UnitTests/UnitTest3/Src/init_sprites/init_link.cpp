@@ -47,6 +47,7 @@ Animator::OnAction link_fr_action(Sprite* s) {
 	);
 }
 
+
 void init_link_move_animator(TileLayer* layer)
 {
 	auto scale = layer->get_scale();
@@ -55,7 +56,7 @@ void init_link_move_animator(TileLayer* layer)
 	Link_animators.push_back(mv_an);
 	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 	animator_init(link, mv_an, mv, [link,mv_an]() {
-		if (!AnimatorManager::GetSingleton().Get_by_Id("Link_falling")->HasFinished())
+		if (!AnimatorManager::GetSingleton().Get_by_Id("Link_falling")->HasFinished() )
 			return;
 		if (mv_an->GetDx() < 0) {
 			link->ChangeFilm("Link.Run.left");
@@ -205,7 +206,7 @@ void damage_start(Animator *animator)
 	auto film = link->GetFilm()->GetId();
 
 	if (is_left(film)) {
-		if (film == "Link.Crouch.left" || film == "Link.Crouch.Attack.left" || "Link.shield.left")
+		if (film == "Link.Crouch.left" || film == "Link.Crouch.Attack.left" || film == "Link.shield.left")
 			link->SetPos(link->GetBox().x, link->GetBox().y - 4 * link->get_layer_scale());
 		link->ChangeFilm("Link.damage.left");
 		link->setCanMove(false);

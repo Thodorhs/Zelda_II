@@ -55,7 +55,7 @@ add_executable(UnitTest3
  "Include/Characters/Staflos.h"
  "Include/Characters/Wosu.h"
 "../../Engine/Src/Animators/MovingPathAnimator.cpp"
-"Src/CreateSprite.cpp" "Src/SoundManager/SoundManager.cpp")
+"Src/CreateSprite.cpp" "Src/SoundManager/SoundManager.cpp" "Include/Characters/Mazura.h" "Src/init_sprites/init_mazura.cpp")
 
 target_link_libraries(UnitTest3  SDL2::SDL2 SDL2::SDL2main SDL2_image::SDL2_image SDL2_ttf::SDL2_ttf SDL2_mixer::SDL2_mixer)
 

@@ -30,8 +30,10 @@ private:
     TileLayer* Horizon_Layer;
     TileLayer* Backround_Layer;
     Render* global_render_vars;
-
+    bool paused = false;
 public:
+
+    bool isPaused() { return paused; }
     void setlayersinput(TileLayer* Action_Laye, TileLayer* Horizon_Laye, TileLayer* Backround_Laye){ 
         Action_Layer= Action_Laye;
         Horizon_Layer= Horizon_Laye;

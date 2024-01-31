@@ -86,18 +86,28 @@ bool isCrouched(Sprite *s)
 	return id == "Link.Crouch.left" || id == "Link.Crouch.right" || id== "Link.Attack.Crouch.right" || id=="Link.Attack.Crouch.left";
 }
 
+bool crouch_att_finished()
+{
+	return AnimatorManager::GetSingleton().Get_by_Id("Link.Attack.Crouch")->HasFinished();
+}
+
 Uint64 last_scrol_time;
 void InputKeys::move() {
 	SDL_Rect viewin = Action_Layer->GetViewWindow();
 	Dim scale = Action_Layer->get_scale();
 	Sprite* link = get_Link();
 	Uint64 curr = GetSystemTime();
-	
+	if (KeyPressed(SDLK_ESCAPE))
+	{
+		paused = !paused;
+		if (paused)
+			return;
+	}
 
 	auto sc = AnimatorManager::GetSingleton().Get_by_Id("scroll_right");
 	auto sc_l = AnimatorManager::GetSingleton().Get_by_Id("scroll_left");
 
-	if (!SpriteManager::GetSingleton().Get_sprite_by_id("Link")->CanMove())
+	if (!SpriteManager::GetSingleton().Get_sprite_by_id("Link")->CanMove() || !AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->HasFinished() || !crouch_att_finished())
 		return;
 	if(KeyPressed(SDLK_a) || KeyDown(SDLK_a)){
 		if (isCrouched(link))
@@ -110,6 +120,9 @@ void InputKeys::move() {
 		if (isCrouched(link))
 			link->SetPos(link->GetBox().x, link->GetBox().y - 8);
 		handle_animator_movement(1, sc, scale, viewin, link);
+		if (link->GetBox().x > 25620 && !Link::GetSingleton().inBoss()) {
+			SoundManager::get_singleton().pause_music();
+		}
 		//get_Link()->ChangeFilm("Link.Run.right");
 	}
 	if (KeyPressed(SDLK_w) ) {
@@ -157,6 +170,7 @@ void InputKeys::move() {
 				
 		}
 	}
+	
 	if (KeyPressed(SDLK_LEFT) || KeyDown(SDLK_LEFT)) {
 		move_pixels_x(-1);
 	}
@@ -207,7 +221,7 @@ void InputKeys::update_press(SDL_Keycode code, bool state) {
 
 void InputKeys::InputRead() {
 	Uint64 curr = GetSystemTime();
-	if (curr > last + timer_interval) {
+	if ((curr > last + timer_interval) && !paused) {
 		last = curr;
 		move_horizon();
 	}
