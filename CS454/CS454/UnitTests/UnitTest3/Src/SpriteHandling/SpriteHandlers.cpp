@@ -8,8 +8,18 @@
 Link Link::singleton;
 std::string crouch_films[] = { "Link.Crouch.left","Link.Crouch.right" };
 std::string jump_films[] = { "Link.jump.left", "Link.jump.right" };
+std::string charge_films[] = { "Mazura_charge_left", "Mazura_charge_right" };
 
 CharacterManager &cman = CharacterManager::GetSingleton();
+
+
+bool isCharge(const std::string& film)
+{
+	for (auto& f : charge_films)
+		if (film == f)
+			return true;
+	return false;
+}
 
 void elevator_action1(Sprite* s1, Sprite* s2) {
 	if (InputKeys::GetSingleton().KeyPressed(SDLK_s)) {
@@ -187,10 +197,6 @@ void key_action(Sprite* s1, Sprite* s2) {
 		else if (s2->GetTypeId() == "key3") {
 			s2->SetVisibility(false);
 			Link::GetSingleton().addKey(2);
-		}
-		else if (s2->GetTypeId() == "key4") {
-			s2->SetVisibility(false);
-			Link::GetSingleton().addKey(3);
 		}
 		//s2->Destroy();
 	}
@@ -446,6 +452,56 @@ void Staflos_collission(Sprite* s1, Sprite* s2)
 
 void Mazura_collission(Sprite *s1,Sprite *s2)
 {
+    if (!Link::GetSingleton().isAlive()) {
+        return;
+    }
+	if (!CharacterManager::GetSingleton().Get_by_Id("Mazura", "Mazura")->is_Alive())
+		return;
+
+    if (cman.Get_by_Id(s2->GetTypeId(), "Mazura") && !cman.Get_by_Id(s2->GetTypeId(), "Mazura")->is_Hit() && cman.Get_by_Id(s2->GetTypeId(), "Mazura")->IsAlive()) {
+        if(!isCharge(s2->GetFilm()->GetId())){
+			if ((s1->GetFilm()->GetId() == "Link.Crouch.Attack.left" || s1->GetFilm()->GetId() == "Link.Attack.left") && !Link::GetSingleton().is_Hit() && (s2->GetBox().x <= s1->GetBox().x)) {
+				AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+			}
+			else if ((s1->GetFilm()->GetId() == "Link.Crouch.Attack.right" || s1->GetFilm()->GetId() == "Link.Attack.right") && !Link::GetSingleton().is_Hit() && (s2->GetBox().x >= s1->GetBox().x)) {
+				AnimatorManager::GetSingleton().Get_by_Id(s2->GetTypeId() + "_damage")->Start(GetSystemTime());
+			}
+		}
+        if (Link::GetSingleton().can_hit(GetSystemTime(), 1000)) {
+            if (s1->GetFilm()->GetId() == "Link.Crouch.right" && (s2->GetBox().x >= s1->GetBox().x)) {
+                SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
+                pr_info("parry");
+                return;
+            }
+            else if (s1->GetFilm()->GetId() == "Link.Crouch.left" && (s2->GetBox().x <= s1->GetBox().x)) {
+                SoundManager::get_singleton().play_sfx("AOL_Deflect.wav", 0, 2);
+                pr_info("parry");
+                return;
+            }
+            else if (s2->GetFilm()->GetId() == "Mazura_attack_right" || s2->GetFilm()->GetId() == "Mazura_attack_left") {
+                if (s1->GetBox().x <= s2->GetBox().x) {
+                    ((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(-1);
+					Link::GetSingleton().damage(Link::GetSingleton().getdif() + 6);
+                }
+                else {
+                    ((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(1);
+					Link::GetSingleton().damage(Link::GetSingleton().getdif() + 6);
+                }
+                
+                AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
+            }else if(isCharge(s2->GetFilm()->GetId())){
+				if (s1->GetBox().x <= s2->GetBox().x) {
+					((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(-1);
+					Link::GetSingleton().damage(Link::GetSingleton().getdif() + 10);
+				}
+				else {
+					((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(1);
+					Link::GetSingleton().damage(Link::GetSingleton().getdif() + 10);
+				}
+				AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
+			}
+        }
+    }
 	pr_info("mazura_col");
 }
 
@@ -513,7 +569,7 @@ void register_collisions(TileLayer* layer) {
 	for(auto i=1;i<5;i++){
 		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("door"+std::to_string(i)),door_action);
 	}
-	for (auto i = 1; i < 5; i++) {
+	for (auto i = 1; i < 4; i++) {
 		col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("key" + std::to_string(i)), key_action);
 	}
 	col.Register(manager.Get_sprite_by_id("Link"), manager.Get_sprite_by_id("doll1"), doll_action);

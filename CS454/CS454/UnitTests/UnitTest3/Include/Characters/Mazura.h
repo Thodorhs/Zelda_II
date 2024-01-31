@@ -28,7 +28,7 @@ public:
 		type = "Mazura";
 		Id = id;
 		start_pos = _start_pos;
-		health = 64;
+		health = 600;
 		rate = 5;
 	}
 };

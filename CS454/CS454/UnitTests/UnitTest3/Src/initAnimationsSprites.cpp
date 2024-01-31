@@ -61,6 +61,28 @@ void generic_gravity_init(TileLayer* layer)
 
 }
 
+void init_torch(TileLayer *layer)
+{
+	std::vector<FrameRangeAnimator*>torches;
+	FrameRangeAnimation* fr_torch = new FrameRangeAnimation("torch", 0, 5, 0, 0, 0, 150);
+	
+	auto s = SpriteManager::GetSingleton().	GetTypeList("torch");
+
+	for (auto& t : s) {
+		t->GetGravityHandler().set_gravity_addicted(false);
+		t->setCanMove(false);
+		FrameRangeAnimator* torch = new FrameRangeAnimator(t->GetTypeId()+"_torch", fr_torch);
+		torch->SetOnAction(torch->generic_animator_action(t));
+		torch->SetOnStart(generic_start);
+		torch->SetOnFinish(generic_stop);
+		torches.push_back(torch);
+	}
+	int i = 0;
+	for (auto& a : torches) {
+		a->Start(GetSystemTime() + i*100);
+		i++;
+	}
+}
 
 
 
@@ -78,5 +100,5 @@ void init_animations_sprites(SDL_Renderer* renderer,TileLayer* layer) {
 	init_wosus(layer);
 	init_characters();
 	init_mazura(layer);
-
+	init_torch(layer);
 }

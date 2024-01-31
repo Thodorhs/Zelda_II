@@ -50,6 +50,7 @@ public:
 			empty_tiles[20] = true;
 			empty_tiles[3]  = true;
 			empty_tiles[42] = true;
+            empty_tiles[96] = true;
 		}
 		GridMapOld& get_grid() { return grid_old; }
 		GridMap& get_s_grid() { return grid; }

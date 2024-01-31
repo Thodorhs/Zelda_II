@@ -6,6 +6,8 @@
 #include <filesystem>
 #include <string>
 #include "../../../../Engine/Include/Util/Print.h"
+#include "../../Include/Characters/CharacterManager.h"
+#include "../../../../Engine/Include/Sprites/SpriteManager.h"
 TTF_Font* font;
 int milestone = 100;
 auto font_path() {
@@ -54,6 +56,20 @@ void RenderHPBar(int x, int y, int w, int h, int life, SDL_Color FGColor, SDL_Re
 	SDL_FreeSurface(healthbar_sur);
 	SDL_DestroyTexture(healthbar_tex);
 }
+void RenderHPBoss(int x, int y, int w, int h, int life, SDL_Color FGColor, SDL_Renderer* renderer) {
+    SDL_Color old;
+    SDL_Rect r = { x,y,w + 1,h };
+    SDL_GetRenderDrawColor(renderer, &old.r, &old.g, &old.g, &old.a);
+    SDL_SetRenderDrawColor(renderer, FGColor.r, FGColor.g, FGColor.b, FGColor.a);
+    SDL_Rect fgrect = { x + 1, y + 2, w - 3 * (600 - life)/6, h - 3 };
+    SDL_RenderFillRect(renderer, &fgrect);
+    SDL_SetRenderDrawColor(renderer, old.r, old.g, old.b, old.a);
+    SDL_Surface* healthbar_sur = IMG_Load(health_path().c_str());
+    SDL_Texture* healthbar_tex = SDL_CreateTextureFromSurface(renderer, healthbar_sur);
+    SDL_RenderCopy(renderer, healthbar_tex, NULL, &r);
+    SDL_FreeSurface(healthbar_sur);
+    SDL_DestroyTexture(healthbar_tex);
+}
 void RenderMagicBar(int x, int y, int w, int h, int magic, SDL_Color FGColor, SDL_Renderer* renderer) {
 	SDL_Color old;
 	SDL_Rect r = { x,y,w + 1,h };
@@ -86,7 +102,8 @@ void render_str(SDL_Renderer* renderer, TileLayer* layer, std::string txt, SDL_P
 void render_stats(SDL_Renderer* renderer, TileLayer* layer) {
 	Link& link = Link::GetSingleton();
 	std::string str;
-	if(link.isAlive()){
+	auto maz = CharacterManager::GetSingleton().Get_by_Id("Mazura","Mazura");
+	if(link.isAlive() && maz->is_Alive()){
 		str = std::to_string(link.getLifes()).c_str();
 		str = "LIFE - " + str;
 		render_str(renderer, layer, str, { 255,0 });
@@ -113,6 +130,19 @@ void render_stats(SDL_Renderer* renderer, TileLayer* layer) {
 		if (magic >= 0) {
 			SDL_Color c = color(74, 34, 223, 255);
 			RenderMagicBar(30, 30, 130, 18, magic, c, renderer);
+		}
+		if(Link::GetSingleton().inBoss()){
+
+			int hp = CharacterManager::GetSingleton().Get_by_Id("Mazura","Mazura")->get_health();
+			if(hp>=0){
+                SDL_Color c = color(181, 49, 32, 255);
+                RenderHPBoss(160, 440, 300, 16, hp, c, renderer);
+				auto [x,y,w,h] = SpriteManager::GetSingleton().Get_sprite_by_id("Mazura")->GetBox();
+				auto [vx, vy, vw, vh] = layer->GetViewWindow();
+				auto scale = layer->get_scale();
+				str = "Old One";
+				render_str(renderer, layer, str, { x - 40 - vx*scale, y - 30 - vy*scale });
+			}
 		}
     }else{
         str = "Game Over";

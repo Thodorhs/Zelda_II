@@ -220,7 +220,7 @@ void init_films() {
 void ZeldaApp::Initialise(void) {
 	assert(SDL_Init(SDL_INIT_TIMER | SDL_INIT_VIDEO | SDL_INIT_EVENTS | SDL_INIT_AUDIO) == 0);
 	//assert(Mix_Init() != 0);
-	
+	Mix_Init(MIX_INIT_FLAC || MIX_INIT_MOD || MIX_INIT_MP3 || MIX_INIT_OGG || MIX_INIT_MID || MIX_INIT_OPUS || MIX_INIT_WAVPACK);
 	if(init_ttf()){
 		printf("Couldn't initialize SDL TTF: %s\n", SDL_GetError());
 		exit(1);

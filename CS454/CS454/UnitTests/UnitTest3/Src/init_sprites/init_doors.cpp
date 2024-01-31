@@ -29,9 +29,9 @@ void init_door_animators(int i, FrameRangeAnimation* door_animation, TileLayer* 
 				layer->get_grid_layer().setGridTile(13, 767, 0);
 			}
 			else if (i == 4) {
-				layer->get_grid_layer().setGridTile(11, 850, 0);
-				layer->get_grid_layer().setGridTile(12, 850, 0);
-				layer->get_grid_layer().setGridTile(13, 850, 0);
+				layer->get_grid_layer().setGridTile(11, 860, 0);
+				layer->get_grid_layer().setGridTile(12, 860, 0);
+				layer->get_grid_layer().setGridTile(13, 860, 0);
 			}
 		s->SetVisibility(false);
 		//dooranimator->Stop();
