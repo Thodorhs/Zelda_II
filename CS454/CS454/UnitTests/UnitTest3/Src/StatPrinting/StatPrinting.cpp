@@ -200,9 +200,9 @@ void render_stats(SDL_Renderer* renderer, TileLayer* layer) {
 		}
 		if (InputKeys::GetSingleton().isPaused()) {
 			str = "Paused.";
-			render_str_c(renderer, layer, str, { 265,60 },{ 0, 255, 32, 255 });
-			str = "INPUT\nA,D - Move       B - Attack\nW - Crouch       S - crouch\nSPELLS\nH - Heal       1 - Shield\nGAME INFO\nG - HitBoxes-Grid       F1 - Cheat\nF - Info";
-			render_str_c(renderer, layer, str, { 20,100 },{ 0, 255, 32, 255 });
+			render_str_c(renderer, layer, str, { 265,60 },{ 255, 255, 255, 255 });
+			str = "INPUT.\nA,D - Move       B - Attack\nW - Crouch       S - crouch\n\nSPELLS.\nH - Heal       1 - Shield\n\nGAME INFO.\nG - HitBoxes-Grid       F1 - Cheat\nF - Info";
+			render_str_c(renderer, layer, str, { 20,135 },{ 255, 0, 0, 255 });
 		}
     }else{
         str = "Game Over";
