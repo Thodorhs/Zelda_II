@@ -43,7 +43,8 @@ void SoundManager::play_music(std::string name, int loops) {
 
 void SoundManager::pause_music() {
 	if (Mix_PlayingMusic() != 0)
-		Mix_PauseMusic();
+		Mix_FadeOutMusic(3500);
+		//Mix_PauseMusic();
 }
 
 void SoundManager::resume_music() {
