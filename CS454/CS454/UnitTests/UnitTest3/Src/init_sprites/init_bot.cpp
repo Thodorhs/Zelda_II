@@ -183,7 +183,7 @@ Animator::OnFinish bot_death_finish(Sprite* g, TileLayer* layer) {
 void init_bot_animators(TileLayer* layer) {
 	auto bots = SpriteManager::GetSingleton().GetTypeList("Palace_bot");
 	FrameRangeAnimation* fr_bot = new FrameRangeAnimation("bot", 0, 1, 5, 0, 0, 200);
-	MovingAnimation* bot_jump = new MovingAnimation("bot.jump", 5, 10, -layer->get_scale()*8, 45);
+	MovingAnimation* bot_jump = new MovingAnimation("bot.jump", 4, 10, -layer->get_scale()*8, 45);
 	FrameRangeAnimation* fr_death = new FrameRangeAnimation("bot.death", 0, 5, 1, 0, 0, 100);
 	MovingAnimation* damage_an = new MovingAnimation("staflos.dmg", 1, 0, 0, 100);
 

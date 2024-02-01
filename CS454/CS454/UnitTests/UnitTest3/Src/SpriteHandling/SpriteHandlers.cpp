@@ -232,7 +232,13 @@ void red_pot_action(Sprite* s1, Sprite* s2) {
 	}
 }
 void end_key_action(Sprite* s1, Sprite* s2) {
-	return;
+	if (InputKeys::GetSingleton().KeyPressed(SDLK_b)) {
+		Link::GetSingleton().addPoints(50);
+		CollisionChecker::GetSingleton().Cancel(s1, s2);
+		s2->Destroy();
+		SoundManager::get_singleton().play_sfx("AOL_Flute.wav",0,2);
+		Link::GetSingleton().setgamefinish(true);
+	}
 }
 
 void init_elevators() {
@@ -437,7 +443,7 @@ void Staflos_collission(Sprite* s1, Sprite* s2)
 				else {
 					((FrameRangeAnimator*)AnimatorManager::GetSingleton().Get_by_Id(s1->GetTypeId() + "_damage"))->SetDx(1);
 				}
-				Link::GetSingleton().damage(Link::GetSingleton().getdif()+2);
+				Link::GetSingleton().damage(Link::GetSingleton().getdif()+4);
 				AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 			}	
 		}

@@ -86,8 +86,19 @@ void RenderMagicBar(int x, int y, int w, int h, int magic, SDL_Color FGColor, SD
 }
 
 void render_str(SDL_Renderer* renderer, TileLayer* layer, std::string txt, SDL_Point p) {
-	//pr_info(all.c_str());
 	SDL_Surface* fontxt = TTF_RenderText_Solid(font, txt.c_str(), { 255, 255, 255 });
+	int texW = 0;
+	int texH = 0;
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, fontxt);
+	SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+	SDL_Rect dst = { p.x, p.y, texW, texH };
+	SDL_RenderCopy(renderer, texture, NULL, &dst);
+	SDL_FreeSurface(fontxt);
+	SDL_DestroyTexture(texture);
+	return;
+}
+void render_end(SDL_Renderer* renderer, TileLayer* layer, std::string txt, SDL_Point p) {
+	SDL_Surface* fontxt = TTF_RenderText_Blended_Wrapped(font, txt.c_str(), { 255, 255, 255 },0);
 	int texW = 0;
 	int texH = 0;
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, fontxt);
@@ -103,7 +114,7 @@ void render_stats(SDL_Renderer* renderer, TileLayer* layer) {
 	Link& link = Link::GetSingleton();
 	std::string str;
 	auto maz = CharacterManager::GetSingleton().Get_by_Id("Mazura","Mazura");
-	if(link.isAlive() && maz->is_Alive()){
+	if(link.isAlive()){
 		str = std::to_string(link.getLifes()).c_str();
 		str = "LIFE - " + str;
 		render_str(renderer, layer, str, { 255,0 });
@@ -132,17 +143,27 @@ void render_stats(SDL_Renderer* renderer, TileLayer* layer) {
 			RenderMagicBar(30, 30, 130, 18, magic, c, renderer);
 		}
 		if(Link::GetSingleton().inBoss()){
-
-			int hp = CharacterManager::GetSingleton().Get_by_Id("Mazura","Mazura")->get_health();
-			if(hp>=0){
-                SDL_Color c = color(181, 49, 32, 255);
-                RenderHPBoss(160, 440, 300, 16, hp, c, renderer);
-				auto [x,y,w,h] = SpriteManager::GetSingleton().Get_sprite_by_id("Mazura")->GetBox();
-				auto [vx, vy, vw, vh] = layer->GetViewWindow();
-				auto scale = layer->get_scale();
-				str = "Old One";
-				render_str(renderer, layer, str, { x - 40 - vx*scale, y - 30 - vy*scale });
+			if (maz->is_Alive()) {
+				int hp = maz->get_health();
+				if(hp>=0){
+					SDL_Color c = color(181, 49, 32, 255);
+					RenderHPBoss(160, 440, 300, 16, hp, c, renderer);
+					auto [x,y,w,h] = SpriteManager::GetSingleton().Get_sprite_by_id("Mazura")->GetBox();
+					auto [vx, vy, vw, vh] = layer->GetViewWindow();
+					auto scale = layer->get_scale();
+					str = "Giga Horseman";
+					render_str(renderer, layer, str, { x - 83 - vx*scale, y - 30 - vy*scale });
+				}
 			}
+		}
+		if (Link::GetSingleton().getfinished()) {
+			str = "Level 1 Completed!!!";
+			render_str(renderer, layer, str, { 185,180 });
+			
+		}
+		if (Link::GetSingleton().getcred()) {
+			str = "THEODOROS PONTZOUKTZIDIS csd4336\nDIMITRIOS VLACHOS csd4492\nUniversity of Crete\nDepartment of Computer Science\nCS - 454. Development of Intelligent Interfaces and Games\nTerm Project, Fall Semester 2023";
+			render_end(renderer, layer, str, { 20,220 });
 		}
     }else{
         str = "Game Over";

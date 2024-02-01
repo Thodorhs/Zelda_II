@@ -29,6 +29,7 @@ void InputKeys::init_key_map() {
 	pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_b, false));
     pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_h, false));
     pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_1, false));
+    pressed_keys.insert(std::make_pair(SDL_KeyCode::SDLK_F1, false));
 	prevpressed_keys=pressed_keys;
 }
 
@@ -107,7 +108,7 @@ void InputKeys::move() {
 	auto sc = AnimatorManager::GetSingleton().Get_by_Id("scroll_right");
 	auto sc_l = AnimatorManager::GetSingleton().Get_by_Id("scroll_left");
 
-	if (!SpriteManager::GetSingleton().Get_sprite_by_id("Link")->CanMove() || !AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->HasFinished() || !crouch_att_finished())
+	if (!SpriteManager::GetSingleton().Get_sprite_by_id("Link")->CanMove() || !AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->HasFinished() || !crouch_att_finished() || !AnimatorManager::GetSingleton().Get_by_Id("Link_shield_animation")->HasFinished())
 		return;
 	if(KeyPressed(SDLK_a) || KeyDown(SDLK_a)){
 		if (isCrouched(link))
@@ -157,8 +158,8 @@ void InputKeys::move() {
 		auto anim_cr = AnimatorManager::GetSingleton().Get_by_Id("Link.Attack.Crouch");
 		auto j = AnimatorManager::GetSingleton().Get_by_Id("link.jump");
 		auto fall = AnimatorManager::GetSingleton().Get_by_Id("Link_falling");
-
-		if(anim->HasFinished() && j->HasFinished() && fall->HasFinished() && anim_cr->HasFinished())
+		
+		if(anim->HasFinished() && j->HasFinished() && fall->HasFinished() && anim_cr->HasFinished() )
 		{
 			if (isCrouched(link)) {
 				anim_cr->Start(GetSystemTime());
@@ -177,9 +178,8 @@ void InputKeys::move() {
 
 	if (KeyPressed(SDLK_f)) {
 		//AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
+		Link::GetSingleton().cred();
 	}
-
-
 	if (KeyPressed(SDLK_RIGHT) || KeyDown(SDLK_RIGHT)) {
 		move_pixels_x(1);
 	}
@@ -187,8 +187,11 @@ void InputKeys::move() {
 		DpyGrid = !DpyGrid;
 	}
 	if (KeyPressed(SDLK_HOME)) {
-		global_render_vars->ViewWindowR.x = 0;
-		global_render_vars->ViewWindowR.y = 0;
+		
+	}
+	if (KeyPressed(SDLK_F1)) {
+		Link::GetSingleton().adddps(500);
+		Link::GetSingleton().addLifes(50);
 	}
 	if (KeyPressed(SDLK_END)) {
 		global_render_vars->ViewWindowR.x = MUL_TILE_WIDTH(GetMapData()->at(0).size(), Engine_Consts.power) - global_render_vars->ViewWindowR.w;
@@ -196,6 +199,8 @@ void InputKeys::move() {
 	}
     if (KeyPressed(SDLK_h)) {
 		Link::GetSingleton().heal();
+		
+		
     }
     if (KeyPressed(SDLK_1)) {
         if(AnimatorManager::GetSingleton().Get_by_Id("Link_shield")->HasFinished()){

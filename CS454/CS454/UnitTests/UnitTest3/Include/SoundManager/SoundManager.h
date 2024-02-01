@@ -13,6 +13,7 @@ private:
 public:
 	static auto get_singleton(void) -> SoundManager& { return singleton; }
 	Mix_Music* get_music(std::string name);
+	void set_vol(int v);
 	Mix_Chunk* get_sfx(std::string name);
 	void audio_init();
 	void play_music(std::string name, int loops);

@@ -41,7 +41,7 @@ void guma_char_action(Character *g)
 	FrameRangeAnimator* an=dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_move"));
 	//FrameRangeAnimator* pr = dynamic_cast<FrameRangeAnimator*>(AnimatorManager::GetSingleton().Get_by_Id(g->get_id() + "_proj"));
 	
-	int dx = 5;
+	int dx = 6;
 	if (lx > gx) {
 		gu->ChangeFilm("Guma_right");
 		if(lx-gx>200){
@@ -146,7 +146,7 @@ void staflos_char_action(Character* c)
 		st->ChangeFilm("Staflos.walk.right");
 			if(lx-sx<80){
 				if (rand() % 2 == 1) {
-					attack->SetDx(dx);
+					attack->SetDx(dx+1);
 					attack->Start(GetSystemTime());
 				}
 			}else{
@@ -157,7 +157,7 @@ void staflos_char_action(Character* c)
 		st->ChangeFilm("Staflos.walk.left");
 			if (sx-lx<80) {
 				if (rand() % 2 == 1) {
-					attack->SetDx(-dx);
+					attack->SetDx(-dx-1);
 					attack->Start(GetSystemTime());
 				}
 			}else{
@@ -237,16 +237,22 @@ void mazura_char_action(Character* c)
 		int lx = li->GetBox().x;
 		int sx = st->GetBox().x;
 		int r;
+		int r2;
 		int dx = 5;
 		if (lx > sx) {
 			st->ChangeFilm("Mazura_walk_right");
 			if (lx - sx < 80) {
+				r2 = rand() % 6;
 				r = rand() % 3;
 				if (r == 1|| r==2) {
 					attack->SetDx(dx);
 					attack->Start(GetSystemTime());
+				}
+				else if(r2==4){
+					charge->SetDx(24);
+					charge->Start(GetSystemTime());
 				}else{
-					an->SetDx(-dx-5);
+					an->SetDx(-dx - 6);
 				}
 			}
 			else {
@@ -262,13 +268,19 @@ void mazura_char_action(Character* c)
 		else if (lx < sx) {
 			st->ChangeFilm("Mazura_walk_left");
 			if (sx - lx < 80) {
+				r2 = rand() % 6;
 				r = rand() % 3;
 				if (r == 1 || r == 2) {
 					attack->SetDx(-dx);
 					attack->Start(GetSystemTime());
 					
-				}else{
-					an->SetDx(dx+5);
+				}
+				else if (r2 == 4) {
+					charge->SetDx(-24);
+					charge->Start(GetSystemTime());
+				}
+				else{
+					an->SetDx(dx+6);
 				}
 			}
 			else {

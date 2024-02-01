@@ -97,6 +97,7 @@ void mazura(TileLayer *layer)
 			auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 			SoundManager::get_singleton().play_music("boss.mp3",2);
 			mazura->Start();
+			SoundManager::get_singleton().set_vol(50);
 		}
 	}
 	else 

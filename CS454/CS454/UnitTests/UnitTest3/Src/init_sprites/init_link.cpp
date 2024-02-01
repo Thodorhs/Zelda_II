@@ -308,6 +308,9 @@ void link_damage(TileLayer *layer)
 	Link_animators.push_back(animator);
 }
 void shield_start(Animator *animator){
+	for (auto& it : Link_animators) {
+			it->Stop();
+	}
 	Link::GetSingleton().use_shield();
 	AnimatorManager::GetSingleton().Get_by_Id("Link_shield_animation")->Start(GetSystemTime()); 
 	generic_start(animator);

@@ -47,7 +47,7 @@ void init_projectile(Sprite* proj, MovingPathAnimator* animator) {
 int x = 0;
 Sprite* create_proj_sprite(Sprite* guma, AnimationFilmHolder& holder) {
 	x++;
-	return new Sprite(guma->GetBox().x+20, guma->GetBox().y, const_cast<AnimationFilm*>(holder.GetFilm(get_sprite_initial_film("Guma_proj"))), guma->GetTypeId() + "_proj"+std::to_string(x));
+	return new Sprite(guma->GetBox().x+20, guma->GetBox().y-7, const_cast<AnimationFilm*>(holder.GetFilm(get_sprite_initial_film("Guma_proj"))), guma->GetTypeId() + "_proj"+std::to_string(x));
 }
 
 
@@ -90,7 +90,7 @@ void proj_collission(Sprite *s1,Sprite *s2)
 			pr_info("parry");
 			return;
 		}
-		Link::GetSingleton().damage(Link::GetSingleton().getdif()-2);
+		Link::GetSingleton().damage(Link::GetSingleton().getdif()-4);
 		AnimatorManager::GetSingleton().Get_by_Id("Link_damage")->Start(GetSystemTime());
 		pr_info("proj collission");
 	}

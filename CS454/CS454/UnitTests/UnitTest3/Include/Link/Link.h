@@ -12,9 +12,9 @@ private:
 	Link(Link&&) = delete;
 	static Link singleton;
 protected:
-	unsigned int difficulty = 13;
+	unsigned int difficulty = 15;
 	int health = 100;
-	int lifes = 100;
+	int lifes = 4;
 	int magic = 200;
 	bool keys[4];
 	int points = 0;
@@ -25,11 +25,18 @@ protected:
 	uint64_t last_time;
 	bool shield = false;
 	bool isOnBoss = false;
+	bool finish = false;
+	bool showcred = false;
 public:
-
+	void cred() { showcred = !showcred; }
+	void setcred(bool c) { showcred = c; }
+	bool getcred() { return showcred; }
 	void setOnBoss(bool val) { isOnBoss = val; }
 	bool inBoss() { return isOnBoss; }
-
+	void setgamefinish(bool b) { 
+		showcred = true;
+		finish = true; }
+	bool getfinished() {return finish;}
 	/*set*/
 	void use_shield() { 
 		if (magic - 32 >= 0) {
@@ -56,6 +63,7 @@ public:
 	const bool is_Hit()const { return isHit; }
 	void addPoints(int newPoints) { points += newPoints; }
 	void addLifes(int newLifes) { lifes += newLifes; }
+	void adddps(int dm) { dps += dm; }
 	void addKey(int i) { keys[i] = true; }
 	void addMagic(int newMagic) {
 		if (magic + newMagic <= 200) {

@@ -28,11 +28,13 @@ Mix_Chunk* SoundManager::get_sfx(std::string name) {
 	}
 	return chunks[music_path];
 }
-
+void SoundManager::set_vol(int v) {
+	Mix_VolumeMusic(v);
+}
 void SoundManager::audio_init() {
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096) < 0)
 		pr_info("error initializing audio");
-	Mix_VolumeMusic(30);
+	Mix_VolumeMusic(40);
 }
 
 void SoundManager::play_music(std::string name, int loops) {

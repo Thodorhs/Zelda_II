@@ -155,6 +155,7 @@ Animator::OnFinish mazura_death_finish(Sprite* g, FrameRangeAnimator* charge, Fr
 		{
 
 			SoundManager::get_singleton().pause_music();
+			SoundManager::get_singleton().play_sfx("AOL_Item_Drop.wav", 0, 2);
 			SoundManager::get_singleton().play_music("end.mp3", 2);
 			auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
 			CollisionChecker::GetSingleton().Cancel(link, g);
@@ -242,7 +243,7 @@ void init_mazura_animators(TileLayer* layer) {
 
 	FrameRangeAnimation* maz_move = new FrameRangeAnimation("maz", 0, 2, 1, 5, 0, 200);
 	FrameRangeAnimation* maz_attack = new FrameRangeAnimation("maz.attack", 0, 3, 1, 1, 0, 150);
-	MovingAnimation* maz_damage = new MovingAnimation("maz.damage", 1, 0, 0, 60);
+	MovingAnimation* maz_damage = new MovingAnimation("maz.damage", 1, 0, 0, 200);
 
 
 

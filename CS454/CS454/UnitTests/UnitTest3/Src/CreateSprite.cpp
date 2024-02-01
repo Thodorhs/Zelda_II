@@ -7,31 +7,35 @@
 #include "../../../Engine/Include/Sprites/CollisionChecker.h"
 
 void drop_point_action(Sprite* s1, Sprite* s2) {
-    if (InputKeys::GetSingleton().KeyPressed(SDLK_b)) {
+    if (InputKeys::GetSingleton().KeyPressed(SDLK_b) && s2->IsVisible()) {
         Link::GetSingleton().addPoints(50);
-		CollisionChecker::GetSingleton().Cancel(s1, s2);
-		s2->Destroy();
+        s2->SetVisibility(false);
+		//CollisionChecker::GetSingleton().Cancel(s1, s2);
+		//s2->Destroy();
     }
 }
 void drop_big_point_action(Sprite* s1, Sprite* s2) {
-    if (InputKeys::GetSingleton().KeyPressed(SDLK_b)) {
+    if (InputKeys::GetSingleton().KeyPressed(SDLK_b) && s2->IsVisible()) {
         Link::GetSingleton().addPoints(200);
-        CollisionChecker::GetSingleton().Cancel(s1, s2);
-        s2->Destroy();
+        s2->SetVisibility(false);
+        //CollisionChecker::GetSingleton().Cancel(s1, s2);
+        //s2->Destroy();
     }
 }
 void drop_blue_pot_action(Sprite* s1, Sprite* s2) {
-    if (InputKeys::GetSingleton().KeyPressed(SDLK_b)) {
+    if (InputKeys::GetSingleton().KeyPressed(SDLK_b) && s2->IsVisible()) {
         Link::GetSingleton().addMagic(16);
+        s2->SetVisibility(false);
         CollisionChecker::GetSingleton().Cancel(s1, s2);
         s2->Destroy();
     }
 }
 void drop_red_pot_action(Sprite* s1, Sprite* s2) {
-    if (InputKeys::GetSingleton().KeyPressed(SDLK_b)) {
+    if (InputKeys::GetSingleton().KeyPressed(SDLK_b) && s2->IsVisible()) {
         Link::GetSingleton().addMagic(128);
-        CollisionChecker::GetSingleton().Cancel(s1, s2);
-        s2->Destroy();
+        s2->SetVisibility(false);
+        //CollisionChecker::GetSingleton().Cancel(s1, s2);
+        //s2->Destroy();
     }
 }
 void key_action_boss(Sprite* s1, Sprite* s2) {
@@ -39,8 +43,8 @@ void key_action_boss(Sprite* s1, Sprite* s2) {
         if (s2->GetTypeId() == "final_key") {
             s2->SetVisibility(false);
             Link::GetSingleton().addKey(3);
-			CollisionChecker::GetSingleton().Cancel(s1, s2);
-            s2->Destroy();
+			//CollisionChecker::GetSingleton().Cancel(s1, s2);
+           // s2->Destroy();
         }
     }
 }
