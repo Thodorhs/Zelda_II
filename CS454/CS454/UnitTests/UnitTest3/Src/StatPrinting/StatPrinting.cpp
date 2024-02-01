@@ -8,7 +8,9 @@
 #include "../../../../Engine/Include/Util/Print.h"
 #include "../../Include/Characters/CharacterManager.h"
 #include "../../../../Engine/Include/Sprites/SpriteManager.h"
+#include "../../../../Engine/Include/GameLoopFuncs/Input.h"
 TTF_Font* font;
+TTF_Font* bgfont;
 int milestone = 100;
 auto font_path() {
 	std::filesystem::path cwd = std::filesystem::current_path();
@@ -30,6 +32,8 @@ bool init_ttf() {
 	bool b = TTF_Init() < 0;
 	if (!b) {
 		font = TTF_OpenFont(font_path().c_str(), FONT_SIZE);
+		bgfont = TTF_OpenFont(font_path().c_str(), FONT_SIZE);
+		TTF_SetFontOutline(bgfont, 0);
 		if (font == NULL) {
 			pr_info("error opening Font.");
 			return true;
@@ -37,6 +41,7 @@ bool init_ttf() {
 	}
 	return b;
 }
+
 SDL_Color color(Uint8 r, Uint8 g, Uint8 b, Uint8 a) {
 	SDL_Color col = { r,g,b,a };
 	return col;
@@ -86,7 +91,19 @@ void RenderMagicBar(int x, int y, int w, int h, int magic, SDL_Color FGColor, SD
 }
 
 void render_str(SDL_Renderer* renderer, TileLayer* layer, std::string txt, SDL_Point p) {
-	SDL_Surface* fontxt = TTF_RenderText_Solid(font, txt.c_str(), { 255, 255, 255 });
+	SDL_Surface* fontxt = TTF_RenderText_Blended_Wrapped(font, txt.c_str(), { 255, 255, 255 },0);
+	int texW = 0;
+	int texH = 0;
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, fontxt);
+	SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+	SDL_Rect dst = { p.x, p.y, texW, texH };
+	SDL_RenderCopy(renderer, texture, NULL, &dst);
+	SDL_FreeSurface(fontxt);
+	SDL_DestroyTexture(texture);
+	return;
+}
+void render_str_c(SDL_Renderer* renderer, TileLayer* layer, std::string txt, SDL_Point p,SDL_Color c) {
+	SDL_Surface* fontxt = TTF_RenderText_Blended_Wrapped(font, txt.c_str(), c, 0);
 	int texW = 0;
 	int texH = 0;
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, fontxt);
@@ -98,14 +115,25 @@ void render_str(SDL_Renderer* renderer, TileLayer* layer, std::string txt, SDL_P
 	return;
 }
 void render_end(SDL_Renderer* renderer, TileLayer* layer, std::string txt, SDL_Point p) {
-	SDL_Surface* fontxt = TTF_RenderText_Blended_Wrapped(font, txt.c_str(), { 255, 255, 255 },0);
+	SDL_Surface* fontxt = TTF_RenderText_Blended_Wrapped(font, txt.c_str(), { 255,255,255,255 }, 0);
+	SDL_Surface* fonbg = TTF_RenderText_Blended_Wrapped(bgfont, txt.c_str(), { 65,18,207,255 }, 0);
+	/*forground*/
 	int texW = 0;
 	int texH = 0;
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, fontxt);
 	SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
 	SDL_Rect dst = { p.x, p.y, texW, texH };
 	SDL_RenderCopy(renderer, texture, NULL, &dst);
+	/*backround*/
+	texW = 0;
+	texH = 0;
+	texture = SDL_CreateTextureFromSurface(renderer, fonbg);
+	SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
+	dst = { p.x, p.y, texW, texH };
+	SDL_RenderCopy(renderer, texture, NULL, &dst);
+
 	SDL_FreeSurface(fontxt);
+	SDL_FreeSurface(fonbg);
 	SDL_DestroyTexture(texture);
 	return;
 }
@@ -138,6 +166,7 @@ void render_stats(SDL_Renderer* renderer, TileLayer* layer) {
 		}
 
 		int magic = link.getMagic();
+		
 		if (magic >= 0) {
 			SDL_Color c = color(74, 34, 223, 255);
 			RenderMagicBar(30, 30, 130, 18, magic, c, renderer);
@@ -156,6 +185,10 @@ void render_stats(SDL_Renderer* renderer, TileLayer* layer) {
 				}
 			}
 		}
+		if (Link::GetSingleton().getstart() && !InputKeys::GetSingleton().isPaused()) {
+			str = "Esc - Info";
+			render_str(renderer, layer, str, { 230,180 });
+		}
 		if (Link::GetSingleton().getfinished()) {
 			str = "Level 1 Completed!!!";
 			render_str(renderer, layer, str, { 185,180 });
@@ -163,7 +196,13 @@ void render_stats(SDL_Renderer* renderer, TileLayer* layer) {
 		}
 		if (Link::GetSingleton().getcred()) {
 			str = "THEODOROS PONTZOUKTZIDIS csd4336\nDIMITRIOS VLACHOS csd4492\nUniversity of Crete\nDepartment of Computer Science\nCS - 454. Development of Intelligent Interfaces and Games\nTerm Project, Fall Semester 2023";
-			render_end(renderer, layer, str, { 20,220 });
+			render_str(renderer, layer, str, { 20,220 });
+		}
+		if (InputKeys::GetSingleton().isPaused()) {
+			str = "Paused.";
+			render_str_c(renderer, layer, str, { 265,60 },{ 0, 255, 32, 255 });
+			str = "INPUT\nA,D - Move       B - Attack\nW - Crouch       S - crouch\nSPELLS\nH - Heal       1 - Shield\nGAME INFO\nG - HitBoxes-Grid       F1 - Cheat\nF - Info";
+			render_str_c(renderer, layer, str, { 20,100 },{ 0, 255, 32, 255 });
 		}
     }else{
         str = "Game Over";

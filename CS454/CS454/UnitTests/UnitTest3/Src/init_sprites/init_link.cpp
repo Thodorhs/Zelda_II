@@ -351,8 +351,27 @@ void game_over(TileLayer* layer)
 	animator->SetOnFinish(game_over_finish);
 	//Link_animators.push_back(animator);
 }
+void msg_start(Animator* animator) {
+	Link::GetSingleton().setstart(true);
+	generic_start(animator);
 
+}
+void msg_finish(Animator* animator) {
+	generic_stop(animator);
+	Link::GetSingleton().setstart(false);
 
+}
+void start_msg(TileLayer* layer)
+{
+	FrameRangeAnimation* fr_animation = new  FrameRangeAnimation("start", 0, 1, 1, 0, 0, 5000);
+	FrameRangeAnimator* animator = new FrameRangeAnimator("start", fr_animation);
+
+	animator->SetOnAction(animator->generic_animator_action(SpriteManager::GetSingleton().Get_sprite_by_id("Link")));
+	animator->SetOnStart(msg_start);
+	animator->SetOnFinish(msg_finish);
+	animator->Start(GetSystemTime());
+	//Link_animators.push_back(animator);
+}
 void link_shield_animation_stop(Animator *animator)
 {
 	auto link = SpriteManager::GetSingleton().Get_sprite_by_id("Link");
@@ -396,4 +415,5 @@ void init_link(TileLayer* layer) {
 	game_over(layer);
 	link_att_crouch();
 	link_shield_animator(layer);
+	start_msg(layer);
 }

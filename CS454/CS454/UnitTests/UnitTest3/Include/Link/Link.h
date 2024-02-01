@@ -27,9 +27,12 @@ protected:
 	bool isOnBoss = false;
 	bool finish = false;
 	bool showcred = false;
+	bool start = true;
 public:
 	void cred() { showcred = !showcred; }
 	void setcred(bool c) { showcred = c; }
+	bool getstart() { return start; }
+	void setstart(bool s) { start = s; }
 	bool getcred() { return showcred; }
 	void setOnBoss(bool val) { isOnBoss = val; }
 	bool inBoss() { return isOnBoss; }
